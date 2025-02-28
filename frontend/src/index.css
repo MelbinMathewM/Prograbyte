@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #9333ea;
+  --background-color: #ececec;
+  --text-color: #1f2937;
+}
+
+/* Admin Theme */
+.admin-theme {
+  --primary-color: #dc26b5;
+  --secondary-color: #cc15fa;
+  --background-color: #111827;
+  --text-color: #ffffff;
+}
+
+/* Tutor Theme */ 
+.tutor-theme {
+  --primary-color: #ffffff;
+  --secondary-color: #272928;
+  --background-color: #f5fbfd;
+  --text-color: #414040;
+}
+
+/* Light Mode (Student Default) */
+.light-theme {
+  --primary-color: #2563eb;
+  --secondary-color: #9333ea;
+  --background-color: #f9fafb;
+  --text-color: #1f2937;
+}
+
+/* Dark Mode (Student Alternate) */
+.dark-theme {
+  --primary-color: #1e40af;
+  --secondary-color: #0ea5e9;
+  --background-color: #1f2937;
+  --text-color: #f9fafb;
+}
+
+/* Apply theme colors to body */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Example class using primary color */
+.bg-primary {
+  background-color: var(--primary-color);
+}
