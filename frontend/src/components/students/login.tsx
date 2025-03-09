@@ -48,7 +48,7 @@ const Login = () => {
       } else if (role === "tutor") {
         navigate("/tutor/dashboard");
       } else {
-        navigate("/");
+        navigate("/home");
       }
     } catch (error: any) {
       if (error.response) {

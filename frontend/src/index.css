@@ -1,16 +1,26 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inria+Serif:wght@300;400;700&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
   --primary-color: #2563eb;
   --secondary-color: #9333ea;
   --background-color: #ececec;
   --text-color: #1f2937;
+  font-family: "Poppins", sans-serif;
 }
 
 /* Admin Theme */
 .admin-theme {
   --primary-color: #dc26b5;
   --secondary-color: #cc15fa;
+  --background-color: #f9fafb;
+  --text-color: #111827;
+}
+
+/* Admin Dark Theme */
+.admin-dark-theme {
+  --primary-color: #b00cad;
+  --secondary-color: #8c0ac1;
   --background-color: #111827;
   --text-color: #ffffff;
 }
@@ -19,15 +29,23 @@
 .tutor-theme {
   --primary-color: #ffffff;
   --secondary-color: #272928;
-  --background-color: #f5fbfd;
+  --background-color: #edeeee;
   --text-color: #414040;
+}
+
+/* Tutor Dark Theme */
+.tutor-dark-theme {
+  --primary-color: #272928;
+  --secondary-color: #ffffff;
+  --background-color: #1c1e1f;
+  --text-color: #ffffff;
 }
 
 /* Light Mode (Student Default) */
 .light-theme {
   --primary-color: #2563eb;
   --secondary-color: #9333ea;
-  --background-color: #f9fafb;
+  --background-color: #f3f3f3;
   --text-color: #1f2937;
 }
 
@@ -39,13 +57,42 @@
   --text-color: #f9fafb;
 }
 
-/* Apply theme colors to body */
+/* Apply theme colors */
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+  font-family: var(--font-family);
 }
 
 /* Example class using primary color */
 .bg-primary {
   background-color: var(--primary-color);
+}
+
+.main-content {
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.sidebar-expanded .main-content {
+  margin-left: 16rem; /* 64px * 4 = 256px */
+}
+
+.sidebar-collapsed .main-content {
+  margin-left: 4rem; /* 16px * 4 = 64px */
+}
+
+
+@keyframes marquee {
+  from {
+      transform: translateX(70%);
+  }
+  to {
+      transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 6s linear infinite;
 }

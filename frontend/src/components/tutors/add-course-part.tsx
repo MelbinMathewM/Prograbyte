@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, ChangeEvent, FormEvent } from "react";
 import {
   TextField,
   Button,
@@ -11,352 +11,399 @@ import {
   Container,
   Grid,
   Paper,
+  IconButton,
+  SelectChangeEvent,
 } from "@mui/material";
 import { TutorContext } from "../../contexts/tutor-context";
-import dayjs, { Dayjs } from "dayjs";
-import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
+import { useTheme } from "../../contexts/theme-context";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Category {
   _id: string;
   name: string;
-  type: string
 }
 
-interface Topic {
+interface Course {
   title: string;
-  level: string;
-  video: File | null;
-  notes: File | null;
-  createdAt: Dayjs;
-  videoPreview?: string | null;
+  description: string;
+  category_id: string;
+  tutor_id: string;
+  price: string;
+  poster: File | null;
+  preview_video: File | null;
+  createdAt: dayjs.Dayjs;
 }
-
-interface CourseErrors {
-  title?: string;
-  price?: string;
-  description?: string;
-  category_id?: string;
-  poster?: string;
-  preview_video?: string;
-  topics?: Array<{ title?: string; level?: string; video?: string }> | string;
-}
-
 
 const AddCoursePart = () => {
   const { tutor } = useContext(TutorContext) || {};
-  const { id } = tutor || {};
+  const { id: tutorId } = tutor || {};
   const navigate = useNavigate();
+  const { theme } = useTheme();
+  const isDarkMode = theme.includes("dark");
 
-  const [course, setCourse] = useState({
+  const [course, setCourse] = useState<Course>({
     title: "",
     description: "",
     category_id: "",
-    tutor_id: "",
+    tutor_id: tutorId || "",
     price: "",
-    preview_video: null as File | null,
+    poster: null,
+    preview_video: null,
     createdAt: dayjs(),
-    poster: null as File | null,
   });
-
-  const [topics, setTopics] = useState<Topic[]>([
-    { title: "", level: "", video: null, notes: null, createdAt: dayjs(), videoPreview: null },
-  ]);
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [posterPreview, setPosterPreview] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
-  const [errors, setErrors] = useState<CourseErrors>({});
-
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await axiosInstance.get('/course/categories');
-      setCategories(response.data);
-    }
+      try {
+        const response = await axiosInstance.get<Category[]>("/course/categories");
+        setCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error("Failed to load categories");
+      }
+    };
     fetchCategories();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCourse({ ...course, [e.target.name]: e.target.value });
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setCourse((prev) => ({ ...prev, [name as keyof Course]: value }));
   };
 
-  const handleSelectChange = (e: any) => {
-    setCourse({ ...course, [e.target.name]: e.target.value });
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    const { name, value } = event.target;
+    setCourse((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileUpload = (field: "poster" | "preview_video", e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setCourse((prev) => ({ ...prev, [field]: file }));
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      if (field === "poster") setPosterPreview(url);
-      if (field === "preview_video") setVideoPreview(url);
+      setCourse((prev) => ({ ...prev, preview_video: file }));
+      setVideoPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleTopicChange = (index: number, field: keyof Topic, value: any) => {
-    setTopics((prev) =>
-      prev.map((topic, i) => (i === index ? { ...topic, [field]: value } : topic))
-    );
+  const handlePosterUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCourse((prev) => ({ ...prev, poster: file }));
+      setPosterPreview(URL.createObjectURL(file));
+    }
   };
 
-  const handleTopicFileUpload = (index: number, field: "video" | "notes", e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setTopics((prev) =>
-      prev.map((topic, i) =>
-        i === index
-          ? {
-            ...topic,
-            [field]: file,
-            ...(field === "video" ? { videoPreview: file ? URL.createObjectURL(file) : null } : {}),
-          }
-          : topic
-      )
-    );
+  const removeVideo = () => {
+    setCourse((prev) => ({ ...prev, preview_video: null }));
+    setVideoPreview(null);
   };
 
-  const addTopic = () => {
-    setTopics([...topics, { title: "", level: "Basic", video: null, notes: null, createdAt: dayjs(), videoPreview: null }]);
+  const removePoster = () => {
+    setCourse((prev) => ({ ...prev, poster: null }));
+    setPosterPreview(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateCourse = (course: Course): boolean => {
+    if (!course.title.trim() || !course.description.trim() || !course.category_id || !course.price.trim()) {
+      toast.error("Please fill in all required fields.");
+      return false;
+    }
 
-    setCourse(prev => {
-      const updatedCourse = { ...prev, tutor_id: id ?? "" };
-      console.log("Updated Course Data:", updatedCourse);
-      return updatedCourse;
-    });
-    
-    const handleCreateCourse = async () => {
-      try {
-        const courseResponse = await axiosInstance.post(`/course/courses`, { course }, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        console.log(courseResponse.data,'bb')
-        const courseId = courseResponse.data._id;
-        
-        if (courseId && topics.length > 0) {
-          const formData = new FormData();
-          formData.append("course_id", `${courseId}`);
+    const priceNumber = Number(course.price);
+    if (isNaN(priceNumber) || priceNumber <= 0) {
+      toast.error("Price must be a valid positive number.");
+      return false;
+    }
 
-          topics.forEach((topic, index) => {
-            formData.append(`topics[${index}][title]`, topic.title);
-            formData.append(`topics[${index}][level]`, topic.level);
-            if (topic.video) {
-              formData.append(`video_${index}`, topic.video);
-            }
-    
-            if (topic.notes) {
-              formData.append(`notes_${index}`, topic.notes);
-            }
-          });
-          await axiosInstance.post(`/course/topics`, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-        }
-    
-        alert("Course and topics created successfully!");
-      } catch (error) {
-        console.error("Error creating course:", error);
+    if (!course.poster) {
+      toast.error("Poster image is required.");
+      return false;
+    }
+
+    if (course.poster) {
+      const allowedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
+      if (!allowedImageTypes.includes(course.poster.type)) {
+        toast.error("Invalid poster format. Please upload a PNG, JPG, or JPEG image.");
+        return false;
       }
-    };
-
-    if(validateForm()){
-      handleCreateCourse();
     }
 
+    if (!course.preview_video) {
+      toast.error("At least one of Preview Video is required.");
+      return false;
+    }
+
+    if (course.preview_video) {
+      const allowedVideoTypes = ["video/mp4", "video/webm"];
+      if (!allowedVideoTypes.includes(course.preview_video.type)) {
+        toast.error("Invalid video format. Please upload an MP4 or WEBM file.");
+        return false;
+      }
+    }
+
+    return true;
   };
 
 
-  const validateForm = () => {
-    let newErrors: CourseErrors = {};
-  
-    if (!course.title.trim()) newErrors.title = "Title is required";
-    if (!course.price || Number(course.price as string) <= 0) newErrors.price = "Price must be a positive number";
-    if (!course.description.trim()) newErrors.description = "Description is required";
-    if (!course.category_id) newErrors.category_id = "Category is required";
-    if (!posterPreview) newErrors.poster = "Poster image is required";
-    if (!videoPreview) newErrors.preview_video = "Preview video is required";
-  
-    if (topics.length === 0) {
-      newErrors.topics = "At least one topic is required";
-    } else {
-      let topicErrorsArray = topics.map((topic) => {
-        let topicErrors: { title?: string; level?: string; video?: string } = {};
-        if (!topic.title.trim()) topicErrors.title = "Topic title is required";
-        if (!topic.level) topicErrors.level = "Difficulty level is required";
-        if (!topic.videoPreview) topicErrors.video = "Video is required";
-        return topicErrors;
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setCourse((prev) => ({ ...prev, tutor_id: tutorId ?? "" }));
+
+    if (!validateCourse(course)) return;
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData();
+      Object.entries(course).forEach(([key, value]) => {
+        if (value) {
+          formData.append(key, value as Blob | string);
+        }
+      });
+      formData.append("tutor_id", tutorId ?? "");
+
+      const response = await axiosInstance.post("/course/courses", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (topicErrorsArray.some((err) => Object.keys(err).length > 0)) {
-        newErrors.topics = topicErrorsArray;
+      if (response.data._id) {
+        toast.success("Course created successfully!");
+        setIsLoading(false);
+        setTimeout(() => {
+          navigate(`/tutor/courses/${response.data._id}/add-topic`);
+        }, 1000);
+      }
+    } catch (error: any) {
+      if (error.response) {
+        const backendMessage = error.response.data.error || "An error occurred";
+        toast.error(backendMessage);
+      } else if (error.request) {
+        toast.error("Server is not responding. Please try again later.");
+      } else {
+        toast.error("Something went wrong. Please try again.");
       }
     }
-  
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
-
-  const handleBack = () => {
-    navigate('/tutor/courses')
-  }
 
   return (
     <Container maxWidth="lg">
-      <Paper elevation={3} sx={{ padding: 1, backgroundColor: "#f9fafb" }}>
-      <Box sx={{ padding: "20px" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h5" gutterBottom>
-            Add New Course
-          </Typography>
-          <Button
-            variant="outlined"
-            onClick={handleBack}
+      <Paper
+        elevation={3}
+        sx={{
+          padding: 2,
+          backgroundColor: isDarkMode ? "#1e1e1e" : "#f9fafb",
+          color: isDarkMode ? "#fff" : "#000",
+        }}
+      >
+        <Box sx={{ padding: "20px" }}>
+          {/* Breadcrumb Navigation */}
+          <nav
+            className="mb-4 text-sm flex items-center"
+            style={{ color: isDarkMode ? "#bbb" : "#666" }}
           >
-            Back
-          </Button>
+            <Link to="/tutor/dashboard" className="hover:text-blue-500">
+              Dashboard
+            </Link>
+            <ChevronRight size={16} />
+            <Link to="/tutor/courses" className="hover:text-blue-500">
+              My Courses
+            </Link>
+            <ChevronRight size={16} />
+            <span>Add Course</span>
+          </nav>
+
+          {/* Title & Back Button */}
+          <div className="flex justify-between items-center mb-4">
+            <Typography
+              variant="h4"
+              component="h4"
+              sx={{ color: isDarkMode ? "#fff" : "#000" }}
+            >
+              Add Course
+            </Typography>
+
+            <Link
+              to="/tutor/courses"
+              className={`flex px-4 py-2 rounded-md transition-colors ${isDarkMode
+                  ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+            >
+              <ChevronLeft className="mt-1" size={18} />
+              Back
+            </Link>
+          </div>
+
+
+          {/* Form */}
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Title"
+                  name="title"
+                  value={course.title}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  sx={{
+                    input: { color: isDarkMode ? "#fff" : "#000" },
+                    label: { color: isDarkMode ? "#bbb" : "#000" },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: isDarkMode ? "#666" : "#ccc" },
+                      "&:hover fieldset": { borderColor: isDarkMode ? "#888" : "#888" },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Price"
+                  name="price"
+                  type="number"
+                  value={course.price}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  sx={{
+                    input: { color: isDarkMode ? "#fff" : "#000" },
+                    label: { color: isDarkMode ? "#bbb" : "#000" },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: isDarkMode ? "#666" : "#ccc" },
+                      "&:hover fieldset": { borderColor: isDarkMode ? "#888" : "#888" },
+                    },
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={8}>
+                <TextField
+                  label="Description"
+                  name="description"
+                  value={course.description}
+                  onChange={handleChange}
+                  multiline
+                  rows={2}
+                  fullWidth
+                  required
+                  sx={{
+                    input: { color: isDarkMode ? "#fff" : "#000" },
+                    label: { color: isDarkMode ? "#bbb" : "#000" },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": { borderColor: isDarkMode ? "#666" : "#ccc" },
+                      "&:hover fieldset": { borderColor: isDarkMode ? "#888" : "#888" },
+                    },
+                  }}
+                />
+              </Grid>
+
+              {/* Category Selection */}
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: isDarkMode ? "#bbb" : "#000" }}>
+                    Category *
+                  </InputLabel>
+                  <Select
+                    name="category_id"
+                    label="Category"
+                    value={course.category_id}
+                    onChange={handleSelectChange}
+                    required
+                    sx={{
+                      color: isDarkMode ? "#fff" : "#000",
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: isDarkMode ? "#666" : "#ccc",
+                      },
+                      "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: isDarkMode ? "#888" : "#888",
+                      },
+                    }}
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category._id} value={category._id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* File Upload Section */}
+              <Grid item xs={12} sm={6}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    backgroundColor: isDarkMode ? "#444" : "#1976d2",
+                    color: isDarkMode ? "#fff" : "#fff",
+                    "&:hover": { backgroundColor: isDarkMode ? "#555" : "#1565c0" },
+                  }}
+                >
+                  Upload Poster Image
+                  <input type="file" hidden onChange={handlePosterUpload} accept="image/*" />
+                </Button>
+                {posterPreview && (
+                  <Box mt={2}>
+                    <img src={posterPreview} alt="Course Poster" width="200px" />
+                    <IconButton onClick={removePoster} sx={{ color: isDarkMode ? "#ddd" : "#000" }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                )}
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  sx={{
+                    backgroundColor: isDarkMode ? "#444" : "#1976d2",
+                    color: isDarkMode ? "#fff" : "#fff",
+                    "&:hover": { backgroundColor: isDarkMode ? "#555" : "#1565c0" },
+                  }}
+                >
+                  Upload Preview Video
+                  <input type="file" hidden onChange={handleFileUpload} accept="video/*" />
+                </Button>
+                {videoPreview && (
+                  <Box mt={2}>
+                    <video src={videoPreview} width="200px" controls />
+                    <IconButton onClick={removeVideo} sx={{ color: isDarkMode ? "#ddd" : "#000" }}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
+                )}
+              </Grid>
+
+              {/* Submit Button */}
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="success"
+                  fullWidth
+                  disabled={isLoading}
+                  sx={{
+                    backgroundColor: isDarkMode ? "#2e7d32" : "#4caf50",
+                    color: isDarkMode ? "#fff" : "#fff",
+                    "&:hover": { backgroundColor: isDarkMode ? "#388e3c" : "#388e3c" },
+                  }}
+                >
+                  Add Course
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
         </Box>
-
-
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={3}>
-            {/* Course Details */}
-            <Grid item xs={12} sm={6}>
-              <TextField label="Title" name="title" value={course.title} onChange={handleChange} fullWidth required error={!!errors.title} helperText={errors.title}/>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Price"
-                name="price"
-                type="number"
-                value={course.price}
-                onChange={handleChange}
-                fullWidth
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={8}>
-              <TextField
-                label="Description"
-                name="description"
-                value={course.description}
-                onChange={handleChange}
-                multiline
-                rows={2}
-                fullWidth
-                required
-              />
-            </Grid>
-
-            {/* Category */}
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Category *</InputLabel>
-                <Select name="category_id" value={course.category_id} onChange={handleSelectChange} label="Category" required>
-                  {categories.map((category) => (
-                    <MenuItem key={category._id} value={category._id}>
-                      {category.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Poster Upload */}
-            <Grid item xs={12} sm={6}>
-              <Button variant="contained" component="label">
-                Upload Poster Image
-                <input type="file" hidden onChange={(e) => handleFileUpload("poster", e)} accept="image/*" />
-              </Button>
-              {posterPreview && <img src={posterPreview} alt="Poster Preview" style={{ width: "100%", marginTop: 10 }} />}
-            </Grid>
-
-            {/* Preview Video Upload */}
-            <Grid item xs={12} sm={6}>
-              <Button variant="contained" component="label">
-                Upload Preview Video
-                <input type="file" hidden onChange={(e) => handleFileUpload("preview_video", e)} accept="video/*" />
-              </Button>
-              {videoPreview && (
-                <video width="100%" controls style={{ marginTop: 10 }}>
-                  <source src={videoPreview} type="video/mp4" />
-                </video>
-              )}
-            </Grid>
-
-            {/* Course Topics */}
-            <Grid item xs={12}>
-              <Typography variant="h6" sx={{ marginBottom: "10px" }}>Course Topics</Typography>
-              {topics.map((topic, index) => (
-                <Box key={index} sx={{ border: "2px solid #ccc", padding: "10px", marginBottom: "10px", paddingTop: "20px", paddingBottom: "20px" }}>
-                  <Grid container spacing={2}>
-                    {/* Topic Title */}
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        label="Topic Title"
-                        value={topic.title}
-                        onChange={(e) => handleTopicChange(index, "title", e.target.value)}
-                        fullWidth
-                        required
-                      />
-                    </Grid>
-
-                    {/* Difficulty Level */}
-                    <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                        <InputLabel>Difficulty Level *</InputLabel>
-                        <Select
-                          value={topic.level}
-                          onChange={(e) => handleTopicChange(index, "level", e.target.value)}
-                          label="Difficulty Level"
-                          required
-                        >
-                          <MenuItem value="Basic">Basic</MenuItem>
-                          <MenuItem value="Intermediate">Intermediate</MenuItem>
-                          <MenuItem value="Advanced">Advanced</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-
-                    {/* Video Upload */}
-                    <Grid item xs={12} sm={6}>
-                      <Button variant="contained" component="label" fullWidth>
-                        Upload Video
-                        <input type="file" hidden onChange={(e) => handleTopicFileUpload(index, "video", e)} accept="video/*" />
-                      </Button>
-                      {topic.videoPreview && (
-                        <video width="100%" controls style={{ marginTop: 10 }}>
-                          <source src={topic.videoPreview} type="video/mp4" />
-                        </video>
-                      )}
-                    </Grid>
-
-                    {/* Notes Upload */}
-                    <Grid item xs={12} sm={6}>
-                      <Button variant="contained" component="label" fullWidth>
-                        Upload Notes
-                        <input type="file" hidden onChange={(e) => handleTopicFileUpload(index, "notes", e)} accept=".pdf" />
-                      </Button>
-                      {topic.notes && <Typography sx={{ mt: 1 }}>{topic.notes.name}</Typography>}
-                    </Grid>
-                  </Grid>
-                </Box>
-              ))}
-              <Button variant="outlined" onClick={addTopic}>
-                Add Topic
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Button type="submit" variant="contained" color="success" fullWidth>
-                Add Course
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Box>
       </Paper>
     </Container>
   );

@@ -117,42 +117,46 @@ export class CourseService {
         return topics;
     }
 
-    async updateCourse(courseId: string, courseData: Partial<ICourse>, files: any): Promise<ICourse | null> {
+    async getTopicById(topicId: string): Promise<ITopic> {
+        const topic = await this.courseRepository.getTopicById(topicId);
 
-        
+        return topic;
+    }
+
+    async updateCourse(courseId: string, courseData: Partial<ICourse>, files?: Express.Multer.File[]): Promise<ICourse | null> {
         const existingCourse = await this.courseRepository.getCourseDetail(courseId);
-        
-        if(!existingCourse) throw new Error("Course not found");
-
+        if (!existingCourse) throw new Error("Course not found");
+    
         const updatedFields: Partial<ICourse> = {};
 
-        if (files.poster) {
-            if (existingCourse.poster_url) {
-                const publicId = await this.extractPublicId(existingCourse.poster_url);
-                await cloudinary.uploader.destroy(publicId);
+        if (files && files.length > 0) {
+            const poster = Array.isArray(files) ? files.find(file => file.fieldname === `poster`) : undefined;
+            const preview_video = Array.isArray(files) ? files.find(file => file.fieldname === `preview_video`) : undefined;
+            if (poster) {
+                if (existingCourse.poster_url) {
+                    const publicId = await this.extractPublicId(existingCourse.poster_url);
+                    await cloudinary.uploader.destroy(publicId);
+                }
+                updatedFields.poster_url = poster?.path;
             }
-            const posterUpload = await cloudinary.uploader.upload(files.poster.path, { folder: "prograbyte/courses" });
-            updatedFields.poster_url = posterUpload.secure_url;
+            if(preview_video){
+                if (existingCourse.preview_video_urls) {
+                    const publicId = await this.extractPublicId(existingCourse.preview_video_urls[0]);
+                    console.log(publicId,'publicId')
+                    await cloudinary.uploader.destroy(publicId, { resource_type: "video" });
+                }
+                updatedFields.preview_video_urls = [preview_video?.path];
+            }
         }
+
+        const updatedCourse = await this.courseRepository.findCourseAndUpdate(courseId, {
+            ...courseData,
+            ...updatedFields,
+        });
     
-        if (files.video) {
-            if (existingCourse.preview_video_url) {
-                const publicId = await this.extractPublicId(existingCourse.preview_video_url);
-                await cloudinary.uploader.destroy(publicId, { resource_type: "video" });
-            }
-            const videoUpload = await cloudinary.uploader.upload(files.video.path, {
-                folder: "prograbyte/courses",
-                resource_type: "video",
-            });
-            updatedFields.preview_video_url = videoUpload.secure_url;
-        }
-
-        console.log('hii')
-
-        const updatedCourse = await this.courseRepository.findCourseAndUpdate(courseId, {...courseData, ...updatedFields});
-
         return updatedCourse;
     }
+    
 
     async extractPublicId(url: string): Promise<string> {
         const parts = url.split("/");

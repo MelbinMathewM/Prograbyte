@@ -27,7 +27,7 @@ const LoginCallback = () => {
       Cookies.set("role", role);
 
       // Redirect user to dashboard based on role
-      navigate("/", { replace: true }); // Prevents adding multiple history entries
+      navigate("/home", { replace: true });
     } else {
       navigate("/login", { replace: true });
     }

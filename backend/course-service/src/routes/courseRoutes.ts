@@ -19,13 +19,16 @@ const storageCourse = new CloudinaryStorage({
 
 const storageTopic = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: async () => ({
+    params: async (req, file) => ({
         folder: "prograbyte/topics",
-        resource_type: "auto",
+        resource_type: file.mimetype.startsWith("video/") ? "video" : file.mimetype === "application/pdf" ? "raw" : "auto",
     }),
 });
 
-const uploadCourse = multer({ storage: storageCourse });
+const uploadCourse = multer({
+    storage: storageCourse,
+}).any();
+
 const uploadTopic = multer({ storage: storageTopic });
 
 //category routes
@@ -36,11 +39,12 @@ courseRouter.delete('/categories/:id',(req,res,next) => courseController.deleteC
 
 courseRouter.get('/courses',(req,res,next) => courseController.getCourses(req,res,next));
 courseRouter.get('/courses/:id',(req,res) => courseController.getCourseDetail(req,res));
-courseRouter.put('/courses/:courseId',uploadCourse.any(),(req,res) => courseController.editCourse(req,res));
-courseRouter.post('/courses',uploadCourse.any(),(req,res) => courseController.createCourse(req,res));
+courseRouter.put('/courses/:courseId',uploadCourse,(req,res) => courseController.editCourse(req,res));
+courseRouter.post('/courses',uploadCourse,(req,res,next) => courseController.createCourse(req,res,next));
 courseRouter.patch('/courses/:courseId/status',(req,res,next) => courseController.changeCourseApprovalStatus(req,res,next));
 
 courseRouter.get('/topics/:course_id',(req,res) => courseController.getTopics(req,res));
-courseRouter.post('/topics',uploadTopic.any(),(req,res) => courseController.createTopic(req,res));
+courseRouter.post('/topics',uploadTopic.any(),(req,res,next) => courseController.createTopic(req,res,next));
+courseRouter.get('/topics/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
 
 export default courseRouter;

@@ -129,11 +129,11 @@ const CategoriesPart: React.FC = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-6">
+        <div className="container py-6 px-6">
             {/* Breadcrumb Navigation */}
             <nav className="text-gray-500 text-sm mb-4">
                 <Link to="/admin/dashboard" className="hover:underline">Home</Link> &gt;
-                <span className="text-primary font-semibold">Categories</span>
+                <span className="text-primary font-semibold"> Categories</span>
             </nav>
 
             {/* Header Section */}
@@ -174,7 +174,7 @@ const CategoriesPart: React.FC = () => {
             </div>
 
             {/* Category Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {paginatedCategories.map(({ _id, name, type }) => (
                     <div 
                     key={_id} 

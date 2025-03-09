@@ -31,6 +31,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     dispatch(reduxLogout());
     Cookies.remove("accessToken");
     Cookies.remove("role");
+    localStorage.removeItem("theme");
     setUser(null);
     navigate('/login');
   }, [dispatch]);

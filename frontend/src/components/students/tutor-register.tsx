@@ -126,7 +126,7 @@ const TutorRegisterPage = () => {
             <form onSubmit={emailForm.handleSubmit(requestOTP)} className="space-y-4">
               <Input {...emailForm.register("email")} placeholder="Email" type="email" />
               <p className="text-red-500 text-xs">{emailForm.formState.errors.email?.message}</p>
-              <Button type="submit" className="w-full bg-blue-600" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Send OTP"}
               </Button>
             </form>
@@ -139,7 +139,7 @@ const TutorRegisterPage = () => {
             <form onSubmit={otpForm.handleSubmit(verifyOTP)} className="space-y-4">
               <Input {...otpForm.register("otp")} placeholder="Enter OTP" type="text" disabled={loading} />
               <p className="text-red-500 text-xs">{otpForm.formState.errors.otp?.message}</p>
-              <Button type="submit" className="w-full bg-blue-600" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Verify OTP"}
               </Button>
             </form>
@@ -173,7 +173,7 @@ const TutorRegisterPage = () => {
               <Input {...detailsForm.register("confirmPassword")} placeholder="Confirm Password" type="password" />
               <p className="text-red-500 text-xs">{detailsForm.formState.errors.confirmPassword?.message}</p>
 
-              <Button type="submit" className="w-full bg-blue-600" disabled={loading}>
+              <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? <Loader2 className="animate-spin" /> : "Register"}
               </Button>
             </form>

@@ -14,7 +14,7 @@ import { validateEnv } from "./utils/envConfig";
 validateEnv();
 
 const app = express();
-app.use(cookieParser())
+app.use(cookieParser());
 
 connectDB();
 
@@ -23,7 +23,7 @@ app.use(express.json());
 
 // Routes
 app.use("/", authRoutes);
-app.use(errorHandler)
+app.use(errorHandler);
 
 startGRPCServer();
 connectRabbitMQ();

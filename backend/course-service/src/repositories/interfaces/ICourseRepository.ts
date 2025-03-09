@@ -22,4 +22,5 @@ export interface ICourseRepository {
 
     createTopic(topic: ITopic[]): Promise<ITopic[]>;
     getTopics(course_id: string): Promise<ITopic[] | null>;
+    getTopicById(id: string): Promise<ITopic>;
 }

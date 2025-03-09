@@ -14,12 +14,11 @@ const Register = () => {
   const [timer, setTimer] = useState(60);
   const [loading, setLoading] = useState(false);
 
-  // User details state (after OTP verification)
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const role = "student"; // Fixed role
+  const role = "student";
 
   const navigate = useNavigate();
 
@@ -41,7 +40,7 @@ const Register = () => {
     try {
       await axios.post(`${BASE_URL}/notification/send-otp`, { email });
       setOtpSent(true);
-      setTimer(60); // Reset timer
+      setTimer(60);
       toast.success("OTP sent to your email!");
     } catch (error) {
       toast.error("Failed to send OTP. Try again!");
@@ -68,8 +67,22 @@ const Register = () => {
 
   // Handle Registration after OTP Verification
   const handleRegister = async () => {
-    if (!name || !phone || !password || !confirmPassword) {
+    if (!name.trim() || !phone.trim() || !password.trim() || !confirmPassword) {
       return toast.error("Please fill in all fields!");
+    }
+    if (name.length < 3) {
+      return toast.error("Name must be at least 3 characters long!");
+    }
+    const phoneRegex = /^[1-9][0-9]{9}$/;
+    if (!phoneRegex.test(phone)) {
+      return toast.error("Phone number must be 10 digits and should not start with 0!");
+    }
+    if (password.length < 6) {
+      return toast.error("Password must be at least 6 characters long!");
+    }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return toast.error("Password must contain at least one uppercase letter, one number, and one special character!");
     }
     if (password !== confirmPassword) {
       return toast.error("Passwords do not match!");
@@ -93,6 +106,10 @@ const Register = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = `${BASE_URL}/user/google`;
+  };
+
   return (
     <div className="h-screen grid grid-cols-1 md:flex">
       {/* Left Section */}
@@ -109,7 +126,7 @@ const Register = () => {
           <span className="font-bold">Sign up</span> quickly using social login
         </p>
         <div className="flex space-x-4">
-          <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100">
+          <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100" onClick={handleGoogleLogin}>
             <FcGoogle className="text-2xl" />
           </button>
           <button className="bg-white p-3 rounded-full shadow-md text-blue-600 hover:bg-gray-100">
@@ -157,9 +174,8 @@ const Register = () => {
                   Verify OTP
                 </button>
                 <button
-                  className={`w-80 p-2 mt-2 rounded ${
-                    timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
-                  }`}
+                  className={`w-80 p-2 mt-2 rounded ${timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
                   onClick={sendOtp}
                   disabled={timer > 0}
                 >

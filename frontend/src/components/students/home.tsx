@@ -1,97 +1,121 @@
-import { Button, Card, CardContent, CardMedia, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useTheme } from "../../contexts/theme-context"; // Assuming you have a custom hook for theme
 
-const HomePart = () => {
-  return (
-    <div className="bg-green-100 min-h-screen">
-      {/* Hero Section */}
-      <section className="text-center py-16 px-6">
-        <h1 className="text-4xl font-bold">Roadmap to success - <em>Prograbtye</em></h1>
-        <p className="mt-4 max-w-2xl mx-auto text-lg">
-          Prograbtye offers a wide variety of courses for you to upskill and be a pro in the industry. We also provide a blog for posting your progress and letting the community know about you.
-        </p>
-        <Button variant="contained" color="error" className="mt-4">Join for free</Button>
-      </section>
+const HomePage = () => {
+    const navigate = useNavigate();
+    const { theme } = useTheme();
+    const isDarkMode = theme === "dark-theme";
 
-      {/* Feature Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6">
-        {[
-          { title: "20+ Courses", icon: "📖" },
-          { title: "Blogs", icon: "✍️" },
-          { title: "Online classes", icon: "💻" },
-        ].map((feature, index) => (
-          <Card key={index} className="p-4 text-center shadow-lg">
-            <Typography variant="h6" className="mb-2">{feature.icon} {feature.title}</Typography>
-          </Card>
-        ))}
-      </section>
+    // Dummy Data
+    const userCourses = [
+        { id: 1, title: "React for Beginners", description: "Learn the basics of React.js." },
+        { id: 2, title: "Mastering TypeScript", description: "Deep dive into TypeScript." },
+        { id: 3, title: "GraphQL Essentials", description: "Build APIs using GraphQL." }
+    ];
 
-      {/* Courses Section */}
-      <section className="text-center py-12">
-        <Typography variant="h5" className="italic">Our Courses</Typography>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 px-6">
-          {[1, 2, 3].map((_, index) => (
-            <Card key={index} className="shadow-lg">
-              <CardMedia
-                component="img"
-                height="140"
-                image="/path/to/javascript.jpg"
-                alt="JavaScript Course"
-              />
-              <CardContent>
-                <Typography variant="subtitle2" color="textSecondary">Programming Language</Typography>
-                <Typography variant="h6">JavaScript</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  A course that molds you from beginner to pro. Learn JavaScript from the basics to advanced topics.
-                </Typography>
-                <Button variant="outlined" className="mt-2">View Course</Button>
-              </CardContent>
-            </Card>
-          ))}
+    const recommendedCourses = [
+        { id: 4, title: "Next.js Advanced Guide", description: "Optimize your Next.js apps." },
+        { id: 5, title: "Node.js with Microservices", description: "Learn gRPC and RabbitMQ." },
+        { id: 6, title: "DevOps with Kubernetes", description: "Master Kubernetes deployment." }
+    ];
+
+    const liveClasses = [
+        { id: 7, topic: "Live: Scaling Apps with Kubernetes", date: "March 10", time: "7:00 PM" },
+        { id: 8, topic: "Live: GraphQL API Best Practices", date: "March 12", time: "6:30 PM" }
+    ];
+
+    const trendingTopics = ["React", "Next.js", "Kubernetes", "gRPC", "GraphQL", "AI/ML"];
+
+    return (
+        <div className={`${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"} min-h-screen`}>
+            {/* Hero Section */}
+            <header className={`${isDarkMode ? "bg-blue-700" : "bg-blue-600"} text-white py-16 text-center`}>
+                <h1 className="text-4xl font-bold">Welcome Back to Codeon 🚀</h1>
+                <p className="mt-3 text-lg">Continue your learning journey with interactive courses, live sessions, and trending topics.</p>
+                <button onClick={() => navigate("/explore")} className="mt-6 px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition">
+                    Explore New Courses
+                </button>
+            </header>
+
+            {/* Enrolled Courses Section */}
+            <section className="py-12 px-6">
+                <h2 className="text-3xl font-semibold text-center">Your Enrolled Courses</h2>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {userCourses.map(course => (
+                        <motion.div
+                            key={course.id}
+                            className={`${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"} p-6 shadow-lg rounded-lg hover:shadow-xl transition cursor-pointer`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            onClick={() => navigate(`/course/${course.id}`)}
+                        >
+                            <h3 className="text-xl font-semibold">{course.title}</h3>
+                            <p className="mt-2">{course.description}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Recommended Courses Section */}
+            <section className={`${isDarkMode ? "bg-gray-800" : "bg-gray-100"} py-12 px-6`}>
+                <h2 className="text-3xl font-semibold text-center">Recommended for You</h2>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {recommendedCourses.map(course => (
+                        <motion.div
+                            key={course.id}
+                            className={`${isDarkMode ? "bg-gray-700 text-white" : "bg-white text-gray-900"} p-6 shadow-lg rounded-lg hover:shadow-xl transition cursor-pointer`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            onClick={() => navigate(`/course/${course.id}`)}
+                        >
+                            <h3 className="text-xl font-semibold">{course.title}</h3>
+                            <p className="mt-2">{course.description}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Live Classes Section */}
+            <section className="py-12 px-6">
+                <h2 className="text-3xl font-semibold text-center">Upcoming Live Classes</h2>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {liveClasses.map(session => (
+                        <motion.div
+                            key={session.id}
+                            className={`${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"} p-6 shadow-lg rounded-lg hover:shadow-xl transition cursor-pointer`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            onClick={() => navigate(`/live/${session.id}`)}
+                        >
+                            <h3 className="text-xl font-semibold">{session.topic}</h3>
+                            <p className="mt-2">{session.date} - {session.time}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Trending Topics Section */}
+            <section className={`${isDarkMode ? "bg-gray-800" : "bg-gray-100"} py-12 px-6`}>
+                <h2 className="text-3xl font-semibold text-center">Trending Topics</h2>
+                <div className="mt-6 flex flex-wrap justify-center gap-4">
+                    {trendingTopics.map(topic => (
+                        <button key={topic} className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
+                            {topic}
+                        </button>
+                    ))}
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className={`${isDarkMode ? "bg-gray-900 text-gray-400" : "bg-gray-900 text-gray-300"} py-6 text-center`}>
+                <p>&copy; {new Date().getFullYear()} Codeon. All rights reserved.</p>
+            </footer>
         </div>
-      </section>
-
-      {/* Blog Section */}
-      <section className="py-12 px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="bg-red-200 p-4 shadow-lg">
-          <Typography variant="h6" className="font-semibold">Post your Ideas</Typography>
-          <Typography variant="body2">Share your vision to the public and expand your connections.</Typography>
-        </Card>
-        <Card className="bg-green-200 p-4 shadow-lg">
-          <Typography variant="h6" className="font-semibold">Make friends and chat with them</Typography>
-          <Typography variant="body2">Chat with people you are interested in and expand your network.</Typography>
-        </Card>
-      </section>
-
-      {/* Live Classes Section */}
-      <section className="py-12 px-6 text-center">
-        <Typography variant="h5" className="italic">Interviews and Live Classes</Typography>
-        <Card className="p-6 bg-orange-200 shadow-lg mt-4">
-          <Typography variant="body1">
-            We have a dedicated platform for conducting interviews and attending online classes seamlessly.
-          </Typography>
-          <Button variant="contained" color="primary" className="mt-4">Video Chat</Button>
-        </Card>
-      </section>
-
-      {/* Footer */}
-      {/* <footer className="bg-blue-900 text-white py-8 px-6 mt-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <Typography variant="h6">PROGRABYTE</Typography>
-            <Typography variant="body2">The most futuristic coding tutorials and blog. Everything you need in a single place.</Typography>
-          </div>
-          <div>
-            <Typography variant="h6">Our Solutions</Typography>
-            <Typography variant="body2">Programming courses, Blogs, Interview coaching, Live classes</Typography>
-          </div>
-          <div>
-            <Typography variant="h6">Support</Typography>
-            <Typography variant="body2">Contact, Newsletter, Design pattern, Help & support</Typography>
-          </div>
-        </div>
-      </footer> */}
-    </div>
-  );
+    );
 };
 
-export default HomePart;
+export default HomePage;
