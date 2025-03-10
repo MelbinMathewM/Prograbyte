@@ -5,6 +5,7 @@ import { ICategory } from "../models/categoryModel";
 import { ICourse } from "../models/courseModel";
 import { ITopic, Topic } from "../models/topicModel";
 import { HttpResponse } from "../constants/responseMessage";
+import stripe from "../config/stripe";
 
 export class CourseController {
   constructor(@inject(CourseService) private courseService: CourseService) { }
@@ -259,7 +260,7 @@ export class CourseController {
 
       const files = req.files as Express.Multer.File[] | undefined;
 
-      console.log(files,"files",req.body)
+      console.log(files, "files", req.body)
 
       const updatedCourse = await this.courseService.updateCourse(courseId, req.body, files);
 
@@ -272,5 +273,30 @@ export class CourseController {
         res.status(400).json({ error: "An unknown error occurred" });
       }
     }
+  }
+
+  async createPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const { amount, method } = req.body;
+
+    console.log(req.body)
+
+    if (method === "upi") {
+      const upiLink = `upi://pay?pa=merchant@upi&pn=Merchant&mc=1234&tid=TXN12345&tr=ORDERID${Date.now()}&am=${amount}`;
+      res.json({ upiLink });
+      return;
+    }
+
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount * 100,
+        currency: "inr",
+        payment_method_types: ["card"],
+      });
+
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (err) {
+      next(err)
+    }
+
   }
 }

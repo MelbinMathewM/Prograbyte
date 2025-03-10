@@ -12,6 +12,7 @@ import { errorHandler } from "./middlewares/errorMiddlewate";
 dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
+import { rabbitMQService } from "./services/RabbitMQService";
 validateEnv();
 
 const app = express();
@@ -30,6 +31,10 @@ app.use(passport.session());
 
 app.use('/', userRouter);
 app.use(errorHandler);
+
+(async () => {
+    await rabbitMQService.connect();
+})();
 
 app.listen(PORT,()=> {
     console.log(`User service running on PORT ${PORT}`);

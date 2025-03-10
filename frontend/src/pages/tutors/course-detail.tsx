@@ -8,7 +8,7 @@ const TutorCourseDetail = () => {
         <div> 
             <ToastContainer />
             <TutorNavbar />
-            <div className="pt-20">
+            <div className="pt-16">
                 <TutorCourseDetailPart />
             </div>
             <TutorFooter />

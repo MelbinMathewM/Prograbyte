@@ -1,30 +1,39 @@
+import { cn } from "../../libs/utils";
+import { Loader2 } from "lucide-react";
 import React from "react";
-import { Loader2 } from "lucide-react"; // Import loading icon
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: "success" | "destructive" | "outline";
-    isLoading?: boolean;
+  variant?: "default" | "success" | "destructive" | "outline";
+  isLoading?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ children, className = "", variant, isLoading, ...props }) => {
-    const baseStyles = "px-4 py-2 rounded-md font-semibold transition duration-300 flex items-center justify-center";
-    
-    const variantStyles = variant === "success"
-        ? "bg-green-600 hover:bg-green-700 text-white"
-        : variant === "destructive"
-        ? "bg-red-600 hover:bg-red-700 text-white"
-        : "border border-blue-600 text-blue-600 hover:bg-blue-100";
+const Button: React.FC<ButtonProps> = ({
+  children,
+  className,
+  variant = "default",
+  isLoading,
+  ...props
+}) => {
+  const baseStyles =
+    "px-4 py-2 rounded-md font-semibold transition duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed";
 
-    return (
-        <button 
-            className={`${baseStyles} ${variantStyles} ${className} ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`} 
-            disabled={isLoading} 
-            {...props}
-        >
-            {isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
-            {children}
-        </button>
-    ); 
+  const variantStyles = {
+    default: "bg-blue-600 text-white hover:bg-blue-800 cursor-pointer",
+    success: "bg-green-600 hover:bg-green-700 text-white cursor-pointer",
+    destructive: "bg-red-600 hover:bg-red-700 text-white cursor-pointer",
+    outline: "border border-blue-600 text-blue-600 hover:bg-blue-100 cursor-pointer",
+  };
+
+  return (
+    <button
+      className={cn(baseStyles, variantStyles[variant], className)}
+      disabled={isLoading || props.disabled}
+      {...props}
+    >
+      {isLoading && <Loader2 className="animate-spin mr-2" size={16} />}
+      {children}
+    </button>
+  );
 };
 
 export default Button;

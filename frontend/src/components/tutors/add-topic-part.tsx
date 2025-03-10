@@ -150,7 +150,7 @@ const AddTopicPart = () => {
         elevation={3}
         sx={{
           padding: 3,
-          backgroundColor: isDarkMode ? "#2c2c2c" : "#f9fafb",
+          backgroundColor: isDarkMode ? "#111827" : "#f9fafb",
         }}
       >
         <Box sx={{ padding: "20px" }}>
@@ -180,11 +180,11 @@ const AddTopicPart = () => {
             }}
           >
             <Typography
-              variant="h4"
+              variant="h5"
               component="h2"
               sx={{ color: isDarkMode ? "#fff" : "#000" }}
             >
-              Add Course Topics
+              Add Topics
             </Typography>
             <Button
               variant="contained"
@@ -208,7 +208,7 @@ const AddTopicPart = () => {
                     sx={{
                       border: "2px solid",
                       borderColor: isDarkMode ? "#444" : "#ccc",
-                      backgroundColor: isDarkMode ? "#333" : "#fff",
+                      backgroundColor: isDarkMode ? "transparent" : "#fff",
                       padding: "16px",
                       borderRadius: "8px",
                     }}

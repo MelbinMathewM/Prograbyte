@@ -22,5 +22,8 @@ export const env = {
     },
     get FRONTEND_URL() {
         return process.env.FRONTEND_URL;
+    },
+    get RABBITMQ_URL() {
+        return process.env.RABBITMQ_URL;
     }
 }

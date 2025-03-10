@@ -7,6 +7,7 @@ import { errorHandler } from "./middlewares/errorMiddlewate";
 dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
+import { startRabbitMQConsumer } from "./services/rabbitMQService";
 validateEnv();
 
 const app = express();
@@ -20,5 +21,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/',courseRouter);
 app.use(errorHandler);
+
+startRabbitMQConsumer();
 
 app.listen(PORT,() => console.log(`course service running on port ${PORT}`))

@@ -7,6 +7,7 @@ import { createHttpError } from '../utils/httpError';
 import { HttpStatus } from '../constants/status';
 import { HttpResponse } from '../constants/responseMessage';
 import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '../utils/jwt';
+import { rabbitMQService } from './RabbitMQService';
 
 @injectable()
 export class UserService {
@@ -73,6 +74,14 @@ export class UserService {
             await this.userRepository.deleteUserById(newTutor._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR);
         }
+
+        const tutorData = {
+            _id: newTutor._id,
+            email: newTutor.email,
+            name: newTutor.name,
+        };
+
+        await rabbitMQService.publishMessage("tutor.registered", tutorData);
     
         return newTutor;
     }

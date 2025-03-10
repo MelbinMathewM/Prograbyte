@@ -22,7 +22,7 @@ const DialogContent = React.forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+      <DialogPrimitive.Close className="absolute right-4 top-4 text-gray-500 hover:text-red-400 focus:outline-none">
         <X className="h-5 w-5" />
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
@@ -48,4 +48,10 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
-export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle };
+interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+const DialogFooter: React.FC<DialogFooterProps> = ({ className, ...props }) => {
+  return <div className={`flex justify-end space-x-2 ${className}`} {...props} />;
+};
+
+export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter };

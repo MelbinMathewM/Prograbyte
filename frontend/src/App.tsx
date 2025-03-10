@@ -30,6 +30,8 @@ import VideoPage from "./pages/students/video";
 import NotesPage from "./pages/students/notes";
 import AdminLayout from "./routes/adminLayout";
 import AddTopic from "./pages/tutors/add-topic";
+import { Toaster } from "react-hot-toast";
+import Checkout from "./pages/students/checkout";
 
 function App() {
   const { role } = useSelector((state: RootState) => state.auth);
@@ -37,6 +39,7 @@ function App() {
   return (
     <Providers>
       <ThemeProvider role={role}>
+        <Toaster />
         <Routes>
           {/* ✅ Public Routes (No authentication needed) */}
           <Route path="/" element={<LandingPage />} />
@@ -54,6 +57,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path='/courses/:courseName/topics/video/:topicId' element={<VideoPage />} />
             <Route path='/courses/:courseName/topics/notes/:topicId' element={<NotesPage />} />
+            <Route path="/checkout/:courseId" element={ <Checkout /> } />
           </Route>
 
           {/* ✅ Admin Protected Routes */}

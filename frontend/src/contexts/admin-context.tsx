@@ -32,6 +32,7 @@ const AdminProvider = ({ children }: { children: ReactNode }) => {
     Cookies.remove("accessToken");
     Cookies.remove("role");
     setAdmin(null);
+    localStorage.removeItem("theme");
     navigate('/login');
   }, [dispatch]);
 

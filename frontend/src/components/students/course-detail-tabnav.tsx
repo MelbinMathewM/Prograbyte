@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axiosInstance from "../../axios/axiosConfig";
 import AccordionItem from "../ui/accordian-item";
 import Accordion from "../ui/accordian";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
     _id: string;
@@ -34,6 +35,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         Intermediate: false,
         Advanced: false,
     });
+    const navigate = useNavigate();
 
     const toggleSection = (level: string) => {
         setOpenSections(prev => ({ ...prev, [level]: !prev[level] }));
@@ -157,7 +159,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
                         ₹399 <span className={`text-lg ${isDark ? "text-gray-400" : "text-gray-500"} line-through`}>₹999</span> <span className="text-white">only</span>
                     </div>
                     {/* Buttons */}
-                    <button className="w-full bg-green-700 text-white py-2 mt-3 rounded-lg font-semibold hover:bg-green-600">
+                    <button onClick={() => navigate(`/checkout/${course?._id}`)} className="w-full bg-green-700 text-white py-2 mt-3 rounded-lg font-semibold hover:bg-green-600">
                         Get Course
                     </button>
                     <button className={`w-full py-2 mt-2 rounded-lg font-semibold ${isDark ? "bg-gray-700 text-green-400 border border-green-500 hover:bg-gray-600" : "bg-white border border-green-700 text-green-700"}`}>

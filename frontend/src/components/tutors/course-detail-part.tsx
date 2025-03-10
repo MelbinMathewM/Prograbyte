@@ -1,12 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Pencil, Trash2, ChevronRight, Star, X, FileText, PlayCircle, ChevronLeft } from "lucide-react";
+import { Pencil, Trash2, ChevronRight, FileText, PlayCircle, ChevronLeft } from "lucide-react";
 import axiosInstance from "../../axios/axiosConfig";
 import EditCourseModal from "./edit-course-modal";
 import { toast } from "react-toastify";
 import EditTopicModal from "./edit-topic-modal";
 import { useTheme } from "../../contexts/theme-context";
-import { Box, Paper, Typography, Button, Grid, CircularProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
+import { Card } from "../ui/card";
+import Button from "../ui/Button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 interface Topic {
   _id: string;
@@ -23,7 +26,7 @@ interface Course {
   category_id: { _id: string, name: string };
   price: number;
   rating: number | null;
-  preview_video_url: string;
+  preview_video_urls: [string];
   poster_url: string;
   approval_status: "Pending" | "Approved" | "Rejected";
 }
@@ -44,7 +47,7 @@ const TutorCourseDetailPart = () => {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const isDarkMode = theme.includes("dark");
 
   useEffect(() => {
@@ -168,9 +171,14 @@ const TutorCourseDetailPart = () => {
 
   const handleSaveTopic = async (updatedTopic: Partial<Topic>) => {
     try {
+
+      const filteredTopic: Partial<Topic> = Object.fromEntries(
+        Object.entries(updatedTopic).filter(([_, v]) => v !== undefined)
+      );
+
       const response = await axiosInstance.put(
         `/course/topics/${updatedTopic._id}`,
-        updatedTopic
+        filteredTopic
       );
 
       setTopics((prevTopics) =>
@@ -181,8 +189,15 @@ const TutorCourseDetailPart = () => {
 
       toast.success("Topic updated successfully");
       handleCloseModal();
-    } catch (error) {
-      toast.error("Failed to update topic");
+    } catch (error: any) {
+      if (error.response) {
+        const backendMessage = error.response.data.error || "An error occurred";
+        toast.error(backendMessage);
+      } else if (error.request) {
+        toast.error("Server is not responding. Please try again later.");
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -195,146 +210,131 @@ const TutorCourseDetailPart = () => {
   }, {} as Record<string, Topic[]>);
 
   return (
-    <Box
-        className="p-6"
-        sx={{
-            backgroundColor: isDarkMode ? 'background.default' : 'background.paper',
-            color: isDarkMode ? 'text.primary' : 'text.secondary',
-        }}
-    >
-        <nav className="mb-4 text-sm flex items-center" style={{ color: isDarkMode ? '#ccc' : '#666' }}>
-            <Link to="/tutor/dashboard" className="hover:text-blue-400">Dashboard</Link>
-            <ChevronRight size={16} />
-            <Link to="/tutor/courses" className="hover:text-blue-400">My Courses</Link>
-            <ChevronRight size={16} />
-            <span>{course.title}</span>
-        </nav>
+    <Card className={`p-6 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white'}`}>
+      {/* Breadcrumb Navigation */}
+      <nav className="mb-4 text-sm flex items-center text-gray-500">
+        <Link to="/tutor/dashboard" className="hover:text-blue-500">Dashboard</Link>
+        <ChevronRight size={16} />
+        <Link to="/tutor/courses" className="hover:text-blue-500">My Courses</Link>
+        <ChevronRight size={16} />
+        <span>{course.title}</span>
+      </nav>
 
-        {/* Header Section */}
-        <div className="flex justify-between items-center mb-4">
-            <Typography variant="h4" component="h2">{course.title}</Typography>
-            <Link to="/tutor/courses" className="flex bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                <ChevronLeft className="mt-1" size={18} />
-                Back
-            </Link>
+      {/* Header Section */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">{course.title}</h2>
+        <Link to="/tutor/courses" className="flex bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+          <ChevronLeft className="mt-1" size={18} /> Back
+        </Link>
+      </div>
+
+      {/* Course Info */}
+      <Card className="p-4 mb-4">
+        <p className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-600'}`}>{course.description}</p>
+        <p className={`font-bold pt-2 ${isDarkMode ? 'bg-gray-900text-white' : 'bg-white text-gray-600'}`}>Category: {course.category_id.name}</p>
+        <p className="mt-2 font-bold">Price: <span className="text-blue-600">${course.price}</span></p>
+        <p className="mt-2">Approval Status: {course.approval_status}</p>
+
+        <div className="flex gap-2 mt-4">
+          <Button onClick={() => setIsEditModalOpen(true)} variant="default" className="flex items-center gap-2" disabled={isLoading}>
+            {isLoading ? <CircularProgress size={16} color="inherit" /> : <Pencil size={16} />}
+            {isLoading ? "Updating..." : "Edit Course"}
+          </Button>
+          <Button onClick={deleteCourse} variant="destructive" className="flex items-center gap-2">
+            <Trash2 size={16} /> Delete Course
+          </Button>
         </div>
+      </Card>
 
-        <Paper
-            elevation={3}
-            sx={{
-                padding: 2,
-                marginBottom: 4,
-                backgroundColor: isDarkMode ? 'background.paper' : 'background.default',
-                color: isDarkMode ? 'text.primary' : 'text.secondary',
-            }}
-        >
-            <Typography variant="body1">{course.description}</Typography>
-            <Typography variant="body2">Category: {course.category_id.name}</Typography>
-            <Typography variant="body1" sx={{ marginTop: 2, fontWeight: 'bold' }}>
-                Price: <span className="text-blue-500">${course.price}</span>
-            </Typography>
-            <Typography variant="body1" sx={{ marginTop: 2 }}>Approval Status: {course.approval_status}</Typography>
-            <Button onClick={() => navigate(`/tutor/courses/${course._id}/add-topic`)}>Add Topic</Button>
-
-            <div className="flex gap-2 mt-4">
-                <Button
-                    onClick={() => setIsEditModalOpen(true)}
-                    variant="contained"
-                    sx={{ backgroundColor: isDarkMode ? '#1976d2' : 'primary.main', color: 'white' }}
-                    startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : <Pencil size={16} />}
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Updating..." : "Edit Course"}
-                </Button>
-
-                <Button
-                    onClick={deleteCourse}
-                    variant="contained"
-                    sx={{ backgroundColor: isDarkMode ? '#d32f2f' : 'secondary.main', color: 'white' }}
-                    startIcon={<Trash2 size={16} />}
-                >
-                    Delete Course
-                </Button>
+      {course.preview_video_urls && course.poster_url && (
+        <Card className="p-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Poster Image */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Poster Image</h3>
+              <img
+                src={course.poster_url}
+                alt="Course Poster"
+                className="w-full rounded-lg shadow-md"
+              />
             </div>
-        </Paper>
 
-        {course.preview_video_url && course.poster_url && (
-            <Grid container spacing={2} sx={{ marginBottom: 4 }}>
-                <Grid item xs={12} md={6}>
-                    <Typography variant="h6">Poster Image</Typography>
-                    <img
-                        src={course.poster_url}
-                        alt="poster"
-                        className="w-full rounded-lg border"
-                        style={{ borderColor: isDarkMode ? '#444' : '#ccc' }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Typography variant="h6">Preview Video</Typography>
-                    <video className="w-full rounded-lg" controls>
-                        <source src={course.preview_video_url} type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
-                </Grid>
-            </Grid>
-        )}
+            {/* Preview Video */}
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Preview Video</h3>
+              <video className="w-full rounded-lg shadow-md" controls>
+                <source src={course.preview_video_urls?.[0]} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </Card>
+      )}
 
-        <Paper
-            elevation={3}
-            sx={{ padding: 2, backgroundColor: isDarkMode ? 'background.paper' : 'background.default', color: isDarkMode ? 'text.primary' : 'text.secondary' }}
-        >
-            <Typography variant="h5" component="h3" sx={{ marginBottom: 2 }}>Topics</Typography>
+      {/* Topics Table */}
+      <Card className="p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold mb-4">Topics</h3>
+          <Button onClick={() => navigate(`/tutor/courses/${course._id}/add-topic`)}>Add Topic</Button>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Level</TableHead>
+              <TableHead>Video</TableHead>
+              <TableHead>Notes</TableHead>
+              <TableHead className="items-center flex justify-center">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {Object.entries(categorizedTopics).map(([level, topics]) => (
-                <div key={level} className="mb-4">
-                    <Typography variant="h6" component="h4">{level}</Typography>
-                    <ul>
-                        {topics.map((topic) => (
-                            <li
-                                key={topic._id}
-                                className="p-2 border-b flex justify-between items-center"
-                                style={{ borderColor: isDarkMode ? '#444' : '#ccc' }}
-                            >
-                                <div className="grid grid-cols sm:grid-cols-3 gap-2">
-                                    <Typography variant="body1" className="font-semibold flex-1 text-center pe-3">{topic.title}</Typography>
-                                    {topic.video_url && (
-                                        <a href={topic.video_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 flex items-center">
-                                            <PlayCircle size={16} className="mr-1" /> Video
-                                        </a>
-                                    )}
-                                    {topic.notes_url && (
-                                        <a href={topic.notes_url} target="_blank" rel="noopener noreferrer" className="text-green-500 flex items-center">
-                                            <FileText size={16} className="mr-1" /> Notes
-                                        </a>
-                                    )}
-                                </div>
-                                <div className="grid grid-cols sm:grid-cols-2 gap-2">
-                                    <Button onClick={() => handleEditClick(topic)} variant="contained" color="primary" startIcon={<Pencil size={16} />}>
-                                        Edit
-                                    </Button>
-                                    <Button variant="contained" color="secondary" startIcon={<Trash2 size={16} />}>
-                                        Delete
-                                    </Button>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+              topics.map((topic) => (
+                <TableRow key={topic._id}>
+                  <TableCell>{topic.title}</TableCell>
+                  <TableCell>{topic.level}</TableCell>
+                  <TableCell>
+                    {topic.video_url && (
+                      <a href={topic.video_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 flex items-center gap-1">
+                        <PlayCircle size={16} /> Video
+                      </a>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {topic.notes_url && (
+                      <a href={topic.notes_url} target="_blank" rel="noopener noreferrer" className="text-green-500 flex items-center gap-1">
+                        <FileText size={16} /> Notes
+                      </a>
+                    )}
+                  </TableCell>
+                  <TableCell className="flex gap-5 justify-center">
+                    <button onClick={() => handleEditClick(topic)} className="text-purple-500 flex items-center gap-1 cursor-pointer">
+                      <Pencil size={16} /> Edit
+                    </button>
+                    <button className="text-red-500 flex items-center gap-1 cursor-pointer">
+                      <Trash2 size={16} /> Delete
+                    </button>
+                  </TableCell>
+                </TableRow>
+              ))
             ))}
-        </Paper>
+          </TableBody>
+        </Table>
+      </Card>
+      {isEditModalOpen && (
+        <EditCourseModal open={true} course={course} categories={categories} onClose={() => setIsEditModalOpen(false)} onSave={saveCourseChanges} isDark={isDarkMode} />
+      )}
 
-        {isEditModalOpen && (
-            <EditCourseModal open={true} course={course} categories={categories} onClose={() => setIsEditModalOpen(false)} onSave={saveCourseChanges} isDark={isDarkMode} />
-        )}
-
-{selectedTopic && (
+      {selectedTopic && (
         <EditTopicModal
           topic={selectedTopic}
           onClose={handleCloseModal}
           onSave={() => handleSaveTopic}
+          isDark={isDarkMode}
         />
       )}
-    </Box>
-);
+    </Card>
+  );
 };
 
 export default TutorCourseDetailPart;

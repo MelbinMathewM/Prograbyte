@@ -32,6 +32,7 @@ const TutorProvider = ({ children }: { children: ReactNode }) => {
     Cookies.remove("accessToken");
     Cookies.remove("role");
     setTutor(null);
+    localStorage.removeItem("theme");
     navigate('/login');
   }, [dispatch]);
 

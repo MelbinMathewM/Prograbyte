@@ -16,4 +16,7 @@ export function validateEnv() {
     if (!env.CLOUDINARY_API_SECRET) {
         throw new Error("CLOUDINARY_API_SECRET is not found in the env");
     }
+    if (!env.STRIPE_SECRET_KEY) {
+        throw new Error("STRIPE_SECRET_KEY is not found in the env");
+    }
 }

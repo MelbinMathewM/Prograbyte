@@ -9,6 +9,8 @@ interface User {
   id: string;
   name: string;
   email: string;
+  bio?: string;
+  profilePic?: string;
 }
 
 interface UserContextType {
