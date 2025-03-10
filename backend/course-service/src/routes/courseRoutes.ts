@@ -47,6 +47,10 @@ courseRouter.get('/topics/:course_id',(req,res) => courseController.getTopics(re
 courseRouter.post('/topics',uploadTopic.any(),(req,res,next) => courseController.createTopic(req,res,next));
 courseRouter.get('/topics/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
 
+courseRouter.get('/wishlist/:userId',(req,res,next) => courseController.getWishlist(req,res,next));
+courseRouter.post('/wishlist',(req,res,next) => courseController.addToWishlist(req,res,next));
+courseRouter.delete('/wishlist/:userId/:courseId',(req,res,next) => courseController.removeFromWishlist(req,res,next));
+
 courseRouter.post('/payments',(req,res,next) => courseController.createPayment(req,res,next));
 
 export default courseRouter;

@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
-import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
+import { FaUserCircle, FaHeart } from "react-icons/fa";
 import { useTheme } from "../../contexts/theme-context";
 import { motion } from "framer-motion";
 import { Sun, Moon } from "lucide-react";
@@ -55,11 +55,11 @@ const StudentNavbar = () => {
                 <FaUserCircle className="mr-2" />
               </NavLink>
               <NavLink
-                to="/cart"
+                to="/wishlist"
                 className={({ isActive }) =>
                   `text-lg font-semibold transition flex items-center ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-red-500" : "text-gray-800 hover:text-red-500"}`
                 }>
-                <FaShoppingCart className="mr-2" />
+                <FaHeart className="mr-2" />
               </NavLink>
         </div>
 
@@ -79,8 +79,8 @@ const StudentNavbar = () => {
                   <NavLink to="/profile" className="text-lg font-semibold flex items-center hover:text-red-500 transition">
                     <FaUserCircle className="mr-2" /> Profile
                   </NavLink>
-                  <NavLink to="/cart" className="text-lg font-semibold flex items-center hover:text-red-500 transition">
-                    <FaShoppingCart className="mr-2" /> Cart
+                  <NavLink to="/wishlist" className="text-lg font-semibold flex items-center hover:text-red-500 transition">
+                    <FaHeart className="mr-2" /> Cart
                   </NavLink>
             </div>
             <ul className="flex flex-col space-y-4 py-4 px-6">

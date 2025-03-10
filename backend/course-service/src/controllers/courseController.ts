@@ -6,6 +6,7 @@ import { ICourse } from "../models/courseModel";
 import { ITopic, Topic } from "../models/topicModel";
 import { HttpResponse } from "../constants/responseMessage";
 import stripe from "../config/stripe";
+import { HttpStatus } from "../constants/status";
 
 export class CourseController {
   constructor(@inject(CourseService) private courseService: CourseService) { }
@@ -278,7 +279,7 @@ export class CourseController {
   async createPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { amount, method } = req.body;
 
-    console.log(req.body)
+    console.log(req.body);
 
     if (method === "upi") {
       const upiLink = `upi://pay?pa=merchant@upi&pn=Merchant&mc=1234&tid=TXN12345&tr=ORDERID${Date.now()}&am=${amount}`;
@@ -297,6 +298,64 @@ export class CourseController {
     } catch (err) {
       next(err)
     }
+  }
 
+  async getWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+
+      if (!userId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
+       return
+     }
+
+      const wishlist = await this.courseService.getWishlist(userId);
+
+      res.status(HttpStatus.OK).json(wishlist);
+    }catch(err){
+      next(err)
+    }
+  }
+
+  async addToWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId, courseId } = req.body;
+
+      if (!userId) {
+         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
+        return
+      }
+      if (!courseId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.COURSE_ID_REQUIRED });
+       return
+     }
+
+     const wishlist = await this.courseService.addWishlist(userId, courseId);
+
+     res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_ADDED_WISHLIST, wishlist });
+    }catch(err){
+      next(err)
+    }
+  }
+
+  async removeFromWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId, courseId } = req.params;
+
+      if (!userId) {
+         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
+        return
+      }
+      if (!courseId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.COURSE_ID_REQUIRED });
+       return
+     }
+
+     await this.courseService.removeWishlist(userId, courseId);
+
+     res.status(HttpStatus.OK).json({message: HttpResponse.COURSE_REMOVED_WISHLIST})
+    }catch(err){
+      next(err)
+    }
   }
 }

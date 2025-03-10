@@ -3,6 +3,8 @@ import Category, { ICategory } from "../../models/categoryModel";
 import { ICourseRepository } from "../interfaces/ICourseRepository";
 import { Course, ICourse } from "../../models/courseModel";
 import { ITopic, Topic } from "../../models/topicModel";
+import Wishlist, { IWishlist } from "../../models/wishlistModel";
+import { Types } from "mongoose";
 
 @injectable()
 export class CourseRepository implements ICourseRepository {
@@ -161,6 +163,24 @@ export class CourseRepository implements ICourseRepository {
         } catch (error) {
             console.error("Error updating course:", error);
             throw new Error("Failed to update course");
+        }
+    }
+
+    async getWishlistByUserId(userId: string): Promise<IWishlist | null> {
+        try {
+            return await Wishlist.findOne({ userId });
+        } catch (error) {
+            console.error("Error fetching wishlist:", error);
+            throw new Error("Failed to fetch wishlist");
+        }
+    }
+
+    async createWishlist(wishlistData: { userId: Types.ObjectId; items: Types.ObjectId[] }): Promise<IWishlist> {
+        try{
+            return await Wishlist.create(wishlistData);
+        }catch(err){
+            console.error("Error creating wishlist");
+            throw new Error("Failed to create wishlist")
         }
     }
 }

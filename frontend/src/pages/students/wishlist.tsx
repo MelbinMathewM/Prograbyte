@@ -1,15 +1,15 @@
-import CartPage from "../../components/students/cart-part"
+import WishlistPage from "../../components/students/wishlist-part"
 import StudentNavbar from "../../components/students/navbar"
 
-const Cart = () => {
+const Wishlist = () => {
     return (
         <div>
             <StudentNavbar />
             <div className="pt-15">
-                <CartPage />
+                <WishlistPage />
             </div>
         </div>
     )
 }
 
-export default Cart;
+export default Wishlist;

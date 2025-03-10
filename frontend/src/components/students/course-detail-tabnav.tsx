@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axiosInstance from "../../axios/axiosConfig";
 import AccordionItem from "../ui/accordian-item";
 import Accordion from "../ui/accordian";
 import { useNavigate } from "react-router-dom";
+import { addToWishlist, getWishlist, removeFromWishlist } from "../../api/wishlist";
+import { UserContext } from "../../contexts/user-context";
+import toast from "react-hot-toast";
 
 interface Course {
     _id: string;
@@ -29,6 +32,7 @@ interface Topic {
 const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) => {
 
     const [topics, setTopics] = useState<Topic[]>([]);
+    const [isInWishlist, setIsInWishlist] = useState(false);
     const [activeTab, setActiveTab] = useState("about");
     const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
         Basic: false,
@@ -36,6 +40,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         Advanced: false,
     });
     const navigate = useNavigate();
+    const { user } = useContext(UserContext) ?? {};
 
     const toggleSection = (level: string) => {
         setOpenSections(prev => ({ ...prev, [level]: !prev[level] }));
@@ -53,6 +58,43 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         };
         fetchTopics();
     }, [course]);
+
+
+    useEffect(() => {
+        if (!user?.id) return;
+        const fetchWishlist = async () => {
+            try {
+                const wishlist = await getWishlist(user?.id);
+                setIsInWishlist(wishlist.items.includes(course?._id));
+            } catch (error) {
+                console.error("Error fetching wishlist", error);
+            }
+        };
+        fetchWishlist();
+    }, [course?._id, user?.id]);
+
+    const handleWishlistClick = async () => {
+        try {
+            if (isInWishlist) {
+                const response = await removeFromWishlist(user?.id as string, course?._id as string);
+                toast.success(response.message);
+                setIsInWishlist(false);
+            } else {
+                const response = await addToWishlist(user?.id as string, course?._id as string);
+                toast.success(response.message);
+                setIsInWishlist(true);
+            }
+        } catch (error: any) {
+            if (error.response) {
+                const backendMessage = error.response.data.error || "An error occurred";
+                toast.error(backendMessage);
+            } else if (error.request) {
+                toast.error("Server is not responding. Please try again later.");
+            } else {
+                toast.error("Something went wrong. Please try again.");
+            }
+        }
+    };
 
     const categorizedTopics = {
         Basic: topics.filter(topic => topic.level === "Basic"),
@@ -155,18 +197,15 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
                         <option>Video + Live classes</option>
                     </select>
                     {/* Pricing */}
-                    <div className="text-2xl font-bold text-green-500">
-                        ₹399 <span className={`text-lg ${isDark ? "text-gray-400" : "text-gray-500"} line-through`}>₹999</span> <span className="text-white">only</span>
+                    <div className="text-2xl font-bold text-red-500">
+                        ₹{course?.price} <span className={`text-lg ${isDark ? "text-gray-400" : "text-gray-500"} line-through`}>₹999</span> <span className="text-white">only</span>
                     </div>
                     {/* Buttons */}
-                    <button onClick={() => navigate(`/checkout/${course?._id}`)} className="w-full bg-green-700 text-white py-2 mt-3 rounded-lg font-semibold hover:bg-green-600">
+                    <button onClick={() => navigate(`/checkout/${course?._id}`)} className="w-full bg-red-700 text-white py-2 mt-3 rounded-lg font-semibold hover:bg-red-600">
                         Get Course
                     </button>
-                    <button className={`w-full py-2 mt-2 rounded-lg font-semibold ${isDark ? "bg-gray-700 text-green-400 border border-green-500 hover:bg-gray-600" : "bg-white border border-green-700 text-green-700"}`}>
-                        Add to Cart
-                    </button>
-                    <button className={`w-full mt-2 font-semibold ${isDark ? "text-green-400" : "text-green-700"}`}>
-                        ❤️ Add to Wishlist
+                    <button onClick={handleWishlistClick} className={`w-full mt-2 font-semibold ${isDark ? "text-red-400" : "text-red-700"}`}>
+                        {isInWishlist ? "❤️ Remove from Wishlist" : "🤍 Add to Wishlist"}
                     </button>
                 </div>
             </div>

@@ -14,5 +14,12 @@ export const HttpResponse = {
     CATEGORY_NOT_FOUND: "Category not found",
     CATEGORY_UPDATE_ERROR: "Couldn't update category",
     CATEGORY_DELETE_ERROR: "Couldn't delete category",
-    CATEGORY_DELETED: "Category deleted successfully"
+    CATEGORY_DELETED: "Category deleted successfully",
+    USER_ID_REQUIRED: "User ID is required",
+    COURSE_ID_REQUIRED: "Course ID is required",
+    COURSE_EXIST_WISHLIST: "Course already in wishlist",
+    COURSE_ADDED_WISHLIST: "Course added to wishlist",
+    WISHLIST_NOT_FOUND: "Wishlist not found",
+    COURSE_NOT_FOUND_WISHLIST: "Course not found in wishlist",
+    COURSE_REMOVED_WISHLIST: "Course removed from wishlist"
 }

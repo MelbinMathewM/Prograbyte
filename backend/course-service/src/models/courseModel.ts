@@ -31,6 +31,7 @@ const courseSchema = new Schema<ICourse>({
     tutor_id: {
         type: Schema.Types.ObjectId,
         required: true,
+        ref: "Tutor"
     },
     price: {
         type: Number,

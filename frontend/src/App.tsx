@@ -25,13 +25,13 @@ import AdminProfile from "./pages/admin/profile";
 import CoursePage from "./pages/students/courses";
 import LandingPage from "./pages/students/landing-page";
 import StudentCourseDetail from "./pages/students/course-detail";
-import Cart from "./pages/students/cart";
 import VideoPage from "./pages/students/video";
 import NotesPage from "./pages/students/notes";
 import AdminLayout from "./routes/adminLayout";
 import AddTopic from "./pages/tutors/add-topic";
 import { Toaster } from "react-hot-toast";
 import Checkout from "./pages/students/checkout";
+import Wishlist from "./pages/students/wishlist";
 
 function App() {
   const { role } = useSelector((state: RootState) => state.auth);
@@ -54,7 +54,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/courses/:id" element={<StudentCourseDetail />} />
             <Route path="/courses" element={<CoursePage />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path='/courses/:courseName/topics/video/:topicId' element={<VideoPage />} />
             <Route path='/courses/:courseName/topics/notes/:topicId' element={<NotesPage />} />
             <Route path="/checkout/:courseId" element={ <Checkout /> } />

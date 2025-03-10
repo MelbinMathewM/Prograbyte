@@ -1,6 +1,8 @@
+import { Types } from "mongoose";
 import { ICategory } from "../../models/categoryModel";
 import { ICourse } from "../../models/courseModel";
 import { ITopic } from "../../models/topicModel";
+import { IWishlist } from "../../models/wishlistModel";
 
 export interface ICourseRepository {
 
@@ -23,4 +25,7 @@ export interface ICourseRepository {
     createTopic(topic: ITopic[]): Promise<ITopic[]>;
     getTopics(course_id: string): Promise<ITopic[] | null>;
     getTopicById(id: string): Promise<ITopic>;
+
+    getWishlistByUserId(userId: string): Promise<IWishlist | null>;
+    createWishlist(wishlistData: { userId: Types.ObjectId; items: Types.ObjectId[] }): Promise<IWishlist>;
 }
