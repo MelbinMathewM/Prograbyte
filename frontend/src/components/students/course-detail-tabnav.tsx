@@ -65,7 +65,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         const fetchWishlist = async () => {
             try {
                 const wishlist = await getWishlist(user?.id);
-                setIsInWishlist(wishlist.items.includes(course?._id));
+                setIsInWishlist(wishlist.items.some((item: any) => item._id === course?._id));
             } catch (error) {
                 console.error("Error fetching wishlist", error);
             }

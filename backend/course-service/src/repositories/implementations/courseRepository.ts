@@ -168,7 +168,10 @@ export class CourseRepository implements ICourseRepository {
 
     async getWishlistByUserId(userId: string): Promise<IWishlist | null> {
         try {
-            return await Wishlist.findOne({ userId });
+            return await Wishlist.findOne({ userId }).populate({
+                path: "items",
+                select: "title price poster_url",
+            });
         } catch (error) {
             console.error("Error fetching wishlist:", error);
             throw new Error("Failed to fetch wishlist");

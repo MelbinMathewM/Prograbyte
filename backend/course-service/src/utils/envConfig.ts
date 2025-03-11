@@ -19,4 +19,7 @@ export function validateEnv() {
     if (!env.STRIPE_SECRET_KEY) {
         throw new Error("STRIPE_SECRET_KEY is not found in the env");
     }
+    if (!env.API_GATEWAY_KEY) {
+        throw new Error("API_GATEWAY_KEY is not found in the env");
+    }
 }

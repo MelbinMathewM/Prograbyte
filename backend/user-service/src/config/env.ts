@@ -25,5 +25,8 @@ export const env = {
     },
     get RABBITMQ_URL() {
         return process.env.RABBITMQ_URL;
+    },
+    get API_GATEWAY_KEY() { 
+        return process.env.API_GATEWAY_KEY; 
     }
 }

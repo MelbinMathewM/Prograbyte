@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "5000:5000"
+    environment:
+      - AUTH_SERVICE=http://auth-service:4000
+      - USER_SERVICE=http://user-service:4001
+      - COURSE_SERVICE=http://course-service:4002
+      - NOTIFICATION_SERVICE=http://notification-service:4003
+    networks:
+      - backend
+
+  auth-service:
+    build: ./auth-service
+    expose:
+      - "4000"
+    networks:
+      - backend
+
+  user-service:
+    build: ./user-service
+    expose:
+      - "4001"
+    networks:
+      - backend
+
+  course-service:
+    build: ./course-service
+    expose:
+      - "4002"
+    networks:
+      - backend
+
+  notification-service:
+    build: ./notification-service
+    expose:
+      - "4003"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

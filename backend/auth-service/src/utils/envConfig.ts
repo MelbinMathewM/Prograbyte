@@ -16,4 +16,7 @@ export function validateEnv() {
     if (!env.REDIS_URL) {
         throw new Error("REDIS_URL is not found in the env");
     }
+    if (!env.API_GATEWAY_KEY) {
+        throw new Error("API_GATEWAY_KEY is not found in the env");
+    }
 }

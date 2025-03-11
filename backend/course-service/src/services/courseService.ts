@@ -200,12 +200,11 @@ export class CourseService {
 
     async removeWishlist(userId: string, courseId: string): Promise<void> {
         const wishlist = await this.courseRepository.getWishlistByUserId(userId);
-
         if (!wishlist) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.WISHLIST_NOT_FOUND);
         }
 
-        const itemIndex = wishlist.items.findIndex(item => item.toString() === courseId);
+        const itemIndex = wishlist.items.findIndex(item => item._id.toString() === courseId);
 
         if (itemIndex === -1) {
             throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.COURSE_NOT_FOUND_WISHLIST);

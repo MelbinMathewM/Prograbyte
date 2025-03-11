@@ -7,5 +7,9 @@ export const env = {
     },
     get EMAIL_PASS() {
         return process.env.EMAIL_PASS;
-    }
+    },
+    get API_GATEWAY_KEY() {
+        return process.env.API_GATEWAY_KEY;
+    },
+
 }

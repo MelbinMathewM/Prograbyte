@@ -7,10 +7,13 @@ import { startNotificationService } from "./rabbitmq/notificationService";
 dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
+import verifyApiKey from "./config/apiKey";
 validateEnv();
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(verifyApiKey as express.RequestHandler);
 
 
 app.use("/", notificationRoutes);

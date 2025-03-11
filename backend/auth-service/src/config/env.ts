@@ -1,3 +1,5 @@
+import { get } from "http";
+
 export const env = {
     get PORT() {
         return process.env.PORT;
@@ -13,5 +15,8 @@ export const env = {
     },
     get REDIS_URL() {
         return process.env.REDIS_URL;
-    }
+    },
+    get API_GATEWAY_KEY() {
+        return process.env.API_GATEWAY_KEY;
+    },
 }

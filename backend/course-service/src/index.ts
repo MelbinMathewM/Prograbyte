@@ -8,6 +8,7 @@ dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
 import { startRabbitMQConsumer } from "./services/rabbitMQService";
+import verifyApiKey from "./config/apiKey";
 validateEnv();
 
 const app = express();
@@ -18,6 +19,7 @@ connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(verifyApiKey as express.RequestHandler);
 
 app.use('/',courseRouter);
 app.use(errorHandler);

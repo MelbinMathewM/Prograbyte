@@ -11,15 +11,18 @@ import { errorHandler } from "./middlewares/errorMiddlewate";
 dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
+import verifyApiKey from "./config/apiKey";
+import helmet from "helmet";
 validateEnv();
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(helmet());
+app.use(verifyApiKey as express.RequestHandler);
 
 connectDB();
-
-// Middleware
-app.use(express.json());
 
 // Routes
 app.use("/", authRoutes);

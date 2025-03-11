@@ -17,5 +17,8 @@ export const env = {
     get STRIPE_SECRET_KEY() {
         return process.env.STRIPE_SECRET_KEY;
     },
+    get API_GATEWAY_KEY() {
+        return process.env.API_GATEWAY_KEY;
+    },
 
 }

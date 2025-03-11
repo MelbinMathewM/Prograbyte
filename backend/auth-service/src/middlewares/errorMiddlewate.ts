@@ -18,6 +18,5 @@ export const errorHandler = (
     }else{
         console.log("Unhandled", err)
     }
-
     res.status(statusCode).json({ error: message });
 }
