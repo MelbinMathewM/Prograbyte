@@ -115,15 +115,45 @@ export class UserService {
         
     }
 
-    async getUserById(token: string): Promise<IUser | null> {
+    async getUserById(token: string): Promise<Partial<IUser>> {
 
         if(!token) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_ACCESS_TOKEN);
 
         const decoded = verifyAccessToken(token) as JwtPayload;
+
+        if(!decoded) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_DECODED_TOKEN);
         
         const user = await this.userRepository.getUserById(decoded.id);
 
         if(!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+
+        const newUser = {
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+        }
+
+        return newUser;
+    }
+
+    async getProfile(userId: string): Promise<IUser> {
+
+        const user = await this.userRepository.getUserById(userId);
+
+        if (!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        }
+
+        return user;
+    }
+
+    async updateProfile(userId: string, updatedUser: Partial<IUser>): Promise<IUser> {
+
+        const user = await this.userRepository.updateUser(userId, updatedUser);
+
+        if (!user) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.PROFILE_UPDATE_ERROR);
+        }
 
         return user;
     }

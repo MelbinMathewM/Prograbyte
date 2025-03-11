@@ -51,6 +51,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
             if (!course) return;
             try {
                 const response = await axiosInstance.get(`/course/topics/${course._id}`);
+                console.log(response.data,'data')
                 setTopics(response.data);
             } catch (err) {
                 console.error("Error fetching topics");

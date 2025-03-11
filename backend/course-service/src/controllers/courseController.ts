@@ -249,6 +249,8 @@ export class CourseController {
 
       const topic = await this.courseService.getTopicById(topicId);
 
+      console.log(topic,'topic')
+
       res.status(200).json(topic);
     } catch (err) {
       next(err)
@@ -354,6 +356,39 @@ export class CourseController {
      await this.courseService.removeWishlist(userId, courseId);
 
      res.status(HttpStatus.OK).json({message: HttpResponse.COURSE_REMOVED_WISHLIST})
+    }catch(err){
+      next(err)
+    }
+  }
+
+  async videoUrlToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { publicId } = req.query;
+
+      if(!publicId){
+        res.status(HttpStatus.BAD_REQUEST).json({message: HttpResponse.PUBLIC_ID_NOT_FOUND});
+        return;
+      }
+
+      const token = await this.courseService.getVideoToken(publicId as string);
+
+      res.status(HttpStatus.OK).json({token});
+    }catch(err){
+      next(err)
+    }
+  }
+
+  async getSecureUrl(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { token } = req.params;
+
+      if(!token){
+        res.status(HttpStatus.BAD_REQUEST).json(HttpResponse.NO_TOKEN);
+      }
+
+      const secureUrl = await this.courseService.getSecureVideo(token as string);
+
+      res.status(HttpStatus.OK).json({videoUrl: secureUrl});
     }catch(err){
       next(err)
     }

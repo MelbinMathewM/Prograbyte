@@ -11,6 +11,7 @@ interface User {
   email: string;
   bio?: string;
   profilePic?: string;
+  skills?: string[];
 }
 
 interface UserContextType {

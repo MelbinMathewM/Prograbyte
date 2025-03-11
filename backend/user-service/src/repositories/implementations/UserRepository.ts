@@ -20,4 +20,12 @@ export class UserRepository implements IUserRepository {
     async deleteUserById(id: string): Promise<void> {
         await User.deleteOne({_id: id}) 
     }
+
+    async updateUser(id: string, user: Partial<IUser>): Promise<IUser | null> {
+        return await User.findOneAndUpdate(
+            {_id: id},
+            { $set: user },
+            { new: true }
+        )
+    }
 }

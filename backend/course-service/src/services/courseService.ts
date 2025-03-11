@@ -9,6 +9,8 @@ import { HttpStatus } from "../constants/status";
 import { HttpResponse } from "../constants/responseMessage";
 import Wishlist, { IWishlist } from "../models/wishlistModel";
 import { convertToObjectId } from "../utils/mongooseObjectId";
+import { generateToken, verifyToken } from "../utils/jwt";
+import getSecureVideoUrl from "../utils/cloudinary";
 
 
 @injectable()
@@ -113,16 +115,35 @@ export class CourseService {
         return course;
     }
 
-    async getTopics(course_id: string): Promise<ITopic[] | null> {
+    async getTopics(course_id: string): Promise<Partial<ITopic[]> | null> {
         const topics = await this.courseRepository.getTopics(course_id);
 
-        return topics;
+        if (!topics) return null;
+
+        return Promise.all(
+            topics.map(async (topic) => {
+                const plainTopic = topic.toObject();
+                return {
+                    ...plainTopic,
+                    video_url: await this.extractPublicId(plainTopic.video_url),
+                    notes_url: await this.extractPublicId(plainTopic.notes_url),
+                };
+            })
+        );
     }
 
-    async getTopicById(topicId: string): Promise<ITopic> {
+    async getTopicById(topicId: string): Promise<ITopic | null> {
         const topic = await this.courseRepository.getTopicById(topicId);
 
-        return topic;
+        if (!topic) return null;
+
+        const plainTopic = topic.toObject();
+
+        return {
+            ...plainTopic,
+            video_url: await this.extractPublicId(plainTopic.video_url),
+            notes_url: await this.extractPublicId(plainTopic.notes_url),
+        };
     }
 
     async updateCourse(courseId: string, courseData: Partial<ICourse>, files?: Express.Multer.File[]): Promise<ICourse | null> {
@@ -160,15 +181,17 @@ export class CourseService {
     }
 
     async extractPublicId(url: string): Promise<string> {
-        const parts = url.split("/");
-        return parts[parts.length - 1].split(".")[0];
+        return url
+            .replace(/^https:\/\/res\.cloudinary\.com\/[^/]+\/(?:image|video)\/(?:upload|authenticated)\/s--[^/]+--\/v\d+\//, "")
+            .replace(/\.\w+$/, "");
     }
+    
 
     async getWishlist(userId: string): Promise<IWishlist> {
         let wishlist = await this.courseRepository.getWishlistByUserId(userId);
 
         const objectIdUser = convertToObjectId(userId)
-        if(!wishlist){
+        if (!wishlist) {
             wishlist = await this.courseRepository.createWishlist({ userId: objectIdUser, items: [] });
         }
 
@@ -213,6 +236,30 @@ export class CourseService {
         wishlist.items.splice(itemIndex, 1);
 
         await wishlist.save();
+    }
+
+    async getVideoToken(publicId: string): Promise<string> {
+        const token = generateToken({publicId});
+
+        return token;
+    }
+
+
+    async getSecureVideo(token: string): Promise<string> {
+
+        const decoded = verifyToken(token) as { publicId: string };
+        console.log(decoded,'decoded')
+        const publicId = decoded.publicId;
+
+        if(!publicId){
+            throw createHttpError(HttpStatus.NO_CONTENT,HttpResponse.NO_DECODED_TOKEN);
+        }
+
+        const secureUrl = await getSecureVideoUrl(publicId);
+
+        console.log("Signed Video URL:", secureUrl);
+
+        return secureUrl;
     }
 
 }

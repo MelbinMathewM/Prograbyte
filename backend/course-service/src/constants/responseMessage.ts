@@ -6,7 +6,7 @@ export const HttpResponse = {
     PASSWORD_INCORRECT:"Incorrect password, try again",
     NO_ACCESS_TOKEN: "Token not provided",
     NO_REFRESH_TOKEN: "Refresh token not provided",
-    NO_RESET_TOKEN: "Reset token not provided",
+    NO_TOKEN: "Token not provided",
     NO_DECODED_TOKEN: "Couldn't decode token",
     CATEGORY_EXIST: "Category already exists",
     CATEGORY_INSERT_ERROR: "Error inserting category",
@@ -21,5 +21,6 @@ export const HttpResponse = {
     COURSE_ADDED_WISHLIST: "Course added to wishlist",
     WISHLIST_NOT_FOUND: "Wishlist not found",
     COURSE_NOT_FOUND_WISHLIST: "Course not found in wishlist",
-    COURSE_REMOVED_WISHLIST: "Course removed from wishlist"
+    COURSE_REMOVED_WISHLIST: "Course removed from wishlist",
+    PUBLIC_ID_NOT_FOUND: "Cloudinary publicId not found",
 }

@@ -8,6 +8,8 @@ const userController = container.get(UserController);
 
 userRouter.post('/register',(req,res,next) => userController.registerUser(req,res,next));
 userRouter.get('/user',(req,res,next) => userController.getUser(req,res,next));
+userRouter.get('/profile/:userId',(req,res,next) => userController.getProfile(req,res,next));
+userRouter.patch('/profile/:userId',(req,res,next) => userController.updateProfile(req,res,next));
 userRouter.get(
     "/google",
     passport.authenticate("google", { scope: ["profile", "email"] })

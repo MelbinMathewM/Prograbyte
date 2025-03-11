@@ -14,17 +14,18 @@ dotenv.config();
 import { validateEnv } from "./utils/envConfig";
 import { rabbitMQService } from "./services/RabbitMQService";
 import verifyApiKey from "./config/apiKey";
+import { env } from "./config/env";
 validateEnv();
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-app.use(express.json());
-app.use(express.urlencoded({ extended : true }));
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ limit: "5mb",extended : true }));
 app.use(helmet());
 app.use(verifyApiKey as express.RequestHandler);
 
-app.use(session({ secret: "SECRET_KEY", resave: false, saveUninitialized: true }));
+app.use(session({ secret: env.SESSION_SECRET_KEY!, resave: false, saveUninitialized: true }));
 
 connectDB();
 

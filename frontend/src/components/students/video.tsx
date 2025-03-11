@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
+import VideoPlayer from "./video-player";
 
 interface Topic {
     _id: string;
@@ -70,75 +71,9 @@ const VideoPart = () => {
             </div>
 
             {/* Video Player Component */}
-            <VideoPlayer videoUrl={topic?.video_url as string} courseName={courseName as string} topic={topic as Topic} isDark={isDark} />
+            <VideoPlayer publicId={topic?.video_url as string} isDark={isDark} />
         </div>
     );
 };
 
 export default VideoPart;
-
-const VideoPlayer = ({ videoUrl, courseName, topic, isDark }: { videoUrl: string; courseName: string; topic: Topic; isDark: boolean }) => {
-    const [videoSrc, setVideoSrc] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!videoUrl) return;
-
-        const fetchVideo = async () => {
-            try {
-                const response = await fetch(videoUrl);
-                const blob = await response.blob();
-                const objectUrl = URL.createObjectURL(blob);
-                setVideoSrc(objectUrl);
-            } catch (error) {
-                console.error("Error fetching video:", error);
-            }
-        };
-
-        fetchVideo();
-
-        return () => {
-            if (videoSrc) {
-                URL.revokeObjectURL(videoSrc);
-            }
-        };
-    }, [videoUrl]);
-
-    return (
-        <div className="flex justify-center items-center pt-3">
-            <div
-                className={`w-full max-w-3xl mx-auto border-b rounded shadow-lg 
-                    ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
-            >
-                {videoSrc ? (
-                    <div>
-                        {/* Video Player */}
-                        <video
-                            controls
-                            controlsList="nodownload"
-                            className={`w-full rounded-lg shadow-lg ${isDark ? "bg-gray-900" : "bg-white"}`}
-                        >
-                            <source src={videoSrc} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
-
-                        {/* Course Info and Notes Link */}
-                        <div className="flex w-full sm:max-w-6xl sm:mx-auto justify-between items-center p-2">
-                            <h2 className="font-bold">
-                                {courseName} | {topic.level} | {topic.title}
-                            </h2>
-                            <a
-                                href={`/courses/${courseName}/topics/notes/${topic._id}`}
-                                className={`px-4 py-2 rounded-lg text-sm font-medium transition
-                                    ${isDark ? "bg-green-500 hover:bg-green-600 text-white" : "bg-green-400 hover:bg-green-600 text-white"}`}
-                            >
-                                📄 View notes
-                            </a>
-                        </div>
-                    </div>
-                ) : (
-                    <p className={`${isDark ? "text-gray-400" : "text-gray-500"} text-center`}>Loading video...</p>
-                )}
-            </div>
-        </div>
-    );
-};

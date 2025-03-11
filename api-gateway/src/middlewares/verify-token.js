@@ -1,15 +1,13 @@
 import jwt from "jsonwebtoken";
 
-const publicRoutes = [
-    "/api/user/register", 
-    // "/api/auth/login", 
-    // "/api/auth/refresh-token",
-];
+const publicRoutes = ["/api/user/register"]; // Update to match your actual route
 
 const verifyToken = (req, res, next) => {
-    if (publicRoutes.includes(req.path)) {
-        return next();
-    }
+
+  if (publicRoutes.some(route => req.originalUrl === route)) {
+    console.log("Public route, skipping token verification:", req.originalUrl);
+    return next();
+  }
   const authHeader = req.headers["authorization"];
   if (!authHeader) return res.status(401).json({ message: "Access Denied" });
 

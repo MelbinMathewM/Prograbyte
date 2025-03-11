@@ -31,4 +31,7 @@ export function validateEnv() {
     if (!env.API_GATEWAY_KEY) {
         throw new Error("API_GATEWAY_KEY is not found in the env");
     }
+    if (!env.SESSION_SECRET_KEY) {
+        throw new Error("SESSION_SECRET_KEY is not found in the env");
+    }
 }

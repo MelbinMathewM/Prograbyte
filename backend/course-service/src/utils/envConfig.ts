@@ -22,4 +22,7 @@ export function validateEnv() {
     if (!env.API_GATEWAY_KEY) {
         throw new Error("API_GATEWAY_KEY is not found in the env");
     }
+    if (!env.TOKEN_SECRET) {
+        throw new Error("TOKEN_SECRET is not found in the env");
+    }
 }

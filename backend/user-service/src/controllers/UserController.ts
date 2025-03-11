@@ -3,6 +3,8 @@ import { inject } from 'inversify';
 import { UserService } from "../services/UserService";
 import { IUser } from "../models/UserModel";
 import { env } from "../config/env";
+import { HttpStatus } from "../constants/status";
+import { HttpResponse } from "../constants/responseMessage";
 
 export class UserController {
   constructor(@inject(UserService) private userService: UserService) { }
@@ -61,8 +63,33 @@ export class UserController {
 
       const user = await this.userService.getUserById(token!);
 
-      res.status(200).json(user);
+      res.status(HttpStatus.OK).json(user);
     } catch (err) {
+      next(err);
+    }
+  }
+
+  async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+
+      const user = await this.userService.getProfile(userId);
+
+      res.status(HttpStatus.OK).json(user);
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+      const updateData = req.body;
+
+      const user = await this.userService.updateProfile(userId, updateData);
+
+      res.status(HttpStatus.OK).json({message: HttpResponse.PROFILE_UPDATED,user});
+    }catch(err){
       next(err);
     }
   }

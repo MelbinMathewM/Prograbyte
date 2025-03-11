@@ -22,6 +22,7 @@ const storageTopic = new CloudinaryStorage({
     params: async (req, file) => ({
         folder: "prograbyte/topics",
         resource_type: file.mimetype.startsWith("video/") ? "video" : file.mimetype === "application/pdf" ? "raw" : "auto",
+        type: file.mimetype.startsWith("video/") ? "authenticated" : "upload",
     }),
 });
 
@@ -46,6 +47,9 @@ courseRouter.patch('/courses/:courseId/status',(req,res,next) => courseControlle
 courseRouter.get('/topics/:course_id',(req,res) => courseController.getTopics(req,res));
 courseRouter.post('/topics',uploadTopic.any(),(req,res,next) => courseController.createTopic(req,res,next));
 courseRouter.get('/topics/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
+
+courseRouter.get('/secure-video-token',(req,res,next) => courseController.videoUrlToken(req,res,next));
+courseRouter.get('/secure-video/:token',(req,res,next) => courseController.getSecureUrl(req,res,next));
 
 courseRouter.get('/wishlist/:userId',(req,res,next) => courseController.getWishlist(req,res,next));
 courseRouter.post('/wishlist',(req,res,next) => courseController.addToWishlist(req,res,next));

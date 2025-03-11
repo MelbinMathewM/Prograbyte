@@ -20,5 +20,8 @@ export const env = {
     get API_GATEWAY_KEY() {
         return process.env.API_GATEWAY_KEY;
     },
+    get TOKEN_SECRET() {
+        return process.env.TOKEN_SECRET;
+    }
 
 }

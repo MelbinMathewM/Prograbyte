@@ -5,7 +5,7 @@ const StudentProfile = () => {
     return (
         <>
                 <StudentNavbar />
-                <div className="pt-20">
+                <div className="pt-15">
                     <ProfilePart />
                 </div>
         </>
