@@ -21,3 +21,33 @@ export const updateProfileInfo = async (userId: string, data: any) => {
         throw error;
     }
 }
+
+export const addSkill = async (userId: string, skill: string) => {
+    try{
+        const response = await axiosInstance.post(`/user/skills/${userId}`,{ skill });
+        return response.data;
+    }catch(error){
+        console.error("Error adding skill");
+        throw error;
+    }
+};
+
+export const editSkill = async (userId: string, oldSkill: string, newSkill: string) => {
+    try{
+        const response = await axiosInstance.patch(`/user/skills/${userId}`,{ oldSkill, newSkill });
+        return response.data;
+    }catch(error){
+        console.error("Error updating skill");
+        throw error;
+    }
+};
+
+export const deleteSkill = async (userId: string, skill: string) => {
+    try{
+        const response = await axiosInstance.delete(`/user/skills/${userId}/${skill}`);
+        return response.data;
+    }catch(error){
+        console.error("Error deleting skill");
+        throw error;
+    }
+};

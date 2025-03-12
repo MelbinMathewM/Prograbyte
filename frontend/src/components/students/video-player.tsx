@@ -14,7 +14,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
 
     useEffect(() => {
         if (!publicId) return;
-        const fetchVideoToken = async () => {
+        const fetchVideoUrl = async () => {
             try {
                 const response = await fetchToken(publicId);
                 setToken(response.token);
@@ -29,7 +29,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
                 }
             }
         };
-        fetchVideoToken();
+        fetchVideoUrl();
     },[publicId])
 
     useEffect(() => {
@@ -39,6 +39,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
             try {
                 const response = await getSecureUrl(token);
                 setVideoUrl(response.videoUrl);
+                console.log(response.videoUrl,'res.v.u');
             } catch (error: any) {
                 if (error.response) {
                     const backendMessage = error.response.data.error || "An error occurred";
@@ -52,10 +53,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
         };
 
         fetchSecureUrl();
-
-        const interval = setInterval(fetchSecureUrl, 4 * 60 * 1000);
-
-        return () => clearInterval(interval);
     }, [token]);
 
     return (

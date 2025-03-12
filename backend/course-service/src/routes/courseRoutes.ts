@@ -49,12 +49,15 @@ courseRouter.post('/topics',uploadTopic.any(),(req,res,next) => courseController
 courseRouter.get('/topics/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
 
 courseRouter.get('/secure-video-token',(req,res,next) => courseController.videoUrlToken(req,res,next));
-courseRouter.get('/secure-video/:token',(req,res,next) => courseController.getSecureUrl(req,res,next));
+courseRouter.get('/secure-url/:token',(req,res,next) => courseController.getSecureUrl(req,res,next));
+courseRouter.get('/proxy-stream/:token',(req,res,next) => courseController.proxyStream(req,res,next));
 
 courseRouter.get('/wishlist/:userId',(req,res,next) => courseController.getWishlist(req,res,next));
 courseRouter.post('/wishlist',(req,res,next) => courseController.addToWishlist(req,res,next));
 courseRouter.delete('/wishlist/:userId/:courseId',(req,res,next) => courseController.removeFromWishlist(req,res,next));
 
 courseRouter.post('/payments',(req,res,next) => courseController.createPayment(req,res,next));
+courseRouter.post('/enroll',(req,res,next) => courseController.erollCourse(req,res,next));
+courseRouter.get('/enroll/:userId',(req,res,next) => courseController.getEnrollCourses(req,res,next));
 
 export default courseRouter;

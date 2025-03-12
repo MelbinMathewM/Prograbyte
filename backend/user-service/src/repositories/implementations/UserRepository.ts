@@ -28,4 +28,8 @@ export class UserRepository implements IUserRepository {
             { new: true }
         )
     }
+
+    async findUserByUsername(username: string): Promise<IUser | null> {
+        return await User.findOne({username});
+    }
 }

@@ -7,6 +7,7 @@ import { ITopic, Topic } from "../models/topicModel";
 import { HttpResponse } from "../constants/responseMessage";
 import stripe from "../config/stripe";
 import { HttpStatus } from "../constants/status";
+import axios from 'axios';
 
 export class CourseController {
   constructor(@inject(CourseService) private courseService: CourseService) { }
@@ -249,8 +250,6 @@ export class CourseController {
 
       const topic = await this.courseService.getTopicById(topicId);
 
-      console.log(topic,'topic')
-
       res.status(200).json(topic);
     } catch (err) {
       next(err)
@@ -296,101 +295,176 @@ export class CourseController {
         payment_method_types: ["card"],
       });
 
+      console.log(paymentIntent.client_secret,'client_secret')
+
       res.json({ clientSecret: paymentIntent.client_secret });
     } catch (err) {
       next(err)
     }
   }
 
-  async getWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async erollCourse(req: Request, res: Response, next: NextFunction): Promise<void> {
     try{
+      const { courseId, userId, paymentAmount, paymentId } = req.body;
+
+      await this.courseService.enrollCourse(courseId, userId, paymentAmount, paymentId);
+      
+      res.status(HttpStatus.OK).json({message: HttpResponse.COURSE_ENROLLED})
+    }catch(err){
+      next(err)
+    }
+  }
+
+  async getEnrollCourses(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+
+      if(!userId){
+        res.status(HttpStatus.BAD_REQUEST).json({message: HttpResponse.USER_ID_REQUIRED});
+      }
+
+      const enrolledCourses = await this.courseService.getEnrolledCourses(userId);
+
+      res.status(HttpStatus.OK).json({enrolledCourses});
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async getWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
       const { userId } = req.params;
 
       if (!userId) {
         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
-       return
-     }
+        return
+      }
 
       const wishlist = await this.courseService.getWishlist(userId);
 
       res.status(HttpStatus.OK).json(wishlist);
-    }catch(err){
+    } catch (err) {
       next(err)
     }
   }
 
   async addToWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { userId, courseId } = req.body;
 
       if (!userId) {
-         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
+        res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
         return
       }
       if (!courseId) {
         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.COURSE_ID_REQUIRED });
-       return
-     }
+        return
+      }
 
-     const wishlist = await this.courseService.addWishlist(userId, courseId);
+      const wishlist = await this.courseService.addWishlist(userId, courseId);
 
-     res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_ADDED_WISHLIST, wishlist });
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_ADDED_WISHLIST, wishlist });
+    } catch (err) {
       next(err)
     }
   }
 
   async removeFromWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { userId, courseId } = req.params;
 
       if (!userId) {
-         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
+        res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
         return
       }
       if (!courseId) {
         res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.COURSE_ID_REQUIRED });
-       return
-     }
+        return
+      }
 
-     await this.courseService.removeWishlist(userId, courseId);
+      await this.courseService.removeWishlist(userId, courseId);
 
-     res.status(HttpStatus.OK).json({message: HttpResponse.COURSE_REMOVED_WISHLIST})
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_REMOVED_WISHLIST })
+    } catch (err) {
       next(err)
     }
   }
 
   async videoUrlToken(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { publicId } = req.query;
 
-      if(!publicId){
-        res.status(HttpStatus.BAD_REQUEST).json({message: HttpResponse.PUBLIC_ID_NOT_FOUND});
+      if (!publicId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.PUBLIC_ID_NOT_FOUND });
         return;
       }
 
       const token = await this.courseService.getVideoToken(publicId as string);
 
-      res.status(HttpStatus.OK).json({token});
-    }catch(err){
+      res.status(HttpStatus.OK).json({ token });
+    } catch (err) {
       next(err)
     }
   }
 
   async getSecureUrl(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { token } = req.params;
+      const accessToken = req.headers.authorization;
 
-      if(!token){
+      console.log(token, 'token')
+      console.log("Received Access Token:", accessToken);
+
+      if (!accessToken) {
+        res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_ACCESS_TOKEN);
+        return;
+      }
+
+      if (!token) {
         res.status(HttpStatus.BAD_REQUEST).json(HttpResponse.NO_TOKEN);
+        return
       }
 
       const secureUrl = await this.courseService.getSecureVideo(token as string);
 
-      res.status(HttpStatus.OK).json({videoUrl: secureUrl});
-    }catch(err){
+      const videoUrl = `/course/proxy-stream/${token}?access_toekn=${accessToken.replace("Bearer ", "")}`;
+
+      res.status(HttpStatus.OK).json({ videoUrl });
+
+    } catch (err) {
       next(err)
     }
   }
+
+  async proxyStream(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { token } = req.params;
+      const accessToken = req.query.access_token as string;
+
+      console.log("Proxy Streaming Token:", token);
+      console.log("Access Token:", accessToken);
+
+      if (!token || !accessToken) {
+        res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN);
+      }
+
+      const secureUrl = await this.courseService.getSecureVideo(token);
+
+      const videoStream = await axios({
+        method: "get",
+        url: secureUrl,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        responseType: "stream",
+      });
+
+      res.setHeader("Content-Type", "video/mp4");
+      videoStream.data.pipe(res);
+
+    } catch (err) {
+      next(err);
+    }
+  }
+
 }

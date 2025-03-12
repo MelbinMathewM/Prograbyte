@@ -14,7 +14,7 @@ export const fetchToken = async (publicId: string) => {
 export const getSecureUrl = async (token: string) => {
     console.log(token,'token')
     try{
-        const response = await axiosInstance.get(`/course/secure-video/${token}`);
+        const response = await axiosInstance.get(`/course/secure-url/${token}`);
         return response.data;
     }catch(error){
         console.error("Error fetching secure video URL:", error);

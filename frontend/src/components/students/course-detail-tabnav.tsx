@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { addToWishlist, getWishlist, removeFromWishlist } from "../../api/wishlist";
 import { UserContext } from "../../contexts/user-context";
 import toast from "react-hot-toast";
+import CoursePurchaseSection from "./course-detail-purchasetab";
+import { fetchEnrolledCourse } from "../../api/course";
 
 interface Course {
     _id: string;
@@ -39,6 +41,9 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         Intermediate: false,
         Advanced: false,
     });
+    const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
+
+
     const navigate = useNavigate();
     const { user } = useContext(UserContext) ?? {};
 
@@ -51,7 +56,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
             if (!course) return;
             try {
                 const response = await axiosInstance.get(`/course/topics/${course._id}`);
-                console.log(response.data,'data')
+                console.log(response.data, 'data')
                 setTopics(response.data);
             } catch (err) {
                 console.error("Error fetching topics");
@@ -60,6 +65,21 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         fetchTopics();
     }, [course]);
 
+    useEffect(() => {
+        if(!user?.id) return;
+        const fetchEnrolled = async () => {
+            try{
+                const response = await fetchEnrolledCourse(user?.id);
+                console.log(response,'hii');
+
+                const courseIds = response.enrolledCourses?.courses?.map((course: any) => course.courseId) || [];
+                setEnrolledCourseIds(courseIds);
+            }catch(err){
+                console.error("error fetching enrolled courses")
+            }
+        }
+        fetchEnrolled();
+    },[user?.id])
 
     useEffect(() => {
         if (!user?.id) return;
@@ -188,28 +208,14 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
             </div>
 
             {/* Right - Fixed Payment Section */}
-            <div className={`col-span-3 md:col-span-1`}>
-                <div className={`shadow-lg p-6 rounded-lg sticky top-20 ${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-                    <h3 className="text-xl font-semibold mb-3">Get the course today</h3>
-                    {/* Course Options Dropdown */}
-                    <select className={`w-full p-2 border rounded mb-3 ${isDark ? "bg-gray-700 text-gray-300 border-gray-600" : "text-gray-600 border-gray-300"}`}>
-                        <option>Get course option</option>
-                        <option>Video classes</option>
-                        <option>Video + Live classes</option>
-                    </select>
-                    {/* Pricing */}
-                    <div className="text-2xl font-bold text-red-500">
-                        ₹{course?.price} <span className={`text-lg ${isDark ? "text-gray-400" : "text-gray-500"} line-through`}>₹999</span> <span className="text-white">only</span>
-                    </div>
-                    {/* Buttons */}
-                    <button onClick={() => navigate(`/checkout/${course?._id}`)} className="w-full bg-red-700 text-white py-2 mt-3 rounded-lg font-semibold hover:bg-red-600">
-                        Get Course
-                    </button>
-                    <button onClick={handleWishlistClick} className={`w-full mt-2 font-semibold ${isDark ? "text-red-400" : "text-red-700"}`}>
-                        {isInWishlist ? "❤️ Remove from Wishlist" : "🤍 Add to Wishlist"}
-                    </button>
-                </div>
-            </div>
+            <CoursePurchaseSection
+                course={course!}
+                enrolledCourses={enrolledCourseIds}
+                isDark={isDark}
+                isInWishlist={isInWishlist}
+                handleWishlistClick={handleWishlistClick}
+            />
+
         </div>
     );
 };

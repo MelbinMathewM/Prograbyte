@@ -5,21 +5,20 @@ export interface IWishlist extends Document {
     items: mongoose.Types.ObjectId[];
 }
 
-const WishlistSchema: Schema = new Schema(
-    {
-        userId: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-            required: true
-        },
-        items: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: "Course",
-                required: true
-            }
-        ]
+const WishlistSchema = new Schema<IWishlist>({
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
+    items: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Course",
+            required: true
+        }
+    ]
+},
     { timestamps: true }
 );
 

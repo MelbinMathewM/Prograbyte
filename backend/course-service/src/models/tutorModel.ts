@@ -29,6 +29,6 @@ const tutorSchema = new Schema<ITutor>({
     }
 }, { timestamps: true });
 
-const Tutor = mongoose.model("Tutor", tutorSchema);
+const Tutor = mongoose.model<ITutor>("Tutor", tutorSchema);
 
 export default Tutor;

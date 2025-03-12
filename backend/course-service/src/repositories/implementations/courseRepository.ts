@@ -5,6 +5,7 @@ import { Course, ICourse } from "../../models/courseModel";
 import { ITopic, Topic } from "../../models/topicModel";
 import Wishlist, { IWishlist } from "../../models/wishlistModel";
 import { Types } from "mongoose";
+import EnrolledCourses, { IEnrolledCourse, IEnrolledCourses } from "../../models/enrolledCoursesModel";
 
 @injectable()
 export class CourseRepository implements ICourseRepository {
@@ -132,6 +133,27 @@ export class CourseRepository implements ICourseRepository {
         } catch (error) {
             console.error("Error fetching course details:", error);
             throw new Error("Failed to retrieve course details");
+        }
+    }
+
+    async getEnrolledCoursesByUserId(userId: Types.ObjectId): Promise<IEnrolledCourses | null> {
+        try{
+            return await EnrolledCourses.findOne({userId});
+        }catch(error) {
+            console.error("Error fetching enrolled courses");
+            throw new Error("Failed to fetch enrolled courses")
+        }
+    }
+
+    async createEnrolledCourse(userId: Types.ObjectId, course: IEnrolledCourse): Promise<void> {
+        try{
+            await EnrolledCourses.create({
+                userId,
+                courses: [course]
+            })
+        }catch(error) {
+            console.error("Error creating enrolled courses");
+            throw new Error("Failed to create enrolled courses");
         }
     }
 

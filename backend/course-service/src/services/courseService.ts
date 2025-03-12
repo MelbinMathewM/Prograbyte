@@ -11,6 +11,7 @@ import Wishlist, { IWishlist } from "../models/wishlistModel";
 import { convertToObjectId } from "../utils/mongooseObjectId";
 import { generateToken, verifyToken } from "../utils/jwt";
 import getSecureVideoUrl from "../utils/cloudinary";
+import { IEnrolledCourses } from "../models/enrolledCoursesModel";
 
 
 @injectable()
@@ -113,6 +114,46 @@ export class CourseService {
     async getCourseDetail(id: string): Promise<ICourse | null> {
         const course = await this.courseRepository.getCourseDetail(id);
         return course;
+    }
+
+    async enrollCourse(courseId: string, userId: string, paymentAmount: number, paymentId: string) {
+
+        const objectIdUserId = convertToObjectId(userId);
+        const objectIdCourseId = convertToObjectId(courseId);
+
+
+        let enrollment = await this.courseRepository.getEnrolledCoursesByUserId(objectIdUserId);
+
+        if(enrollment){
+            const isAlreadyEnrolled = enrollment.courses.some(c => c.courseId.equals(objectIdCourseId));
+            if(isAlreadyEnrolled){
+                throw createHttpError(HttpStatus.CONFLICT, HttpResponse.COURSE_EXIST_ENROLLED);
+            }
+
+            enrollment.courses.push({ courseId: objectIdCourseId, paymentAmount, enrolledAt: new Date(), paymentId });
+            await (enrollment as any).save();
+        }else{
+
+            await this.courseRepository.createEnrolledCourse(objectIdUserId,{
+                courseId: objectIdCourseId, 
+                paymentAmount, 
+                enrolledAt: new Date(), 
+                paymentId
+            })
+        }
+    }
+
+    async getEnrolledCourses(userId: string): Promise<IEnrolledCourses> {
+
+        const objectIdUserId = convertToObjectId(userId);
+
+        const enrolledCourses = await this.courseRepository.getEnrolledCoursesByUserId(objectIdUserId);
+
+        if(!enrolledCourses){
+            throw createHttpError(HttpStatus.NO_CONTENT,HttpResponse.ENROLLED_COURSES_NOT_FOUND);
+        }
+
+        return enrolledCourses;
     }
 
     async getTopics(course_id: string): Promise<Partial<ITopic[]> | null> {

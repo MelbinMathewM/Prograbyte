@@ -3,6 +3,7 @@ import { ICategory } from "../../models/categoryModel";
 import { ICourse } from "../../models/courseModel";
 import { ITopic } from "../../models/topicModel";
 import { IWishlist } from "../../models/wishlistModel";
+import { IEnrolledCourse, IEnrolledCourses } from "../../models/enrolledCoursesModel";
 
 export interface ICourseRepository {
 
@@ -25,6 +26,9 @@ export interface ICourseRepository {
     createTopic(topic: ITopic[]): Promise<ITopic[]>;
     getTopics(course_id: string): Promise<ITopic[] | null>;
     getTopicById(id: string): Promise<ITopic>;
+
+    getEnrolledCoursesByUserId(userId: Types.ObjectId): Promise<IEnrolledCourses | null>;
+    createEnrolledCourse(userId: Types.ObjectId,course: IEnrolledCourse): Promise<void>;
 
     getWishlistByUserId(userId: string): Promise<IWishlist | null>;
     createWishlist(wishlistData: { userId: Types.ObjectId; items: Types.ObjectId[] }): Promise<IWishlist>;

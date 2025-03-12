@@ -93,4 +93,42 @@ export class UserController {
       next(err);
     }
   }
+
+  async addSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { skill } = req.body;
+      const { userId } = req.params;
+
+      const skills = await this.userService.addSkill(userId, skill);
+
+      res.status(HttpStatus.OK).json({message: HttpResponse.SKILL_ADDED, skills})
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async editSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { oldSkill, newSkill } = req.body;
+      const { userId } = req.params;
+
+      const skills = await this.userService.editSkill(userId, oldSkill, newSkill);
+
+      res.status(HttpStatus.OK).json({message: HttpResponse.SKILL_EDITED, skills})
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async deleteSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId, skill } = req.params;
+
+      const skills = await this.userService.deleteSkill(userId, skill);
+
+      res.status(HttpStatus.OK).json({message: HttpResponse.SKILL_DELETED, skills});
+    }catch(err){
+      next(err);
+    }
+  }
 }

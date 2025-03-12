@@ -149,6 +149,14 @@ export class UserService {
 
     async updateProfile(userId: string, updatedUser: Partial<IUser>): Promise<IUser> {
 
+        if(updatedUser.username){
+            const existingUser = await this.userRepository.findUserByUsername(updatedUser.username);
+
+            if(existingUser && (existingUser._id as string).toString() !== userId){
+                throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USERNAME_EXIST);
+            }
+        }
+
         const user = await this.userRepository.updateUser(userId, updatedUser);
 
         if (!user) {
@@ -156,5 +164,53 @@ export class UserService {
         }
 
         return user;
+    }
+
+    async addSkill(userId: string, skill: string): Promise<string[]> {
+
+        const user = await this.userRepository.getUserById(userId);
+        if(!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        }
+
+        if(user.skills.includes(skill)){
+            throw createHttpError(HttpStatus.CONFLICT,HttpResponse.SKILL_EXIST);
+        }
+
+        user.skills.push(skill);
+        await user.save();
+
+        return user.skills;
+    }
+
+    async editSkill(userId: string, oldSkill: string, newSkill: string): Promise<string[]> {
+
+        const user = await this.userRepository.getUserById(userId);
+        if(!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        }
+
+        const skillIndex = user.skills.indexOf(oldSkill);
+        if(skillIndex){
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.SKILL_NOT_FOUND);
+        }
+
+        user.skills[skillIndex] = newSkill;
+        await user.save();
+
+        return user.skills;
+    }
+
+    async deleteSkill(userId: string, skill: string): Promise<string[]> {
+
+        const user = await this.userRepository.getUserById(userId);
+        if(!user) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        }
+
+        user.skills = user.skills.filter((s) => s !== skill);
+        await user.save();
+
+        return user.skills;
     }
 }

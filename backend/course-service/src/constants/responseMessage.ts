@@ -23,4 +23,7 @@ export const HttpResponse = {
     COURSE_NOT_FOUND_WISHLIST: "Course not found in wishlist",
     COURSE_REMOVED_WISHLIST: "Course removed from wishlist",
     PUBLIC_ID_NOT_FOUND: "Cloudinary publicId not found",
+    COURSE_EXIST_ENROLLED: "Course already enrolled",
+    COURSE_ENROLLED: "Course enroled successfully",
+    ENROLLED_COURSES_NOT_FOUND: "No enrolled courses found"
 }
