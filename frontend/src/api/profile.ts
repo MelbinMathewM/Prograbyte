@@ -34,6 +34,7 @@ export const addSkill = async (userId: string, skill: string) => {
 
 export const editSkill = async (userId: string, oldSkill: string, newSkill: string) => {
     try{
+        console.log(oldSkill,newSkill,'vv')
         const response = await axiosInstance.patch(`/user/skills/${userId}`,{ oldSkill, newSkill });
         return response.data;
     }catch(error){
@@ -51,3 +52,13 @@ export const deleteSkill = async (userId: string, skill: string) => {
         throw error;
     }
 };
+
+export const getEnrolledCourses = async (userId: string) => {
+    try{
+        const response = await axiosInstance.get(`/course/enroll/${userId}`);
+        return response.data;
+    }catch(error){
+        console.log('Error fetching enrolled courses');
+        throw error;
+    }
+}

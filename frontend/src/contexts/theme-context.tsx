@@ -31,7 +31,17 @@ export const ThemeProvider = ({ children, role }: { children: ReactNode; role: s
         }
     };
 
-    const [theme, setTheme] = useState<Theme>(getDefaultTheme(role));
+    // Initially set the theme based on role (if available)
+    const [theme, setTheme] = useState<Theme>("light-theme");
+
+    useEffect(() => {
+        if (role) {
+            const newTheme = getDefaultTheme(role);
+            if (newTheme !== theme) {
+                setTheme(newTheme);
+            }
+        }
+    }, [role]); // Run when role updates
 
     useEffect(() => {
         document.documentElement.className = theme;

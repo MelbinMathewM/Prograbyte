@@ -43,7 +43,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ profile, isDark, updateProfil
     }, [editingField]);
 
     return (
-        <div className={`p-6 rounded-lg shadow-md ${isDark ? "bg-gray-800" : "bg-white"}`}>
+        <div className={`p-6 rounded-lg shadow-md ${isDark ? "bg-[#272928]" : "bg-[#ffffff]"}`}>
             <h2 className={`text-xl font-semibold mb-4 ${isDark ? "text-gray-200" : "text-gray-700"}`}>User Details</h2>
             <div className="space-y-4">
                 {[
@@ -52,7 +52,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ profile, isDark, updateProfil
                     { label: "Username", key: "username", value: profile?.username || "N/A" },
                     { label: "Bio", key: "bio", value: profile?.bio || "No bio yet" },
                 ].map((item) => (
-                    <div key={item.key} className={`flex justify-between items-center p-3 rounded-lg ${isDark ? "bg-gray-700" : "bg-gray-100"}`}>
+                    <div key={item.key} className={`flex justify-between items-center p-3 rounded-lg ${isDark ? "bg-[#213944]" : "bg-[#ffffff]"}`}>
                         <div>
                             <p className={`${isDark ? "text-gray-400" : "text-gray-500"} text-sm`}>{item.label}</p>
                             {editingField === item.key ? (

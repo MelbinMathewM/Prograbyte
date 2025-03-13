@@ -13,7 +13,7 @@ import { rabbitMQService } from './RabbitMQService';
 export class UserService {
     constructor(@inject("IUserRepository") private userRepository: IUserRepository) {}
 
-    async registerUser(user: IUser): Promise<IUser> {
+    async registerUser(user: IUser): Promise<void> {
 
         const existingUser = await this.userRepository.getUserByEmail(user.email);
 
@@ -42,8 +42,6 @@ export class UserService {
             await this.userRepository.deleteUserById(newUser._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR)
         }
-    
-        return newUser;
     }
 
     async registerTutor(tutor: IUser): Promise<IUser> {
@@ -157,6 +155,10 @@ export class UserService {
             }
         }
 
+        if(updatedUser.email){
+            throw createHttpError(HttpStatus.FORBIDDEN, "email cannot be edited for now")
+        }
+
         const user = await this.userRepository.updateUser(userId, updatedUser);
 
         if (!user) {
@@ -191,7 +193,7 @@ export class UserService {
         }
 
         const skillIndex = user.skills.indexOf(oldSkill);
-        if(skillIndex){
+        if(skillIndex === -1){
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.SKILL_NOT_FOUND);
         }
 

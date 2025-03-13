@@ -138,7 +138,7 @@ export class CourseRepository implements ICourseRepository {
 
     async getEnrolledCoursesByUserId(userId: Types.ObjectId): Promise<IEnrolledCourses | null> {
         try{
-            return await EnrolledCourses.findOne({userId});
+            return await EnrolledCourses.findOne({userId}).populate("courses.courseId");
         }catch(error) {
             console.error("Error fetching enrolled courses");
             throw new Error("Failed to fetch enrolled courses")

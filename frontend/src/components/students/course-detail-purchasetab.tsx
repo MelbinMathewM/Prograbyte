@@ -1,15 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import Progress from "../../components/ui/progress";
-import { useState } from "react";
+
+interface Course {
+    _id: string;
+    title: string;
+    price: number;
+    progress?: number;
+}
 
 interface CoursePurchaseProps {
-    course: {
-        _id: string;
-        title: string;
-        price: number;
-        progress?: number;
-    };
-    enrolledCourses: string[];
+    course: Course;
+    enrolledCourses: Course[];
     isDark: boolean;
     isInWishlist: boolean;
     handleWishlistClick: () => void;
@@ -18,7 +19,12 @@ interface CoursePurchaseProps {
 const CoursePurchaseSection: React.FC<CoursePurchaseProps> = ({ course,enrolledCourses, isDark, isInWishlist, handleWishlistClick }) => {
     const navigate = useNavigate();
 
-    const isPurchased = enrolledCourses.includes(course?._id);
+    console.log(enrolledCourses,'hgg')
+
+    const isPurchased = enrolledCourses && Array.isArray(enrolledCourses) 
+    ? enrolledCourses.some(enrolled => enrolled._id === course?._id) 
+    : false;
+
 
     return (
         <div className="col-span-3 md:col-span-1">

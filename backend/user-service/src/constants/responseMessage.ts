@@ -3,6 +3,7 @@ export const HttpResponse = {
     USER_EXIST: "User already exist",
     PAGE_NOT_FOUND: "Route not found",
     USER_NOT_FOUND: "User not found",
+    USER_REGISTERED: "User registered successfully",
     PASSWORD_INCORRECT: "Incorrect password, try again",
     NO_ACCESS_TOKEN: "Token not provided",
     NO_REFRESH_TOKEN: "Refresh token not provided",

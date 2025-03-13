@@ -13,9 +13,9 @@ export class UserController {
     try {
       const user: IUser = req.body;
 
-      const createdUser = await this.userService.registerUser(user);
+      await this.userService.registerUser(user);
 
-      res.status(201).json(createdUser);
+      res.status(HttpStatus.CREATED).json({message : HttpResponse.USER_REGISTERED});
     } catch (err) {
       next(err)
     }

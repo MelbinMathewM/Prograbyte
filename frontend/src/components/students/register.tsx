@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaGithub } from "react-icons/fa";
 import axios from "axios";
+import OTPInput from "./otp-input";
+import PasswordInput from "./password-input";
+import { registerUser } from "../../api/register";
 
 const Register = () => {
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -15,16 +20,25 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const role = "student";
 
   const navigate = useNavigate();
-
   const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
-  // Timer effect
+  // Confirm before leaving the page
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "Are you sure you want to leave? Your data will be lost.";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  // Timer effect for OTP resend
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (otpSent && timer > 0) {
@@ -42,6 +56,7 @@ const Register = () => {
       setOtpSent(true);
       setTimer(60);
       toast.success("OTP sent to your email!");
+      setStep(2);
     } catch (error) {
       toast.error("Failed to send OTP. Try again!");
     } finally {
@@ -56,7 +71,9 @@ const Register = () => {
       const response = await axios.post(`${BASE_URL}/notification/verify-otp`, { otp, email });
       if (response.status === 200) {
         setOtpVerified(true);
+        setIsEmailVerified(true)
         toast.success("OTP verified successfully!");
+        setStep(3);
       } else {
         toast.error("Invalid OTP, please try again.");
       }
@@ -67,15 +84,14 @@ const Register = () => {
 
   // Handle Registration after OTP Verification
   const handleRegister = async () => {
-    if (!name.trim() || !phone.trim() || !password.trim() || !confirmPassword) {
+    if (!name.trim()) {
+      return toast.error("Please fill name field!")
+    }
+    if (!username.trim() || !password.trim() || !confirmPassword) {
       return toast.error("Please fill in all fields!");
     }
-    if (name.length < 3) {
-      return toast.error("Name must be at least 3 characters long!");
-    }
-    const phoneRegex = /^[1-9][0-9]{9}$/;
-    if (!phoneRegex.test(phone)) {
-      return toast.error("Phone number must be 10 digits and should not start with 0!");
+    if (username.length < 3) {
+      return toast.error("Username must be at least 3 characters long!");
     }
     if (password.length < 6) {
       return toast.error("Password must be at least 6 characters long!");
@@ -88,21 +104,11 @@ const Register = () => {
       return toast.error("Passwords do not match!");
     }
     try {
-      const response = await axios.post(`${BASE_URL}/user/register`, {
-        name,
-        phone,
-        email,
-        password,
-        role,
-      });
-      if (response.status === 201) {
-        toast.success("Registration successful! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      toast.error("Registration failed.");
+      const response = await registerUser(name,username,email,password,role,isEmailVerified)
+      toast.success(response.message);
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (error: any) {
+      toast.error(error.response.data.error);
     }
   };
 
@@ -111,90 +117,135 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen grid grid-cols-1 md:flex">
-      {/* Left Section */}
+    <div className="h-screen w-full flex flex-col md:flex-row">
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-gray-200 p-6">
-        <h1 className="text-4xl font-bold italic mb-8">Prograbyte</h1>
-        <div className="flex flex-col justify-center items-center">
-          <h2 className="font-semibold mb-2">Already have an account?</h2>
-          <a href="/login" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
-            Sign In
-          </a>
-        </div>
-        <div className="my-4 w-full border-t border-gray-300"></div>
-        <p className="text-gray-500 mb-6 text-center">
-          <span className="font-bold">Sign up</span> quickly using social login
-        </p>
-        <div className="flex space-x-4">
-          <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100" onClick={handleGoogleLogin}>
-            <FcGoogle className="text-2xl" />
-          </button>
-          <button className="bg-white p-3 rounded-full shadow-md text-blue-600 hover:bg-gray-100">
-            <FaFacebook className="text-2xl" />
-          </button>
-          <button className="bg-white p-3 rounded-full shadow-md text-gray-800 hover:bg-gray-100">
-            <FaGithub className="text-2xl" />
-          </button>
+        <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-gray-200 p-6">
+          <h1 className="text-4xl font-bold italic mb-8">Prograbyte</h1>
+          <div className="flex flex-col justify-center items-center">
+            <h2 className="font-semibold mb-2">Already have an account?</h2>
+            <Link to="/login" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
+              Sign In
+            </Link>
+          </div>
+          <div className="my-4 w-full border-t border-gray-300"></div>
+          <p className="text-gray-500 mb-6 text-center">
+            <span className="font-bold">Sign up</span> quickly using social login
+          </p>
+          <div className="flex space-x-4">
+            <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100" onClick={handleGoogleLogin}>
+              <FcGoogle className="text-2xl" />
+            </button>
+            <button className="bg-white p-3 rounded-full shadow-md text-blue-600 hover:bg-gray-100">
+              <FaFacebook className="text-2xl" />
+            </button>
+            <button className="bg-white p-3 rounded-full shadow-md text-gray-800 hover:bg-gray-100">
+              <FaGithub className="text-2xl" />
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Right Section */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6">
-        <h2 className="text-2xl font-semibold text-center mb-4">Register</h2>
-
-        {/* OTP Step */}
-        {!otpVerified ? (
-          <>
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-6">
+        {/* Step 1: Enter Email */}
+        {step === 1 && (
+          <div className="w-96 bg-white dark:bg-gray-800 border border-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl mb-4">Enter Your Email</h2>
             <input
               type="email"
-              placeholder="Enter your email"
-              className="w-80 p-2 border rounded mb-4"
+              placeholder="Email"
+              className="w-full p-2 shadow-md border border-gray-100 hover:border-blue-200 rounded mb-4"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled={otpSent}
             />
-            {!otpSent ? (
+            <button className="w-full bg-blue-400 text-white p-2 rounded hover:bg-blue-600" onClick={sendOtp} disabled={loading}>
+              {loading ? "Sending OTP..." : "Send OTP"}
+            </button>
+          </div>
+        )}
+
+        {/* Step 2: Verify OTP */}
+        {step === 2 && (
+          <div className="w-96 bg-white dark:bg-gray-800 border border-gray-100 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl mb-4">Verify OTP</h2>
+            <OTPInput otp={otp} setOtp={setOtp} />
+            <button className="w-full bg-green-400 text-white p-2 rounded hover:bg-green-600" onClick={verifyOtp}>
+              Verify OTP
+            </button>
+            <div className="flex flex-row justify-center items-center w-full mt-3 gap-4">
               <button
-                className={`w-80 bg-red-500 text-white p-2 rounded hover:bg-red-600 ${loading && "opacity-50 cursor-not-allowed"}`}
+                className={`flex-[3] p-2 rounded flex items-center justify-center gap-2 ${timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}
                 onClick={sendOtp}
-                disabled={loading}
+                disabled={timer > 0 || loading}
               >
-                {loading ? "Sending OTP..." : "Send OTP"}
+                {loading ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"
+                      ></path>
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  <>{timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}</>
+                )}
               </button>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  placeholder="Enter OTP"
-                  className="w-80 p-2 border rounded mb-4"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-                <button className="w-80 bg-green-500 text-white p-2 rounded hover:bg-green-600" onClick={verifyOtp}>
-                  Verify OTP
-                </button>
-                <button
-                  className={`w-80 p-2 mt-2 rounded ${timer > 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
-                    }`}
-                  onClick={sendOtp}
-                  disabled={timer > 0}
-                >
-                  {timer > 0 ? `Resend OTP in ${timer}s` : "Resend OTP"}
-                </button>
-              </>
-            )}
-          </>
-        ) : (
-          // Registration Form (After OTP Verification)
-          <>
-            <input type="text" placeholder="Name" className="w-80 p-2 border rounded mb-4" value={name} onChange={(e) => setName(e.target.value)} />
-            <input type="tel" placeholder="Phone" className="w-80 p-2 border rounded mb-4" value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <input type="password" placeholder="Password" className="w-80 p-2 border rounded mb-4" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <input type="password" placeholder="Confirm Password" className="w-80 p-2 border rounded mb-4" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-            <button className="w-80 bg-green-500 text-white p-2 rounded hover:bg-green-600" onClick={handleRegister}>
+              <button
+                className="flex-[1] bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+                onClick={() => setStep(1)}
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Enter User Details */}
+        {step === 3 && otpVerified && (
+          <div className="w-96 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl mb-4">Create Your Account</h2>
+            <input
+              type="text"
+              placeholder="Name"
+              className="w-full p-2 border border-gray-100 hover:border-blue-200 rounded mb-4"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full p-2 border border-gray-100 hover:border-blue-200 rounded mb-4"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <PasswordInput
+              password={password}
+              setPassword={setPassword}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
+            />
+            <button className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600" onClick={handleRegister}>
               Register
             </button>
-          </>
+            <button className="w-full mt-2 bg-gray-500 text-white p-2 rounded hover:bg-gray-600" onClick={() => setStep(1)}>
+              Back
+            </button>
+          </div>
         )}
       </div>
     </div>

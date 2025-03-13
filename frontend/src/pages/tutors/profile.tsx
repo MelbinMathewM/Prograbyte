@@ -6,7 +6,7 @@ const TutorProfile = () => {
     return (
         <div>
             <TutorNavbar />
-            <div className="pt-20">
+            <div className="pt-15">
                 <TutorProfilePart />
             </div>
             <TutorFooter />
