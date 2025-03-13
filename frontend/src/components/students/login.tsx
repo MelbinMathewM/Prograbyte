@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {  useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FcGoogle } from "react-icons/fc";
@@ -9,6 +9,8 @@ import { AppDispatch } from "../../redux/store";
 import { setUserToken } from "../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
+import { ChevronLeft } from "lucide-react";
+import PasswordInputLogin from "./password-input-login";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -29,11 +31,11 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        `${BASE_URL}/auth/login`, 
-        { email, password }, 
+        `${BASE_URL}/auth/login`,
+        { email, password },
         { withCredentials: true }
       );
-        
+
       const { role, accessToken } = response.data;
 
       Cookies.set("accessToken", accessToken, { expires: 7 });
@@ -92,9 +94,9 @@ const Login = () => {
         <h1 className="text-4xl font-bold italic mb-8">Prograbyte</h1>
         <div className="flex flex-col justify-center items-center">
           <h2 className="font-semibold mb-2">Don't have an account?</h2>
-          <a href="/register" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
+          <Link to="/register" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
             Sign Up
-          </a>
+          </Link>
         </div>
         <div className="my-4 w-full border-t border-gray-300"></div>
         <p className="text-gray-500 mb-6 text-center">Login quickly using social login</p>
@@ -113,62 +115,59 @@ const Login = () => {
 
       {/* Right Section (Email & Password Login or Forgot Password Form) */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6 space-y-4">
-        <h2 className="text-2xl font-semibold text-center">
-          {isForgotPassword ? "Forgot Password" : "Login"}
-        </h2>
+        <div className="w-96 bg-white dark:bg-gray-800 border border-gray-100 p-6 rounded-lg shadow-md">
+          <h2 className="text-xl">
+            {isForgotPassword ? "Forgot Password" : "Login"}
+          </h2>
 
-        {isForgotPassword ? (
-          <div className="w-full max-w-xs">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full p-2 border rounded mb-4"
-              value={resetEmail}
-              onChange={(e) => setResetEmail(e.target.value)}
-            />
-            <button
-              className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-              onClick={handleForgotPassword}
-              disabled={isLoading}
-            >
-              {isLoading ? "Sending..." : "Send Reset Link"}
-            </button>
-            <div className="w-full text-center mt-4">
-              <button className="text-blue-400 hover:text-blue-600" onClick={() => setIsForgotPassword(false)}>
-                Back to Login
+          {isForgotPassword ? (
+            <div className="w-full pt-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full p-2 shadow-md border border-gray-100 hover:border-blue-200 rounded mb-4"
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+              />
+              <button
+                className="w-full bg-blue-400 text-white p-2 rounded hover:bg-blue-600"
+                onClick={handleForgotPassword}
+                disabled={isLoading}
+              >
+                {isLoading ? "Sending..." : "Send Reset Link"}
               </button>
+              <div className="w-full flex justify-end mt-4">
+                <button className="flex items-center text-blue-400 hover:text-blue-600" onClick={() => setIsForgotPassword(false)}>
+                  <ChevronLeft className="mt-0.5" size={16} /> Back to Login
+                </button>
+              </div>
             </div>
-          </div>
-        ) : (
-          <>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-80 p-2 border rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="w-80 p-2 border rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              className="w-80 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-              onClick={handleLogin}
-              disabled={isLoading}
-            >
-              {isLoading ? "Logging in..." : "Login"}
-            </button>
-            <div className="w-80 flex justify-end">
-              <p className="font-bold hover:text-red-400 text-blue-400 cursor-pointer" onClick={() => setIsForgotPassword(true)}>
-                Forgot password?
-              </p>
+          ) : (
+            <div className="w-full pt-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-80 p-2 shadow-md border border-gray-100 hover:border-blue-200 rounded mb-4"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <PasswordInputLogin password={password} setPassword={setPassword}/>
+              <button
+                className="w-80 bg-blue-400 text-white p-2 rounded hover:bg-blue-600 mb-2"
+                onClick={handleLogin}
+                disabled={isLoading}
+              >
+                {isLoading ? "Logging in..." : "Login"}
+              </button>
+              <div className="w-80 flex justify-end">
+                <p className="hover:text-blue-600 text-blue-400 cursor-pointer" onClick={() => setIsForgotPassword(true)}>
+                  Forgot password?
+                </p>
+              </div>
             </div>
-          </>
-        )}
+          )}
+        </div>
+
       </div>
     </div>
   );

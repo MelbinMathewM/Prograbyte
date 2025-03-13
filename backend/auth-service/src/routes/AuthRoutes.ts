@@ -8,6 +8,8 @@ const authController = container.get(AuthController);
 
 router.post("/login",(req, res, next) => authController.login(req, res, next));
 router.post("/refresh_token",(req,res,next) => authController.refreshToken(req,res,next));
+router.post('/send-otp',(req,res,next) => authController.sendOtp(req,res,next));
+router.post('/verify-otp',(req,res,next) => authController.verifyOtp(req,res,next));
 router.post('/forgot_password',(req,res,next) => authController.forgotPassword(req,res,next));
 router.post('/reset_password',(req,res,next) => authController.resetPassword(req,res,next));
 

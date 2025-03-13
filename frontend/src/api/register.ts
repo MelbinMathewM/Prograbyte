@@ -11,3 +11,23 @@ export const registerUser = async (name: string, username: string,email: string,
         throw err;
     }
 }
+
+export const sendOtpToEmail = async (email: string) => {
+    try{
+        const response = await axios.post(`${BASE_URL}/auth/send-otp`,{email});
+        return response.data;
+    }catch(error){
+        console.log("Error sending otp to email");
+        throw error;
+    }
+}
+
+export const verifyOtpEmail = async (email: string, otp: string) => {
+    try{
+        const response = await axios.post(`${BASE_URL}/auth/verify-otp`,{email,otp});
+        return response.data;
+    }catch(error){
+        console.log("Error verifying otp");
+        throw error;
+    }
+}

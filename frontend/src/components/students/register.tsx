@@ -7,7 +7,7 @@ import { FaFacebook, FaGithub } from "react-icons/fa";
 import axios from "axios";
 import OTPInput from "./otp-input";
 import PasswordInput from "./password-input";
-import { registerUser } from "../../api/register";
+import { registerUser, sendOtpToEmail, verifyOtpEmail } from "../../api/register";
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -30,15 +30,16 @@ const Register = () => {
 
   // Confirm before leaving the page
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "Are you sure you want to leave? Your data will be lost.";
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+    if (step > 1) {
+      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        event.preventDefault();
+        event.returnValue = "Are you sure you want to leave? Your data will be lost.";
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }
+  }, [step]);
 
-  // Timer effect for OTP resend
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     if (otpSent && timer > 0) {
@@ -52,13 +53,14 @@ const Register = () => {
     if (!email) return toast.error("Enter your email first!");
     setLoading(true);
     try {
-      await axios.post(`${BASE_URL}/notification/send-otp`, { email });
+      const response = await sendOtpToEmail(email);
       setOtpSent(true);
       setTimer(60);
-      toast.success("OTP sent to your email!");
+      toast.success(response.message);
+      setOtp("");
       setStep(2);
-    } catch (error) {
-      toast.error("Failed to send OTP. Try again!");
+    } catch (error: any) {
+      toast.error(error.response.data.error);
     } finally {
       setLoading(false);
     }
@@ -68,17 +70,14 @@ const Register = () => {
   const verifyOtp = async () => {
     if (!otp) return toast.error("Enter OTP first!");
     try {
-      const response = await axios.post(`${BASE_URL}/notification/verify-otp`, { otp, email });
-      if (response.status === 200) {
-        setOtpVerified(true);
-        setIsEmailVerified(true)
-        toast.success("OTP verified successfully!");
-        setStep(3);
-      } else {
-        toast.error("Invalid OTP, please try again.");
-      }
-    } catch (error) {
-      toast.error("OTP verification failed.");
+      const response = await verifyOtpEmail(email, otp);
+      setOtpVerified(true);
+      setIsEmailVerified(true);
+      setOtp("");
+      toast.success(response.message);
+      setStep(3);
+    } catch (error: any) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -104,7 +103,7 @@ const Register = () => {
       return toast.error("Passwords do not match!");
     }
     try {
-      const response = await registerUser(name,username,email,password,role,isEmailVerified)
+      const response = await registerUser(name, username, email, password, role, isEmailVerified)
       toast.success(response.message);
       setTimeout(() => navigate("/login"), 2000);
     } catch (error: any) {
@@ -119,29 +118,27 @@ const Register = () => {
   return (
     <div className="h-screen w-full flex flex-col md:flex-row">
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-gray-200 p-6">
-        <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-gray-200 p-6">
-          <h1 className="text-4xl font-bold italic mb-8">Prograbyte</h1>
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="font-semibold mb-2">Already have an account?</h2>
-            <Link to="/login" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
-              Sign In
-            </Link>
-          </div>
-          <div className="my-4 w-full border-t border-gray-300"></div>
-          <p className="text-gray-500 mb-6 text-center">
-            <span className="font-bold">Sign up</span> quickly using social login
-          </p>
-          <div className="flex space-x-4">
-            <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100" onClick={handleGoogleLogin}>
-              <FcGoogle className="text-2xl" />
-            </button>
-            <button className="bg-white p-3 rounded-full shadow-md text-blue-600 hover:bg-gray-100">
-              <FaFacebook className="text-2xl" />
-            </button>
-            <button className="bg-white p-3 rounded-full shadow-md text-gray-800 hover:bg-gray-100">
-              <FaGithub className="text-2xl" />
-            </button>
-          </div>
+        <h1 className="text-4xl font-bold italic mb-8">Prograbyte</h1>
+        <div className="flex flex-col justify-center items-center">
+          <h2 className="font-semibold mb-2">Already have an account?</h2>
+          <Link to="/login" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
+            Sign In
+          </Link>
+        </div>
+        <div className="my-4 w-full border-t border-gray-300"></div>
+        <p className="text-gray-500 mb-6 text-center">
+          <span className="font-bold">Sign up</span> quickly using social login
+        </p>
+        <div className="flex space-x-4">
+          <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100" onClick={handleGoogleLogin}>
+            <FcGoogle className="text-2xl" />
+          </button>
+          <button className="bg-white p-3 rounded-full shadow-md text-blue-600 hover:bg-gray-100">
+            <FaFacebook className="text-2xl" />
+          </button>
+          <button className="bg-white p-3 rounded-full shadow-md text-gray-800 hover:bg-gray-100">
+            <FaGithub className="text-2xl" />
+          </button>
         </div>
       </div>
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-6">
@@ -242,7 +239,11 @@ const Register = () => {
             <button className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600" onClick={handleRegister}>
               Register
             </button>
-            <button className="w-full mt-2 bg-gray-500 text-white p-2 rounded hover:bg-gray-600" onClick={() => setStep(1)}>
+            <button className="w-full mt-2 bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+              onClick={() => {
+                setStep(1);
+                setOtp("");
+              }}>
               Back
             </button>
           </div>

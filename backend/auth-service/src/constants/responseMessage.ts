@@ -7,5 +7,11 @@ export const HttpResponse = {
     NO_ACCESS_TOKEN : "Token not provided",
     NO_REFRESH_TOKEN: "Refresh token not provided",
     NO_RESET_TOKEN: "Reset token not provided",
-    NO_DECODED_TOKEN: "Couldn't decode token"
+    NO_DECODED_TOKEN: "Couldn't decode token",
+    EMAIL_REQUIRED: "Email is required",
+    OTP_REQUIRED: "OTP is required",
+    OTP_SEND: "OTP send to email",
+    OTP_NOT_FOUND: "OTP expired or not found",
+    OTP_INVALID: "OTP invalid",
+    OTP_VERIFIED: "OTP verified successfully",
 }

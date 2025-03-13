@@ -1,10 +1,10 @@
 import { Container } from "inversify";
-import { NotificationController } from "../controllers/otpController";
-import { OtpService } from "../services/otpService";
+import { NotificationController } from "../controllers/notificationController";
+import { NotificationService } from "../services/notificationService";
 
 const container = new Container();
 
-container.bind<OtpService>(OtpService).toSelf();
+container.bind<NotificationService>(NotificationService).toSelf();
 container.bind<NotificationController>(NotificationController).toSelf();
 
 export default container;

@@ -14,6 +14,7 @@ interface CropImageModalProps {
     onCropComplete: (croppedArea: any, croppedAreaPixels: any) => void;
     getCroppedImage: () => void;
     isDark: boolean;
+    aspectRatio?: number;
 }
 
 const CropImageModal: React.FC<CropImageModalProps> = ({
@@ -26,7 +27,8 @@ const CropImageModal: React.FC<CropImageModalProps> = ({
     setZoom,
     onCropComplete,
     getCroppedImage,
-    isDark
+    isDark,
+    aspectRatio = 1
 }) => {
     return (
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -43,7 +45,7 @@ const CropImageModal: React.FC<CropImageModalProps> = ({
                         image={imageSrc || ""}
                         crop={crop}
                         zoom={zoom}
-                        aspect={1}
+                        aspect={aspectRatio}
                         onCropChange={setCrop}
                         onZoomChange={setZoom}
                         onCropComplete={onCropComplete}

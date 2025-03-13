@@ -9,23 +9,24 @@ import { HttpResponse } from "../constants/responseMessage";
 import { comparePassword, hashPassword } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken, verifyResetToken } from "../utils/jwt";
 import { IAuth } from "../models/AuthModel";
+import { generateOtp } from "../utils/otp";
 
 @injectable()
 export class AuthService {
-    constructor(@inject("IAuthRepository") private authRepository: IAuthRepository) {}
+    constructor(@inject("IAuthRepository") private authRepository: IAuthRepository) { }
 
     async loginUser(email: string, password: string): Promise<{ accessToken: string, refreshToken: string, role: string }> {
 
         const user = await this.authRepository.getUserByEmail(email);
-        
+
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
-        
+
         const isMatch = await comparePassword(password, user.password);
-        
-        if(!isMatch) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.PASSWORD_INCORRECT);
+
+        if (!isMatch) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.PASSWORD_INCORRECT);
 
         console.log('hii')
-        
+
         const payload = { id: user._id, role: user.role };
 
         const accessToken = generateAccessToken(payload);
@@ -54,13 +55,47 @@ export class AuthService {
         await this.authRepository.createUserByGrpc(authData);
     }
 
+    async sendOtp(email: string): Promise<void> {
+
+        const existingUser = await this.authRepository.getUserByEmail(email);
+
+        if(existingUser){
+            throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
+        }
+
+        const otp = generateOtp();
+
+        await redisClient.set(`otp:${email}`, otp, { EX: 90 });
+
+        publishToQueue("send_otp", {
+            email: email,
+            otp: otp
+        });
+
+    }
+
+    async verifyOtp(email: string, otp: string): Promise<void> {
+
+        const storedOtp = await redisClient.get(`otp:${email}`);
+
+        if (!storedOtp) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.OTP_NOT_FOUND);
+        }
+        if (storedOtp !== otp) {
+            throw createHttpError(HttpStatus.CONFLICT, HttpResponse.OTP_INVALID);
+        }
+
+        await redisClient.del(`otp:${email}`);
+
+    }
+
     async forgotPassword(email: string): Promise<void> {
 
         const user = await this.authRepository.getUserByEmail(email);
 
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 
-        const resetToken = generateResetToken({email});
+        const resetToken = generateResetToken({ email });
 
         await redisClient.set(`resetToken:${user._id}`, resetToken, { EX: 900 });
 
@@ -69,7 +104,7 @@ export class AuthService {
             resetLink: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
         });
 
-        console.log(`📩 Sent reset email request to Notification Service for ${ email }`);
+        console.log(`📩 Sent reset email request to Notification Service for ${email}`);
     }
 
     async resetPassword(token: string, password: string): Promise<void> {
@@ -82,7 +117,7 @@ export class AuthService {
 
         const user = await this.authRepository.getUserByEmail(decoded.email);
 
-        if(!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 
         user.password = await hashPassword(password);
 

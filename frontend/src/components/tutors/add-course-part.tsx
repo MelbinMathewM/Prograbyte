@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, useContext, ChangeEvent, FormEvent, useCallback } from "react";
 import {
   TextField,
   Button,
@@ -23,6 +23,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import CropImageModal from "../ui/crop-image-modal";
+import { getCroppedPosterImage } from "../../libs/courseImageCropper";
 
 interface Category {
   _id: string;
@@ -38,6 +40,13 @@ interface Course {
   poster: File | null;
   preview_video: File | null;
   createdAt: dayjs.Dayjs;
+}
+
+interface CroppedArea {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
 }
 
 const AddCoursePart = () => {
@@ -62,6 +71,11 @@ const AddCoursePart = () => {
   const [posterPreview, setPosterPreview] = useState<string | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedArea | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -97,8 +111,32 @@ const AddCoursePart = () => {
   const handlePosterUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setCourse((prev) => ({ ...prev, poster: file }));
-      setPosterPreview(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageSrc(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+    setModalOpen(true);
+  };
+
+  const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleCroppedImage = async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
+    try {
+      const croppedBlob = await getCroppedPosterImage(imageSrc, croppedAreaPixels);
+      console.log(croppedBlob,'hswhwi')
+      if(!croppedBlob) return;
+
+      const croppedFile = new File([croppedBlob], "cropped_poster.jpg", { type: "image/jpeg" });
+      setPosterPreview(URL.createObjectURL(croppedFile));
+      setCourse((prev) => ({ ...prev, poster: croppedFile }));
+      setModalOpen(false);
+    } catch (error) {
+      setModalOpen(false);
     }
   };
 
@@ -233,8 +271,8 @@ const AddCoursePart = () => {
             <Link
               to="/tutor/courses"
               className={`flex px-4 py-2 rounded-md transition-colors ${isDarkMode
-                  ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
+                ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
             >
               <ChevronLeft className="mt-1" size={18} />
@@ -360,6 +398,20 @@ const AddCoursePart = () => {
                   </Box>
                 )}
               </Grid>
+
+              <CropImageModal 
+                modalOpen={modalOpen} 
+                setModalOpen={setModalOpen} 
+                imageSrc={imageSrc} 
+                crop={crop} 
+                setCrop={setCrop} 
+                zoom={zoom} 
+                setZoom={setZoom} 
+                onCropComplete={onCropComplete} 
+                getCroppedImage={handleCroppedImage} 
+                isDark={isDarkMode} 
+                aspectRatio={window.innerWidth / window.innerHeight}
+              />
 
               <Grid item xs={12} sm={6}>
                 <Button
