@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import axiosInstance from "../../axios/axiosConfig";
 import AccordionItem from "../ui/accordian-item";
 import Accordion from "../ui/accordian";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addToWishlist, getWishlist, removeFromWishlist } from "../../api/wishlist";
 import { UserContext } from "../../contexts/user-context";
 import toast from "react-hot-toast";
@@ -22,9 +22,14 @@ interface Course {
     approval_status: "Pending" | "Approved" | "Rejected";
 }
 
-interface Topic {
+interface Topics {
     _id: string;
     course_id: string,
+    topics: Topic[];
+}
+
+interface Topic {
+    _id: string;
     title: string;
     level: "Basic" | "Intermediate" | "Advanced";
     video_url: string;
@@ -33,7 +38,8 @@ interface Topic {
 
 const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) => {
 
-    const [topics, setTopics] = useState<Topic[]>([]);
+    const [topicsMain, setTopicsMain] = useState<Topics | null>(null);
+    const [topics, setTopics] = useState<Topic[]>([])
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [activeTab, setActiveTab] = useState("about");
     const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
@@ -56,8 +62,8 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
             if (!course) return;
             try {
                 const response = await axiosInstance.get(`/course/topics/${course._id}`);
-                console.log(response.data, 'data')
-                setTopics(response.data);
+                setTopicsMain(response.data);
+                setTopics(response.data.topics);
             } catch (err) {
                 console.error("Error fetching topics");
             }
@@ -123,6 +129,8 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         Advanced: topics.filter(topic => topic.level === "Advanced"),
     };
 
+    console.log(categorizedTopics,'cattop')
+
     return (
         <div className={`grid grid-cols-3 shadow-lg rounded p-3 gap-8 max-w-6xl mx-auto mt-8 ${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
             {/* Left - Main Content */}
@@ -172,7 +180,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
                             <h2 className="text-2xl font-semibold">Course Content</h2>
                             <p className={`mt-2 ${isDark ? "text-gray-300" : "text-gray-700"}`}>Topics covered in this course:</p>
                             <div className="mt-4">
-                                {Object.entries(categorizedTopics).map(([level, topics]) => (
+                                {Object.entries(categorizedTopics).map(([level, topicItems]) => (
                                     <div key={level} className={`mt-2 border rounded-lg ${isDark ? "border-gray-600" : "border-gray-300"}`}>
                                         {/* Dropdown Header */}
                                         <button
@@ -192,8 +200,8 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
                                         {/* Dropdown Content */}
                                         {openSections[level] && (
                                             <div className={`p-4 rounded-b-lg shadow-md ${isDark ? "bg-gray-800" : "bg-white"}`}>
-                                                {topics.length > 0 ? (
-                                                    <TopicList topics={topics} courseName={course?.title as string} isDark={isDark} />
+                                                {topicItems.length > 0 ? (
+                                                    <TopicList topicsItems={topicItems} courseName={course?.title as string} isDark={isDark} topicsId={topicsMain?._id as string}/>
                                                 ) : (
                                                     <p className={`${isDark ? "text-gray-400" : "text-gray-500"}`}>No topics available</p>
                                                 )}
@@ -221,17 +229,17 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
 };
 
 
-const TopicList = ({ topics, courseName, isDark }: { topics: Topic[], courseName: string, isDark: boolean }) => {
+const TopicList = ({ topicsItems, courseName, isDark, topicsId }: { topicsItems: Topic[], courseName: string, isDark: boolean, topicsId: string }) => {
     return (
         <ul className={`grid grid-cols-1 md:grid-cols-2 gap-4 list-none ${isDark ? "text-gray-300" : "text-gray-700"}`}>
-            {topics.map((topic) => (
-                <TopicItem key={topic._id} topic={topic} courseName={courseName} isDark={isDark} />
+            {topicsItems.map((topic) => (
+                <TopicItem key={topic._id} topic={topic} courseName={courseName} isDark={isDark} topicsId={topicsId}/>
             ))}
         </ul>
     );
 };
 
-const TopicItem = ({ topic, courseName, isDark }: { topic: Topic, courseName: string, isDark: boolean }) => {
+const TopicItem = ({ topic, courseName, isDark, topicsId }: { topic: Topic, courseName: string, isDark: boolean, topicsId: string }) => {
     const titleRef = useRef<HTMLSpanElement | null>(null);
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [isOverflowing, setIsOverflowing] = useState(false);
@@ -267,21 +275,23 @@ const TopicItem = ({ topic, courseName, isDark }: { topic: Topic, courseName: st
 
             {/* Action Buttons */}
             <div className="flex gap-3 ms-2">
-                <a
-                    href={`/courses/${courseName}/topics/video/${topic._id}`}
+                {topic.notes_url && (
+                    <Link
+                    to={`/courses/${courseName}/topics/${topicsId}/notes/${topic._id}`}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition
+                        ${isDark ? "bg-green-500 hover:bg-green-600 text-white" : "bg-green-400 hover:bg-green-600 text-white"}`}
+                    >
+                    📄
+                    </Link>
+                )}
+                <Link
+                    to={`/courses/${courseName}/topics/${topicsId}/video/${topic._id}`}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition
                         ${isDark ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-blue-400 hover:bg-blue-600 text-white"}`}
                 >
                     🎥
-                </a>
+                </Link>
 
-                <a
-                    href={`/courses/${courseName}/topics/notes/${topic._id}`}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition
-                        ${isDark ? "bg-green-500 hover:bg-green-600 text-white" : "bg-green-400 hover:bg-green-600 text-white"}`}
-                >
-                    📄
-                </a>
             </div>
         </li>
     );

@@ -128,8 +128,8 @@ const AddCoursePart = () => {
     if (!imageSrc || !croppedAreaPixels) return;
     try {
       const croppedBlob = await getCroppedPosterImage(imageSrc, croppedAreaPixels);
-      console.log(croppedBlob,'hswhwi')
-      if(!croppedBlob) return;
+      console.log(croppedBlob, 'hswhwi')
+      if (!croppedBlob) return;
 
       const croppedFile = new File([croppedBlob], "cropped_poster.jpg", { type: "image/jpeg" });
       setPosterPreview(URL.createObjectURL(croppedFile));
@@ -201,12 +201,21 @@ const AddCoursePart = () => {
 
     try {
       const formData = new FormData();
-      Object.entries(course).forEach(([key, value]) => {
-        if (value) {
-          formData.append(key, value as Blob | string);
-        }
-      });
+      formData.append("title", course.title);
+      formData.append("description", course.description);
+      formData.append("category_id", course.category_id);
       formData.append("tutor_id", tutorId ?? "");
+      formData.append("price", course.price.toString());
+
+      // Append poster file (if exists)
+      if (course.poster) {
+        formData.append("poster", course.poster);
+      }
+
+      // Append preview videos (if exists)
+      if (course.preview_video) {
+          formData.append("preview_video", course.preview_video);
+      }
 
       const response = await axiosInstance.post("/course/courses", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -223,6 +232,7 @@ const AddCoursePart = () => {
       if (error.response) {
         const backendMessage = error.response.data.error || "An error occurred";
         toast.error(backendMessage);
+        setIsLoading(false)
       } else if (error.request) {
         toast.error("Server is not responding. Please try again later.");
       } else {
@@ -399,17 +409,17 @@ const AddCoursePart = () => {
                 )}
               </Grid>
 
-              <CropImageModal 
-                modalOpen={modalOpen} 
-                setModalOpen={setModalOpen} 
-                imageSrc={imageSrc} 
-                crop={crop} 
-                setCrop={setCrop} 
-                zoom={zoom} 
-                setZoom={setZoom} 
-                onCropComplete={onCropComplete} 
-                getCroppedImage={handleCroppedImage} 
-                isDark={isDarkMode} 
+              <CropImageModal
+                modalOpen={modalOpen}
+                setModalOpen={setModalOpen}
+                imageSrc={imageSrc}
+                crop={crop}
+                setCrop={setCrop}
+                zoom={zoom}
+                setZoom={setZoom}
+                onCropComplete={onCropComplete}
+                getCroppedImage={handleCroppedImage}
+                isDark={isDarkMode}
                 aspectRatio={window.innerWidth / window.innerHeight}
               />
 

@@ -2,9 +2,9 @@ import { injectable } from "inversify";
 import Category, { ICategory } from "../../models/categoryModel";
 import { ICourseRepository } from "../interfaces/ICourseRepository";
 import { Course, ICourse } from "../../models/courseModel";
-import { ITopic, Topic } from "../../models/topicModel";
+import { ITopic, ITopics, Topic } from "../../models/topicModel";
 import Wishlist, { IWishlist } from "../../models/wishlistModel";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import EnrolledCourses, { IEnrolledCourse, IEnrolledCourses } from "../../models/enrolledCoursesModel";
 
 @injectable()
@@ -82,9 +82,9 @@ export class CourseRepository implements ICourseRepository {
         }
     }
 
-    async createTopic(topic: ITopic[]): Promise<ITopic[]> {
+    async createTopic(topics: {course_id: mongoose.Types.ObjectId, topics: ITopic[]}): Promise<ITopics> {
         try {
-            return await Topic.insertMany(topic);
+            return await Topic.create(topics);
         } catch (error) {
             console.error("Error creating topics:", error);
             throw new Error("Failed to create topics");
@@ -157,16 +157,16 @@ export class CourseRepository implements ICourseRepository {
         }
     }
 
-    async getTopics(course_id: string): Promise<ITopic[] | null> {
+    async getTopics(course_id: string): Promise<ITopics | null> {
         try {
-            return await Topic.find({ course_id });
+            return await Topic.findOne({ course_id });
         } catch (error) {
             console.error("Error fetching topics:", error);
             throw new Error("Failed to retrieve topics");
         }
     }
 
-    async getTopicById(id: string): Promise<ITopic> {
+    async getTopicById(id: string): Promise<ITopics> {
         try {
             const topic = await Topic.findById(id);
             if (!topic) {

@@ -4,6 +4,11 @@ import multer from "multer";
 import { CourseController } from "../controllers/courseController";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinary";
+import { validate } from "../middlewares/validateMiddleware";
+import { courseSchema } from "../schemas/addCourseSchema";
+import { attachFilesToCourse, attachFilesToTopics} from "../middlewares/attachFiles";
+import { topicsSchema } from "../schemas/addTopicsSchema";
+import { editCourseSchema } from "../schemas/editCourseSchema";
 
 const courseRouter = Router();
 
@@ -40,13 +45,13 @@ courseRouter.delete('/categories/:id',(req,res,next) => courseController.deleteC
 
 courseRouter.get('/courses',(req,res,next) => courseController.getCourses(req,res,next));
 courseRouter.get('/courses/:id',(req,res) => courseController.getCourseDetail(req,res));
-courseRouter.put('/courses/:courseId',uploadCourse,(req,res) => courseController.editCourse(req,res));
-courseRouter.post('/courses',uploadCourse,(req,res,next) => courseController.createCourse(req,res,next));
+courseRouter.post('/courses',uploadCourse,attachFilesToCourse,validate(courseSchema),(req,res,next) => courseController.createCourse(req,res,next));
+courseRouter.put('/courses/:courseId',uploadCourse,attachFilesToCourse,validate(editCourseSchema),(req,res) => courseController.editCourse(req,res));
 courseRouter.patch('/courses/:courseId/status',(req,res,next) => courseController.changeCourseApprovalStatus(req,res,next));
 
 courseRouter.get('/topics/:course_id',(req,res) => courseController.getTopics(req,res));
-courseRouter.post('/topics',uploadTopic.any(),(req,res,next) => courseController.createTopic(req,res,next));
-courseRouter.get('/topics/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
+courseRouter.post('/topics',uploadTopic.any(),attachFilesToTopics,validate(topicsSchema),(req,res,next) => courseController.createTopic(req,res,next));
+courseRouter.get('/topics/:topicsId/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
 
 courseRouter.get('/secure-video-token',(req,res,next) => courseController.videoUrlToken(req,res,next));
 courseRouter.get('/secure-url/:token',(req,res,next) => courseController.getSecureUrl(req,res,next));

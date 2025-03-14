@@ -15,7 +15,7 @@ interface Topic {
 }
 
 const VideoPart = () => {
-    const { courseName, topicId } = useParams();
+    const { courseName, topicId, topicsId } = useParams();
     console.log(topicId, "jj");
     const [topic, setTopic] = useState<Topic | null>(null);
     const { theme } = useTheme();
@@ -26,7 +26,7 @@ const VideoPart = () => {
         const fetchTopic = async () => {
             if (!topicId) return;
             try {
-                const response = await axiosInstance.get(`/course/topics/topic/${topicId}`);
+                const response = await axiosInstance.get(`/course/topics/${topicsId}/topic/${topicId}`);
                 console.log(response.data);
                 setTopic(response.data);
             } catch (error) {

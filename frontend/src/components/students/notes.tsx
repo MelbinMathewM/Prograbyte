@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
+import PDFViewer from "./notes-pdf";
 
 interface Topic {
     _id: string;
@@ -11,7 +12,7 @@ interface Topic {
 }
 
 const ViewNotes = () => {
-    const { courseName, topicId } = useParams();
+    const { courseName, topicsId, topicId } = useParams();
     const [topic, setTopic] = useState<Topic | null>(null);
     const { theme } = useTheme();
     const isDark = theme === "dark-theme";
@@ -21,7 +22,7 @@ const ViewNotes = () => {
         const fetchNotes = async () => {
             if (!topicId) return;
             try {
-                const response = await axiosInstance.get(`/course/topics/topic/${topicId}`);
+                const response = await axiosInstance.get(`/course/topics/${topicsId}/topic/${topicId}`);
                 setTopic(response.data);
             } catch (error) {
                 console.error("Error fetching notes");
@@ -56,9 +57,11 @@ const ViewNotes = () => {
             </div>
 
             {/* Notes Content */}
-            <div className={`w-full max-w-4xl mx-auto border rounded-lg shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
+            <div className={`w-full max-w-4xl mx-auto rounded-lg shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
                 {topic?.notes_url ? (
-                    <iframe src={topic.notes_url} className="w-full h-[80vh] rounded-lg" title="Notes"></iframe>
+                    <div>
+                        <PDFViewer notesUrl={topic?.notes_url} isDark={isDark} />
+                    </div>
                 ) : (
                     <p className="text-center py-6 text-gray-500">No notes available for this topic.</p>
                 )}

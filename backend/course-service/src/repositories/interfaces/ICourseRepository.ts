@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { ICategory } from "../../models/categoryModel";
 import { ICourse } from "../../models/courseModel";
-import { ITopic } from "../../models/topicModel";
+import { ITopic, ITopics } from "../../models/topicModel";
 import { IWishlist } from "../../models/wishlistModel";
 import { IEnrolledCourse, IEnrolledCourses } from "../../models/enrolledCoursesModel";
 
@@ -23,9 +23,9 @@ export interface ICourseRepository {
     findCourseAndUpdate(courseId: string, courseData: Object): Promise<ICourse | null>;
     changeCourseStatus(courseId: string, status: string): Promise<void>;
 
-    createTopic(topic: ITopic[]): Promise<ITopic[]>;
-    getTopics(course_id: string): Promise<ITopic[] | null>;
-    getTopicById(id: string): Promise<ITopic>;
+    createTopic(topics: {course_id: Types.ObjectId, topics: ITopic[]}): Promise<ITopics>;
+    getTopics(course_id: string): Promise<ITopics | null>;
+    getTopicById(id: string): Promise<ITopics>;
 
     getEnrolledCoursesByUserId(userId: Types.ObjectId): Promise<IEnrolledCourses | null>;
     createEnrolledCourse(userId: Types.ObjectId,course: IEnrolledCourse): Promise<void>;

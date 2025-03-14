@@ -21,7 +21,7 @@ import { ChevronRight } from "lucide-react";
 import axiosInstance from "../../axios/axiosConfig";
 import { toast } from "react-toastify";
 
-interface Topic {
+interface AddTopic {
   course_id: string;
   title: string;
   level: string;
@@ -37,12 +37,12 @@ const AddTopicPart = () => {
   const navigate = useNavigate();
   const { courseId } = useParams();
   
-  const [topics, setTopics] = useState<Topic[]>([
+  const [topics, setTopics] = useState<AddTopic[]>([
     { title: "", level: "Basic", course_id: courseId ?? "", video: null, notes: null, createdAt: dayjs(), videoPreview: null },
   ]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleTopicChange = (index: number, field: keyof Topic, value: any) => {
+  const handleTopicChange = (index: number, field: keyof AddTopic, value: any) => {
     setTopics((prev) =>
       prev.map((topic, i) => (i === index ? { ...topic, [field]: value } : topic))
     );
@@ -75,7 +75,7 @@ const AddTopicPart = () => {
     setTopics([...topics, { title: "", level: "Basic", course_id: courseId ?? "", video: null, notes: null, createdAt: dayjs(), videoPreview: null }]);
   };
 
-  const validateTopics = (topics: Topic[]): boolean => {
+  const validateTopics = (topics: AddTopic[]): boolean => {
     const hasError = topics.some((topic, index) => {
       if (!topic.title.trim()) {
         toast.error(`Topic ${index + 1} must have a title.`);

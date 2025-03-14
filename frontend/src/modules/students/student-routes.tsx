@@ -17,8 +17,8 @@ const StudentRoutes = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/courses" element={<CoursePage />} />
             <Route path="/courses/:id" element={<StudentCourseDetail />} />
-            <Route path="/courses/:courseName/topics/video/:topicId" element={<VideoPage />} />
-            <Route path="/courses/:courseName/topics/notes/:topicId" element={<NotesPage />} />
+            <Route path="/courses/:courseName/topics/:topicsId/video/:topicId" element={<VideoPage />} />
+            <Route path="/courses/:courseName/topics/:topicsId/notes/:topicId" element={<NotesPage />} />
             <Route path="/checkout/:courseId" element={<Checkout />} />
             <Route path="/profile" element={<StudentProfile />} />
             <Route path="/profile/my-courses" element={<MyCourses />} />

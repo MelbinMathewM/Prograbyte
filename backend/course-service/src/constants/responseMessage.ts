@@ -17,6 +17,7 @@ export const HttpResponse = {
     CATEGORY_DELETED: "Category deleted successfully",
     USER_ID_REQUIRED: "User ID is required",
     COURSE_ID_REQUIRED: "Course ID is required",
+    COURSE_NOT_FOUND: "Course not found",
     COURSE_EXIST_WISHLIST: "Course already in wishlist",
     COURSE_ADDED_WISHLIST: "Course added to wishlist",
     WISHLIST_NOT_FOUND: "Wishlist not found",
@@ -25,5 +26,8 @@ export const HttpResponse = {
     PUBLIC_ID_NOT_FOUND: "Cloudinary publicId not found",
     COURSE_EXIST_ENROLLED: "Course already enrolled",
     COURSE_ENROLLED: "Course enroled successfully",
-    ENROLLED_COURSES_NOT_FOUND: "No enrolled courses found"
+    ENROLLED_COURSES_NOT_FOUND: "No enrolled courses found",
+    UNEXPECTED_KEY_FOUND: "Unexpected key found",
+    INVALID_CREDENTIALS: "Invalid credentials",
+    MISSING_OR_INVALID_FIELDS: "Missing or invalid required fields"
 }

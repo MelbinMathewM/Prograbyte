@@ -11,6 +11,12 @@ import { Card } from "../ui/card";
 import Button from "../ui/Button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
+interface Topics {
+  _id: string;
+  course_id: string;
+  topics: Topic[];
+}
+
 interface Topic {
   _id: string;
   title: string;
@@ -40,7 +46,8 @@ interface Category {
 const TutorCourseDetailPart = () => {
   const { id } = useParams();
   const [course, setCourse] = useState<Course | null>(null);
-  const [topics, setTopics] = useState<Topic[]>([]);
+  const [topics, setTopics] = useState<Topics | null>(null);
+  const [topic, setTopic] = useState<Topic[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [updatedCourse, setUpdatedCourse] = useState<Partial<Course>>({ ...course });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -69,6 +76,7 @@ const TutorCourseDetailPart = () => {
       try {
         const response = await axiosInstance.get(`/course/topics/${course._id}`);
         setTopics(response.data);
+        setTopic(response.data.topics);
       } catch (err) {
         console.error("Error fetching topics");
       }
@@ -181,7 +189,7 @@ const TutorCourseDetailPart = () => {
         filteredTopic
       );
 
-      setTopics((prevTopics) =>
+      setTopic((prevTopics) =>
         prevTopics.map((topic) =>
           topic._id === updatedTopic._id ? { ...topic, ...updatedTopic } : topic
         )
@@ -203,7 +211,7 @@ const TutorCourseDetailPart = () => {
 
   if (!course) return <p>Loading...</p>;
 
-  const categorizedTopics = topics.reduce((acc, topic) => {
+  const categorizedTopics = topic.reduce((acc, topic) => {
     if (!acc[topic.level]) acc[topic.level] = [];
     acc[topic.level].push(topic);
     return acc;

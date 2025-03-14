@@ -3,7 +3,7 @@ import { Loader2 } from "lucide-react";
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "success" | "destructive" | "outline";
+  variant?: "default" | "success" | "destructive" | "outline" | "ghost";
   isLoading?: boolean;
 }
 
@@ -22,6 +22,7 @@ const Button: React.FC<ButtonProps> = ({
     success: "bg-green-600 hover:bg-green-700 text-white cursor-pointer",
     destructive: "bg-red-600 hover:bg-red-700 text-white cursor-pointer",
     outline: "border border-blue-600 text-blue-600 hover:bg-blue-100 cursor-pointer",
+    ghost: "text-gray-600 hover:bg-gray-100 cursor-pointer",
   };
 
   return (
