@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { addSkill, deleteSkill, editSkill } from "../../api/profile";
 import toast from "react-hot-toast";
+import ConfirmDialog from "../ui/confirm-dialog";
 
 interface SkillProps {
     skills: string[],
@@ -113,43 +114,16 @@ const SkillPart: React.FC<SkillProps> = ({ skills, isDark, userId, setSkills }) 
             </div>
 
             {/* Confirmation Modal */}
-            <Dialog open={isConfirmOpen} onClose={() => setIsConfirmOpen(false)} className="relative z-50">
-                {/* Overlay */}
-                <div className="fixed inset-0 bg-black bg-opacity-50" />
-
-                <div className="fixed inset-0 flex items-center justify-center p-4">
-                    <Dialog.Panel
-                        className={`p-6 rounded-lg shadow-lg max-w-sm w-full transition-all ${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-800"
-                            }`}
-                    >
-                        <Dialog.Title className="text-lg font-bold">Confirm Deletion</Dialog.Title>
-                        <Dialog.Description className={`mt-2 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-                            Are you sure you want to remove this skill?
-                        </Dialog.Description>
-
-                        <div className="mt-4 flex justify-end gap-3">
-                            <button
-                                className={`px-4 py-2 rounded-lg transition-all ${isDark
-                                    ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                                    : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                                    }`}
-                                onClick={() => setIsConfirmOpen(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className={`px-4 py-2 rounded-lg transition-all ${isDark
-                                    ? "bg-red-600 text-white hover:bg-red-700"
-                                    : "bg-red-500 text-white hover:bg-red-600"
-                                    }`}
-                                onClick={handleRemoveSkill}
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    </Dialog.Panel>
-                </div>
-            </Dialog>
+            <ConfirmDialog
+                isOpen={isConfirmOpen}
+                onClose={() => setIsConfirmOpen(false)}
+                onConfirm={handleRemoveSkill}
+                title="Confirm Deletion"
+                message="Are you sure you want to remove this skill?"
+                confirmText="Remove"
+                cancelText="Cancel"
+                isDark={isDark}
+            />
 
             {/* Add Skill Input */}
             <div className="mt-4 flex items-center gap-2">

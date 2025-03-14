@@ -29,5 +29,10 @@ export const HttpResponse = {
     ENROLLED_COURSES_NOT_FOUND: "No enrolled courses found",
     UNEXPECTED_KEY_FOUND: "Unexpected key found",
     INVALID_CREDENTIALS: "Invalid credentials",
-    MISSING_OR_INVALID_FIELDS: "Missing or invalid required fields"
+    MISSING_OR_INVALID_FIELDS: "Missing or invalid required fields",
+    COURSE_DELETED: "Course deleted successfully",
+    TOPIC_UPDATED: "Topic updated successfully",
+    TOPICS_NOT_FOUND: "Topics data not found",
+    TOPIC_NOT_FOUND: "Topic not found",
+    TOPIC_DELETED: "Topic deleted successfully"
 }

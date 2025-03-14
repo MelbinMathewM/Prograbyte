@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import VideoPlayer from "./video-player";
+import { useSelector } from "react-redux";
 
 interface Topic {
     _id: string;
@@ -21,6 +22,8 @@ const VideoPart = () => {
     const { theme } = useTheme();
     const isDark = theme === "dark-theme";
     const navigate = useNavigate();
+
+    // const accessToken = useSelector((state: any) => state.auth.accessToken);
 
     useEffect(() => {
         const fetchTopic = async () => {

@@ -10,38 +10,8 @@ import { CircularProgress } from "@mui/material";
 import { Card } from "../ui/card";
 import Button from "../ui/Button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-
-interface Topics {
-  _id: string;
-  course_id: string;
-  topics: Topic[];
-}
-
-interface Topic {
-  _id: string;
-  title: string;
-  level: "Basic" | "Intermediate" | "Advanced";
-  video_url: string;
-  notes_url: string;
-}
-
-interface Course {
-  _id: string;
-  title: string;
-  description: string;
-  category_id: { _id: string, name: string };
-  price: number;
-  rating: number | null;
-  preview_video_urls: [string];
-  poster_url: string;
-  approval_status: "Pending" | "Approved" | "Rejected";
-}
-
-interface Category {
-  _id: string,
-  name: string,
-  type: string
-}
+import { Course, Topics, Topic, Category } from "../../types/course";
+import ConfirmDialog from "../ui/confirm-dialog";
 
 const TutorCourseDetailPart = () => {
   const { id } = useParams();
@@ -53,6 +23,8 @@ const TutorCourseDetailPart = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { theme } = useTheme();
   const isDarkMode = theme.includes("dark");
@@ -95,12 +67,23 @@ const TutorCourseDetailPart = () => {
   const deleteCourse = async () => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
     try {
-      await axiosInstance.delete(`/course/${id}`);
-      alert("Course deleted successfully!");
+      const response = await axiosInstance.delete(`/course/courses/${id}`);
+      alert(response.data.message);
+      navigate('/tutor/courses');
     } catch (err) {
       console.error("Error deleting course");
     }
   };
+
+  const handleRemoveTopic = async (topicId: string) => {
+    try{
+      const response = await axiosInstance.delete(`/course/topics/${topics?._id}/${topicId}`)
+      toast.success(response.data.message);
+      setTopic((prevTopics) => prevTopics.filter((topic) => topic._id !== topicId));
+    }catch(err: any){
+      toast.error(err.response.data.error)
+    }
+  }
 
   const validateCourse = (course: Partial<Course>, files: { poster?: File; video?: File }): boolean => {
     if (!course.title?.trim()) {
@@ -177,25 +160,23 @@ const TutorCourseDetailPart = () => {
     setSelectedTopic(null);
   };
 
-  const handleSaveTopic = async (updatedTopic: Partial<Topic>) => {
+  const handleSaveTopic = async (formData: FormData) => {
+    const topicId = formData.get("topicId");
     try {
-
-      const filteredTopic: Partial<Topic> = Object.fromEntries(
-        Object.entries(updatedTopic).filter(([_, v]) => v !== undefined)
-      );
-
+      console.log(...formData, 'll')
       const response = await axiosInstance.put(
-        `/course/topics/${updatedTopic._id}`,
-        filteredTopic
+        `/course/topics/${topics?._id}/${topicId}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
       );
 
       setTopic((prevTopics) =>
         prevTopics.map((topic) =>
-          topic._id === updatedTopic._id ? { ...topic, ...updatedTopic } : topic
+          topic._id === topicId ? { ...topic, ...formData } : topic
         )
       );
 
-      toast.success("Topic updated successfully");
+      toast.success(response.data.message);
       handleCloseModal();
     } catch (error: any) {
       if (error.response) {
@@ -319,7 +300,10 @@ const TutorCourseDetailPart = () => {
                     <button onClick={() => handleEditClick(topic)} className="text-purple-500 flex items-center gap-1 cursor-pointer">
                       <Pencil size={16} /> Edit
                     </button>
-                    <button className="text-red-500 flex items-center gap-1 cursor-pointer">
+                    <button className="text-red-500 flex items-center gap-1 cursor-pointer" onClick={() => {
+                      setSelectedTopicId(topic._id);
+                      setIsConfirmOpen(true)
+                    }}>
                       <Trash2 size={16} /> Delete
                     </button>
                   </TableCell>
@@ -337,10 +321,24 @@ const TutorCourseDetailPart = () => {
         <EditTopicModal
           topic={selectedTopic}
           onClose={handleCloseModal}
-          onSave={() => handleSaveTopic}
+          onSave={handleSaveTopic}
           isDark={isDarkMode}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={() => {
+          if (selectedTopicId) handleRemoveTopic(selectedTopicId);
+          setIsConfirmOpen(false);
+        }}
+        title="Confirm Deletion"
+        message="Are you sure you want to remove this topic?"
+        confirmText="Remove"
+        cancelText="Cancel"
+        isDark={isDarkMode}
+      />
     </Card>
   );
 };

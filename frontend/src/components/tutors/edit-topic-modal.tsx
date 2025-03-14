@@ -6,19 +6,12 @@ import Button from "../../components/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
 import { toast } from "react-hot-toast";
-
-interface Topic {
-    _id: string;
-    title: string;
-    level: "Basic" | "Intermediate" | "Advanced";
-    video_url?: string | null;
-    notes_url?: string;
-}
+import { Topic } from "../../types/course";
 
 interface EditTopicModalProps {
     topic: Topic;
     onClose: () => void;
-    onSave: (updatedTopic: Partial<Topic>) => void;
+    onSave: (updatedTopic: FormData) => Promise<void>;
     isDark?: boolean;
 }
 
@@ -62,15 +55,23 @@ const EditTopicModal = ({ topic, onClose, onSave, isDark }: EditTopicModalProps)
         if (validationError) {
             toast.error(validationError);
             return;
-        }   
+        }
 
-        onSave({
-            _id: topic._id,
-            title,
-            level,
-            video_url: files.video ? URL.createObjectURL(files.video) : topic.video_url,
-            notes_url: notesFile ? URL.createObjectURL(notesFile) : topic.notes_url,
-        });
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("level", level);
+        formData.append("topicId", topic._id);
+
+        if (files.video) {
+            formData.append("video", files.video);
+        }
+
+        if (notesFile) {
+            formData.append("notes", notesFile);
+        } else if (topic.notes_url) {
+            formData.append("notes_url", topic.notes_url);
+        }
+        onSave(formData);
     };
 
     return (

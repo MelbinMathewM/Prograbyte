@@ -21,11 +21,13 @@ export interface ICourseRepository {
     getCoursesByCategoryId(categoryId: string): Promise<ICourse[] | null>;
     getCourseDetail(id: string): Promise<ICourse | null>;
     findCourseAndUpdate(courseId: string, courseData: Object): Promise<ICourse | null>;
+    deleteCourseById(courseId: string): Promise<void>;
     changeCourseStatus(courseId: string, status: string): Promise<void>;
 
     createTopic(topics: {course_id: Types.ObjectId, topics: ITopic[]}): Promise<ITopics>;
     getTopics(course_id: string): Promise<ITopics | null>;
     getTopicById(id: string): Promise<ITopics>;
+    deleteTopicsByCourseId(courseId: string): Promise<void>;
 
     getEnrolledCoursesByUserId(userId: Types.ObjectId): Promise<IEnrolledCourses | null>;
     createEnrolledCourse(userId: Types.ObjectId,course: IEnrolledCourse): Promise<void>;

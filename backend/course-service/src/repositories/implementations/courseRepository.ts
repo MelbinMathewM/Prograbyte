@@ -118,6 +118,16 @@ export class CourseRepository implements ICourseRepository {
         }
     }
 
+    async deleteCourseById(courseId: string): Promise<void> {
+        try {
+            await Course.findByIdAndDelete(courseId);
+            return;
+        } catch (error) {
+            console.error("Error deleting course:", error);
+            throw new Error("Failed to delete course");
+        }
+    }
+
     async changeCourseStatus(courseId: string, status: string): Promise<void> {
         try {
             await Course.findByIdAndUpdate(courseId, { approval_status: status });
@@ -176,6 +186,16 @@ export class CourseRepository implements ICourseRepository {
         } catch (error) {
             console.error("Error fetching topic:", error);
             throw new Error("Failed to retrieve topic");
+        }
+    }
+
+    async deleteTopicsByCourseId(courseId: string): Promise<void> {
+        try{
+            await Topic.findOneAndDelete({course_id: courseId});
+            return;
+        }catch(err){
+            console.error("Error deletig topics:",err);
+            throw new Error("Failed to delete topics")
         }
     }
 

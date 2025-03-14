@@ -102,12 +102,12 @@ export class CourseService {
         let existTopic = await this.courseRepository.getTopics(topics.course_id as string);
 
         let newTopics;
-        if(existTopic){
+        if (existTopic) {
             existTopic.topics.push(...topics?.topics);
             newTopics = await existTopic?.save();
-        }else{
+        } else {
             const objectIdCourseId = convertToObjectId(topics.course_id as string);
-            newTopics = await this.courseRepository.createTopic({course_id: objectIdCourseId, topics: topics.topics})
+            newTopics = await this.courseRepository.createTopic({ course_id: objectIdCourseId, topics: topics.topics })
         }
 
         return newTopics;
@@ -209,7 +209,7 @@ export class CourseService {
 
         const topics = await this.courseRepository.getTopicById(topicsId);
 
-        console.log(topics,'tps')
+        console.log(topics, 'tps')
 
         if (!topics) return null;
 
@@ -217,7 +217,7 @@ export class CourseService {
 
         console.log(topic, 'tp')
 
-        if(!topic) return null;
+        if (!topic) return null;
 
 
         return {
@@ -237,11 +237,8 @@ export class CourseService {
         const updatedFields: Partial<ICourse> = {};
 
         if (courseData.poster_url && courseData.poster_url !== existingCourse.poster_url) {
-            console.log('hii-1')
             if (existingCourse.poster_url) {
-                console.log('hii-2')
                 const publicId = await this.extractPublicId2(existingCourse.poster_url);
-                console.log(publicId,'publicId');
                 await cloudinary.uploader.destroy(publicId);
             }
             updatedFields.poster_url = courseData.poster_url;
@@ -249,12 +246,12 @@ export class CourseService {
 
         if (courseData.preview_video_urls && courseData.preview_video_urls.length > 0) {
             const newPreviewVideoUrl = courseData.preview_video_urls[0];
-    
+
             if (existingCourse.preview_video_urls.length > 0 && newPreviewVideoUrl !== existingCourse.preview_video_urls[0]) {
                 const publicId = await this.extractPublicId2(existingCourse.preview_video_urls[0]);
                 await cloudinary.uploader.destroy(publicId, { resource_type: "video" });
             }
-    
+
             updatedFields.preview_video_urls = [newPreviewVideoUrl];
         }
 
@@ -274,17 +271,163 @@ export class CourseService {
 
     async extractPublicId2(fileUrl: string): Promise<string> {
         const parts = fileUrl.split("/");
-    
+
         const versionIndex = parts.findIndex(part => part.startsWith("v") && !isNaN(Number(part.substring(1))));
-    
+
         if (versionIndex !== -1) {
             parts.splice(versionIndex, 1);
         }
-    
+
         const publicIdParts = parts.slice(parts.indexOf("upload") + 1);
         const publicId = publicIdParts.join("/").split(".")[0];
-    
+
         return publicId;
+    }
+
+    async deleteCourse(courseId: string): Promise<void> {
+        const course = await this.courseRepository.getCourseDetail(courseId);
+
+        if (!course) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COURSE_NOT_FOUND);
+        }
+
+        const topics = await this.courseRepository.getTopics(courseId);
+
+        const mediaUrls = [
+            ...course.preview_video_urls,
+            course.poster_url
+        ].filter(Boolean);
+
+        if (topics) {
+            topics.topics.forEach(topic => {
+                if (topic.video_url) mediaUrls.push(topic.video_url);
+                if (topic.notes_url) mediaUrls.push(topic.notes_url);
+            });
+        }
+
+        const publicIds = await Promise.all(mediaUrls.map(url => this.extractPublicId3(url)));
+
+        await Promise.all(
+            publicIds.map(({ publicId, resourceType, isAuthenticated }) => {
+                return cloudinary.uploader.destroy(publicId, {
+                    resource_type: resourceType,
+                    type: isAuthenticated ? 'authenticated' : 'upload'
+                });
+            })
+        )
+
+        if (topics) {
+            await this.courseRepository.deleteTopicsByCourseId(courseId);
+        }
+
+        await this.courseRepository.deleteCourseById(courseId);
+    }
+
+    async deleteTopic(topicsId: string, topicId: string): Promise<void> {
+
+        const topics = await this.courseRepository.getTopicById(topicsId);
+
+        if (!topics) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPICS_NOT_FOUND);
+        }
+
+        const topicIndex = topics.topics.findIndex((t: any) => t._id.toString() === topicId);
+
+        if (topicIndex === -1) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPIC_NOT_FOUND);
+        }
+
+        const topic = topics.topics[topicIndex];
+
+        const mediaUrls: string[] = [];
+        if (topic.video_url) mediaUrls.push(topic.video_url);
+        if (topic.notes_url) mediaUrls.push(topic.notes_url);
+
+        if(mediaUrls.length > 0){
+            const publicIds = await Promise.all(mediaUrls.map(url => this.extractPublicId3(url)));
+
+            await Promise.all(
+                publicIds.map(({ publicId, resourceType, isAuthenticated }) => {
+                    return cloudinary.uploader.destroy(publicId, {
+                        resource_type: resourceType,
+                        type: isAuthenticated ? 'authenticated' : 'upload'
+                    });
+                })
+            )
+        }
+
+        topics.topics.splice(topicIndex, 1);
+
+        await topics.save();
+    }
+
+    private extractPublicId3(url: string): { publicId: string; resourceType: string; isAuthenticated: boolean } {
+        try {
+            const match = url.match(/\/(upload|authenticated)\/(?:s--[^/]+--\/)?v\d+\/(.+?)(\.\w+)?$/);
+            if (!match) {
+                console.warn("Invalid Cloudinary URL:", url);
+                return { publicId: "", resourceType: "auto", isAuthenticated: false };
+            }
+
+            const [, type, publicId] = match;
+            const resourceType = url.includes("/video/") ? "video" : url.includes("/image/") ? "image" : "raw";
+            const isAuthenticated = type === "authenticated";
+
+            return { publicId, resourceType, isAuthenticated };
+        } catch (error) {
+            console.error("Error extracting Cloudinary Public ID:", error);
+            return { publicId: "", resourceType: "auto", isAuthenticated: false };
+        }
+    }
+
+
+    determineResourceType(publicId: string): "image" | "video" | "raw" {
+        if (publicId.includes("/video/")) return "video";
+        if (publicId.includes("/raw/")) return "raw";
+        return "image";
+    }
+
+    async updateTopic(topicsId: string, topicId: string, topicData: ITopic): Promise<ITopic> {
+
+        const topics = await this.courseRepository.getTopicById(topicsId);
+
+        if (!topics) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPICS_NOT_FOUND);
+        }
+
+        const topicIndex = topics.topics.findIndex((t: any) => t._id.toString() === topicId);
+
+        if (topicIndex === -1) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPIC_NOT_FOUND);
+        }
+
+        const topic = topics.topics[topicIndex];
+
+        if (topicData.video_url && topicData.video_url !== topic.video_url) {
+            if (topic.video_url) {
+                const publicId = await this.extractPublicId2(topic.video_url);
+                await cloudinary.uploader.destroy(publicId);
+            }
+        }
+
+        if (topicData.notes_url && topicData.notes_url !== topic.notes_url) {
+            if (topic.notes_url) {
+                const publicId = await this.extractPublicId2(topic.notes_url);
+                await cloudinary.uploader.destroy(publicId);
+            }
+        }
+
+        topics.topics[topicIndex] = {
+            ...topic,
+            title: topicData.title || topic.title,
+            level: topicData.level || topic.level,
+            video_url: topicData.video_url || topic.video_url,
+            notes_url: topicData.notes_url || topic.notes_url
+        };
+
+        await topics.save();
+
+        return topics.topics[topicIndex];
     }
 
     async getWishlist(userId: string): Promise<IWishlist> {
@@ -339,6 +482,7 @@ export class CourseService {
     }
 
     async getVideoToken(publicId: string): Promise<string> {
+
         const token = generateToken({ publicId });
 
         return token;
@@ -348,7 +492,10 @@ export class CourseService {
     async getSecureVideo(token: string): Promise<string> {
 
         const decoded = verifyToken(token) as { publicId: string };
-        console.log(decoded, 'decoded')
+
+        if (!decoded || !decoded.publicId) {
+            throw createHttpError(HttpStatus.NO_CONTENT, HttpResponse.NO_DECODED_TOKEN);
+        }
         const publicId = decoded.publicId;
 
         if (!publicId) {
@@ -356,8 +503,6 @@ export class CourseService {
         }
 
         const secureUrl = await getSecureVideoUrl(publicId);
-
-        console.log("Signed Video URL:", secureUrl);
 
         return secureUrl;
     }

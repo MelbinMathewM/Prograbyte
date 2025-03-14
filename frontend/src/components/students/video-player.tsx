@@ -11,56 +11,45 @@ interface VideoPlayerProps {
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
     const [token, setToken] = useState<string | null>(null);
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
+    const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
     useEffect(() => {
         if (!publicId) return;
-        const fetchVideoUrl = async () => {
+
+        const fetchVideoToken = async () => {
             try {
                 const response = await fetchToken(publicId);
                 setToken(response.token);
             } catch (error: any) {
-                if (error.response) {
-                    const backendMessage = error.response.data.error || "An error occurred";
-                    toast.error(backendMessage);
-                } else if (error.request) {
-                    console.error("Server is not responding. Please try again later.");
-                } else {
-                    console.error("Something went wrong. Please try again.");
-                }
+                const backendMessage = error.response?.data?.error || "An error occurred";
+                toast.error(backendMessage);
             }
         };
-        fetchVideoUrl();
-    },[publicId])
+
+        fetchVideoToken();
+    }, [publicId]);
 
     useEffect(() => {
         if (!token) return;
-        const fetchSecureUrl = async () => {
-            console.log(token, 'token')
+
+        const fetchSecureVideoUrl = async () => {
             try {
                 const response = await getSecureUrl(token);
-                setVideoUrl(response.videoUrl);
-                console.log(response.videoUrl,'res.v.u');
+                console.log(response,'ll')
+                setVideoUrl(`${BASE_URL}${response.videoUrl}`);
+                console.log(`${BASE_URL}${response.videoUrl}`)
             } catch (error: any) {
-                if (error.response) {
-                    const backendMessage = error.response.data.error || "An error occurred";
-                    toast.error(backendMessage);
-                } else if (error.request) {
-                    console.error("Server is not responding. Please try again later.");
-                } else {
-                    console.error("Something went wrong. Please try again.");
-                }
+                const backendMessage = error.response?.data?.error || "An error occurred";
+                toast.error(backendMessage);
             }
         };
 
-        fetchSecureUrl();
+        fetchSecureVideoUrl();
     }, [token]);
 
     return (
         <div className="flex justify-center items-center pt-3">
-            <div
-                className={`w-full max-w-3xl mx-auto border-b rounded shadow-lg 
-                    ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}
-            >
+            <div className={`w-full max-w-3xl mx-auto border-b rounded shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
                 {videoUrl ? (
                     <ReactPlayer
                         url={videoUrl}

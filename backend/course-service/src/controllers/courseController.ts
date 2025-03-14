@@ -113,6 +113,25 @@ export class CourseController {
     }
   }
 
+  async editTopic(req:Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { topicsId, topicId } = req.params;
+
+      if(!topicsId || !topicId){
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.INVALID_CREDENTIALS});
+        return;
+      }
+
+      const topic = await this.courseService.updateTopic(topicsId, topicId, req.body);
+
+      console.log(topic)
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.TOPIC_UPDATED, topic})
+    }catch(err){
+      next(err);
+    }
+  }
+
 
   async getCourses(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -192,8 +211,6 @@ export class CourseController {
     try {
       const { courseId } = req.params;
 
-      console.log(req.body,"req,body");
-
       const updatedCourse = await this.courseService.updateCourse(courseId, req.body);
 
       res.status(200).json({ message: "Course updated successfully", course: updatedCourse });
@@ -204,6 +221,40 @@ export class CourseController {
         console.log(err as string)
         res.status(400).json({ error: "An unknown error occurred" });
       }
+    }
+  }
+
+  async deleteCourse(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { courseId } = req.params;
+
+      if(!courseId){
+        res.status(HttpStatus.BAD_REQUEST).json({error: HttpResponse.COURSE_ID_REQUIRED});
+        return;
+      }
+
+      await this.courseService.deleteCourse(courseId);
+
+      res.status(HttpStatus.OK).json({message: HttpResponse.COURSE_DELETED});
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async removeTopic(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { topicsId, topicId } = req.params;
+
+      if(!topicsId || !topicId){
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.INVALID_CREDENTIALS});
+        return;
+      }
+
+      await this.courseService.deleteTopic(topicsId, topicId);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.TOPIC_DELETED});
+    }catch(err){
+      next(err);
     }
   }
 
@@ -340,10 +391,7 @@ export class CourseController {
   async getSecureUrl(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { token } = req.params;
-      const accessToken = req.headers.authorization;
-
-      console.log(token, 'token')
-      console.log("Received Access Token:", accessToken);
+      const accessToken = req.headers.authorization?.replace("Bearer ", "");
 
       if (!accessToken) {
         res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_ACCESS_TOKEN);
@@ -355,12 +403,7 @@ export class CourseController {
         return
       }
 
-      const secureUrl = await this.courseService.getSecureVideo(token as string);
-
-      const videoUrl = `/course/proxy-stream/${token}?access_toekn=${accessToken.replace("Bearer ", "")}`;
-
-      res.status(HttpStatus.OK).json({ videoUrl });
-
+      res.status(HttpStatus.OK).json({ videoUrl: `/course/proxy-stream/${token}` });
     } catch (err) {
       next(err)
     }
@@ -369,13 +412,14 @@ export class CourseController {
   async proxyStream(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { token } = req.params;
-      const accessToken = req.query.access_token as string;
+      // const accessToken = req.headers.authorization?.replace("Bearer ", "");
 
       console.log("Proxy Streaming Token:", token);
-      console.log("Access Token:", accessToken);
+      // console.log("Access Token:", accessToken);
 
-      if (!token || !accessToken) {
+      if (!token) {
         res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN);
+        return;
       }
 
       const secureUrl = await this.courseService.getSecureVideo(token);
@@ -383,13 +427,15 @@ export class CourseController {
       const videoStream = await axios({
         method: "get",
         url: secureUrl,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${accessToken}`,
+        // },
         responseType: "stream",
       });
 
       res.setHeader("Content-Type", "video/mp4");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Accept-Ranges", "bytes");
       videoStream.data.pipe(res);
 
     } catch (err) {

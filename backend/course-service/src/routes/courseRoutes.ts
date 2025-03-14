@@ -9,6 +9,7 @@ import { courseSchema } from "../schemas/addCourseSchema";
 import { attachFilesToCourse, attachFilesToTopics} from "../middlewares/attachFiles";
 import { topicsSchema } from "../schemas/addTopicsSchema";
 import { editCourseSchema } from "../schemas/editCourseSchema";
+import { editTopicSchema } from "../schemas/editTopicSchema";
 
 const courseRouter = Router();
 
@@ -47,10 +48,13 @@ courseRouter.get('/courses',(req,res,next) => courseController.getCourses(req,re
 courseRouter.get('/courses/:id',(req,res) => courseController.getCourseDetail(req,res));
 courseRouter.post('/courses',uploadCourse,attachFilesToCourse,validate(courseSchema),(req,res,next) => courseController.createCourse(req,res,next));
 courseRouter.put('/courses/:courseId',uploadCourse,attachFilesToCourse,validate(editCourseSchema),(req,res) => courseController.editCourse(req,res));
+courseRouter.delete('/courses/:courseId',(req,res,next) => courseController.deleteCourse(req,res,next));
 courseRouter.patch('/courses/:courseId/status',(req,res,next) => courseController.changeCourseApprovalStatus(req,res,next));
 
 courseRouter.get('/topics/:course_id',(req,res) => courseController.getTopics(req,res));
 courseRouter.post('/topics',uploadTopic.any(),attachFilesToTopics,validate(topicsSchema),(req,res,next) => courseController.createTopic(req,res,next));
+courseRouter.put('/topics/:topicsId/:topicId',uploadTopic.any(),attachFilesToTopics,validate(editTopicSchema),(req,res,next) => courseController.editTopic(req,res,next));
+courseRouter.delete('/topics/:topicsId/:topicId',(req,res,next) => courseController.removeTopic(req,res,next));
 courseRouter.get('/topics/:topicsId/topic/:topicId',(req,res,next) => courseController.getTopic(req,res,next));
 
 courseRouter.get('/secure-video-token',(req,res,next) => courseController.videoUrlToken(req,res,next));
