@@ -3,13 +3,7 @@ import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { addSkill, deleteSkill, editSkill } from "../../api/profile";
 import toast from "react-hot-toast";
-
-interface SkillProps {
-    skills: string[],
-    isDark: boolean,
-    userId: string,
-    setSkills: (skills: string[]) => void;
-}
+import { SkillProps } from "../../types/user";
 
 const SkillPart: React.FC<SkillProps> = ({ skills, isDark, userId, setSkills }) => {
 

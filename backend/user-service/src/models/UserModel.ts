@@ -12,6 +12,7 @@ export interface IUser extends Document {
     role: "student" | "tutor" | "admin";
     isEmailVerified: boolean;
     isTutorVerified?: boolean;
+    isPremium?: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -60,6 +61,10 @@ const UserSchema = new Schema<IUser>(
             type: Boolean, 
             default: false 
         },
+        isPremium: {
+            type: Boolean,
+            default: false
+        }
 
     },
     { timestamps: true }

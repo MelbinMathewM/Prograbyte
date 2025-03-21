@@ -18,5 +18,6 @@ export const HttpResponse = {
     SKILL_EDITED: "Skill updated",
     SKILL_DELETED: "Skill deleted",
     SKILL_EXIST: "Skill already exists",
-    SKILL_NOT_FOUND: "Skill not found"
+    SKILL_NOT_FOUND: "Skill not found",
+    USER_ID_NOT_FOUND: "UserId not found"
 }

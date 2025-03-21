@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const publicRoutes = ["/api/user/register", "/api/course/proxy-stream"]; // Update to match your actual route
+const publicRoutes = ["/api/user/register", "/api/user/tutor-register"]; // Update to match your actual route
 
 const verifyToken = (req, res, next) => {
 
@@ -9,6 +9,7 @@ const verifyToken = (req, res, next) => {
     return next();
 }
   const authHeader = req.headers["authorization"];
+  console.log(authHeader,'bb')
   if (!authHeader) return res.status(401).json({ message: "Access Denied" });
 
   const token = authHeader.split(" ")[1];

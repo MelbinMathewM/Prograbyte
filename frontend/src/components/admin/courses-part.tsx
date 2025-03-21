@@ -3,23 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import AdminPagination from "./pagination";
-
-export type ApprovalStatus = "Pending" | "Approved" | "Rejected";
-
-export interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    category_id: string;
-    tutor_id: string;
-    price: number;
-    preview_video_url: string;
-    poster_url: string;
-    approval_status: ApprovalStatus;
-    rating: number | null;
-    createdAt?: string;
-    updatedAt?: string;
-}
+import { Course } from "../../types/course";
 
 const CoursePart = () => {
     const [courses, setCourses] = useState<Course[]>([]);

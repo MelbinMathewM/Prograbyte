@@ -50,6 +50,7 @@
     "swiper": "^11.2.4",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.6",
+    "video.js": "^8.22.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {

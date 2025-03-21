@@ -6,16 +6,7 @@ import { Textarea } from "../../components/ui/textarea";
 import Button from "../../components/ui/Button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
 import { toast } from "react-hot-toast";
-
-interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    category_id: { _id: string; name: string };
-    price: number;
-    preview_video_urls: [string];
-    poster_url: string;
-}
+import { Course } from "../../types/course";
 
 interface EditCourseModalProps {
     open: boolean;

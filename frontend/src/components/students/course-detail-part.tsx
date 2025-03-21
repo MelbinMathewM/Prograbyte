@@ -4,19 +4,7 @@ import axiosInstance from "../../axios/axiosConfig";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTheme } from "../../contexts/theme-context";
 import TabNav from "./course-detail-tabnav";
-
-interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    tutor_id: string;
-    category_id: { _id: string, name: string };
-    price: number;
-    rating: number | null;
-    preview_video_urls: [string];
-    poster_url: string;
-    approval_status: "Pending" | "Approved" | "Rejected";
-}
+import { Course } from "../../types/course";
 
 const StudentCourseDetailPart = () => {
     // const [coupon, setCoupon] = useState("");

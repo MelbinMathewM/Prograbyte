@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Award, BookOpen, ChevronLeft, ChevronRight, Heart, Settings, Upload, Wallet } from "lucide-react";
+import { Award, BookOpen, ChevronLeft, ChevronRight, Crown, Heart, Settings, Upload, Wallet } from "lucide-react";
 import { useTheme } from "../../contexts/theme-context";
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile, updateProfileInfo } from "../../api/profile";
@@ -10,25 +10,8 @@ import CropImageModal from "../ui/crop-image-modal";
 import UserDetails from "./profile-user-details";
 import { getCroppedImage } from "../../libs/imageCropper";
 import SkillPart from "./profile-skill";
+import { Profile, CroppedArea } from "../../types/user";
 
-interface Profile {
-    _id?: string;
-    name: string;
-    email: string;
-    username?: string;
-    profileImage: string | null;
-    bio?: string;
-    skills: string[];
-    role: string;
-    isEmailVerified: boolean;
-}
-
-interface CroppedArea {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-}
 
 export default function ProfilePage() {
 
@@ -197,13 +180,14 @@ export default function ProfilePage() {
 
                         {/* Profile Navigation Buttons */}
                         <div className="col-span-1 md:col-span-3">
-                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
                                 {[
                                     { label: "My Courses", icon: BookOpen, link: "/profile/my-courses" },
                                     { label: "Wishlist", icon: Heart, link: "/wishlist" },
                                     { label: "Wallet", icon: Wallet, link: "/wallet" },
                                     { label: "Certificates", icon: Award, link: "/certificates" },
                                     { label: "Settings", icon: Settings, link: "/settings" },
+                                    { label: "Premium", icon: Crown, link: "/profile/premium"}
                                 ].map((item, index) => (
                                     <Link
                                         key={index}
@@ -215,7 +199,7 @@ export default function ProfilePage() {
                                         <p className="mt-1 text-sm">{item.label}</p>
                                     </Link>
                                 ))}
-                            </div>;
+                            </div>
 
                         </div>
 

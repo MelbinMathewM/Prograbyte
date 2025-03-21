@@ -8,33 +8,7 @@ import { UserContext } from "../../contexts/user-context";
 import toast from "react-hot-toast";
 import CoursePurchaseSection from "./course-detail-purchasetab";
 import { fetchEnrolledCourse } from "../../api/course";
-
-interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    tutor_id: string;
-    category_id: { _id: string, name: string };
-    price: number;
-    rating: number | null;
-    preview_video_urls: [string];
-    poster_url: string;
-    approval_status: "Pending" | "Approved" | "Rejected";
-}
-
-interface Topics {
-    _id: string;
-    course_id: string,
-    topics: Topic[];
-}
-
-interface Topic {
-    _id: string;
-    title: string;
-    level: "Basic" | "Intermediate" | "Advanced";
-    video_url: string;
-    notes_url: string;
-}
+import { Course, Topic, Topics } from "../../types/course";
 
 const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) => {
 

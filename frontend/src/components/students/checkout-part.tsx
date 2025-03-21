@@ -8,17 +8,7 @@ import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { payCourse, saveEnrolledCourse } from "../../api/checkout";
 import { UserContext } from "../../contexts/user-context";
-
-interface Course {
-    id: string;
-    title: string;
-    description: string;
-    tutor_id: string;
-    poster_url: string;
-    price: number;
-    rating: number | null;
-    originalPrice: number;
-}
+import { Course } from "../../types/course";
 
 const CheckoutPage: React.FC = () => {
     const stripe = useStripe();

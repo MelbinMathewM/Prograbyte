@@ -34,4 +34,7 @@ export function validateEnv() {
     if (!env.SESSION_SECRET_KEY) {
         throw new Error("SESSION_SECRET_KEY is not found in the env");
     }
+    if (!env.STRIPE_SECRET_KEY) {
+        throw new Error("STRIPE_SECRET_KEY is not found in the env");
+    }
 }

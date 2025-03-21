@@ -8,6 +8,10 @@ import axios from "axios";
 import OTPInput from "./otp-input";
 import PasswordInput from "./password-input";
 import { registerUser, sendOtpToEmail, verifyOtpEmail } from "../../api/register";
+import { AppDispatch } from "../../redux/store";
+import { setUserToken } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -26,6 +30,7 @@ const Register = () => {
   const role = "student";
 
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
   // Confirm before leaving the page
@@ -105,7 +110,31 @@ const Register = () => {
     try {
       const response = await registerUser(name, username, email, password, role, isEmailVerified)
       toast.success(response.message);
-      setTimeout(() => navigate("/login"), 2000);
+
+      const loginResponse = await axios.post(
+        `${BASE_URL}/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
+    
+      const { role: userRole, accessToken } = loginResponse.data;
+    
+      // Store token and role in cookies
+      Cookies.set("accessToken", accessToken, { expires: 7 });
+      Cookies.set("role", userRole, { expires: 7 });
+    
+      // Update Redux store
+      dispatch(setUserToken({ accessToken, role: userRole }));
+    
+      toast.success("Login successful!");
+
+      if (userRole === "admin") {
+        navigate("/admin/dashboard");
+      } else if (userRole === "tutor") {
+        navigate("/tutor/dashboard");
+      } else {
+        navigate("/home");
+      }
     } catch (error: any) {
       toast.error(error.response.data.error);
     }

@@ -37,6 +37,7 @@ const Login = () => {
       );
 
       const { role, accessToken } = response.data;
+      
 
       Cookies.set("accessToken", accessToken, { expires: 7 });
       Cookies.set("role", role, { expires: 7 });

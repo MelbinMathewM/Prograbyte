@@ -10,6 +10,9 @@ import ProtectedRoute from "../../routes/protectedRoutes";
 import CoursePage from "../../pages/students/courses";
 import StudentCourseDetail from "../../pages/students/course-detail";
 import MyCourses from "../../pages/students/my-courses";
+import Premium from "../../pages/students/premium";
+import PaymentSuccess from "../../pages/students/payment-success";
+import PaymentFailure from "../../pages/students/payment-failure";
 
 const StudentRoutes = () => {
     return (
@@ -23,6 +26,9 @@ const StudentRoutes = () => {
             <Route path="/profile" element={<StudentProfile />} />
             <Route path="/profile/my-courses" element={<MyCourses />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/profile/premium" element={ <Premium /> } />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-failure" element={<PaymentFailure />} />
         </Route>
     );
 };

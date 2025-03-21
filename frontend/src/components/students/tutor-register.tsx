@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import axiosInstance from "../../axios/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
@@ -20,7 +19,7 @@ const otpSchema = yup.object().shape({
 
 const detailsSchema = yup.object().shape({
   name: yup.string().required("Name is required").min(3, "At least 3 characters required"),
-  phone: yup.string().matches(/^\d{10}$/, "Phone must be 10 digits").required("Phone number is required"),
+  username: yup.string().required("Username is required").min(3, "At least 3 characters required"),
   password: yup.string().min(6, "Minimum 6 characters required").required("Password is required"),
   confirmPassword: yup
     .string()
@@ -35,6 +34,7 @@ const TutorRegisterPage = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [resendTimer, setResendTimer] = useState(60);
+  const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
   const emailForm = useForm({ resolver: yupResolver(emailSchema) });
   const otpForm = useForm({ resolver: yupResolver(otpSchema) });
@@ -44,11 +44,11 @@ const TutorRegisterPage = () => {
     setLoading(true);
     setError(null);
     try {
-      await axiosInstance.post("/notification/send-otp", { email: data.email, role: "tutor" });
+      await axios.post(`${BASE_URL}/auth/send-otp`, { email: data.email, role: "tutor" });
       setEmail(data.email);
       setStep(2);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to send OTP");
+      setError(err.response?.data?.error || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
@@ -68,10 +68,10 @@ const TutorRegisterPage = () => {
     setLoading(true);
     setError(null);
     try {
-      await axiosInstance.post("/notification/send-otp", { email, role: "tutor" });
+      await axios.post(`${BASE_URL}/auth/send-otp`, { email, role: "tutor" });
       setResendTimer(60);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to resend OTP");
+      setError(err.response?.data?.error || "Failed to resend OTP");
     } finally {
       setLoading(false);
     }
@@ -81,10 +81,10 @@ const TutorRegisterPage = () => {
     setLoading(true);
     setError(null);
     try {
-      await axiosInstance.post("/notification/verify-otp", { email, otp: data.otp });
+      await axios.post(`${BASE_URL}/auth/verify-otp`, { email, otp: data.otp });
       setStep(3);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid OTP");
+      setError(err.response?.data?.error || "Invalid OTP");
     } finally {
       setLoading(false);
     }
@@ -94,12 +94,13 @@ const TutorRegisterPage = () => {
     setLoading(true);
     setError(null);
     try {
-      await axiosInstance.post("/user/tutor-register", {
+      await axios.post(`${BASE_URL}/user/tutor-register`, {
         name: data.name,
         email,
-        phone: data.phone,
+        username: data.username,
         password: data.password,
         role: "tutor",
+        isEmailVerified: true
       });
       navigate("/login");
     } catch (err: unknown) {
@@ -164,8 +165,8 @@ const TutorRegisterPage = () => {
               <Input {...detailsForm.register("name")} placeholder="Full Name" type="text" />
               <p className="text-red-500 text-xs">{detailsForm.formState.errors.name?.message}</p>
 
-              <Input {...detailsForm.register("phone")} placeholder="Phone Number" type="text" />
-              <p className="text-red-500 text-xs">{detailsForm.formState.errors.phone?.message}</p>
+              <Input {...detailsForm.register("username")} placeholder="Username" type="text" />
+              <p className="text-red-500 text-xs">{detailsForm.formState.errors.username?.message}</p>
 
               <Input {...detailsForm.register("password")} placeholder="Password" type="password" />
               <p className="text-red-500 text-xs">{detailsForm.formState.errors.password?.message}</p>

@@ -3,31 +3,8 @@ import { useState, useEffect } from "react";
 import Button from "../../components/ui/Button";
 import axiosInstance from "../../axios/axiosConfig";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Topic, Course, ApprovalStatus } from "../../types/course";
 
-interface Topic {
-    _id: string;
-    title: string;
-    level: string;
-    video_url: string;
-    notes_url: string;
-}
-
-export type ApprovalStatus = "Pending" | "Approved" | "Rejected";
-
-export interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    category_id: string;
-    tutor_id: string;
-    price: number;
-    preview_video_url: string;
-    poster_url: string;
-    approval_status: ApprovalStatus;
-    rating: number | null;
-    createdAt?: string;
-    updatedAt?: string;
-}
 
 const CourseDetailPage = () => {
     const { courseId } = useParams();
@@ -158,7 +135,7 @@ const CourseDetailPage = () => {
             </Button>
 
 
-            {course.preview_video_url && course.poster_url && (
+            {course.preview_video_urls && course.poster_url && (
                 <div className="mb-6 mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                     <div>
                         <h3 className="text-xl font-bold mb-2">Poster Image</h3>
@@ -167,7 +144,7 @@ const CourseDetailPage = () => {
                     <div>
                         <h3 className="text-xl font-bold mb-2">Preview Video</h3>
                         <video className="w-full rounded-lg" controls>
-                            <source src={course.preview_video_url} type="video/mp4" />
+                            <source src={course.preview_video_urls[0]} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                     </div>

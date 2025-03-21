@@ -6,34 +6,7 @@ import { UserContext } from "../../contexts/user-context";
 import { getEnrolledCourses } from "../../api/profile";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
-export type ApprovalStatus = "Pending" | "Approved" | "Rejected";
-
-export interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    category_id: string;
-    tutor_id: string;
-    price: number;
-    preview_video_url: string;
-    poster_url: string;
-    approval_status: ApprovalStatus;
-    rating: number | null;
-    createdAt?: string;
-    updatedAt?: string;
-}
-
-interface EnrolledCourse {
-    courseId: Course;
-    paymentAmount: number;
-}
-
-interface EnrolledCourses {
-    _id: string;
-    userId: string;
-    courses: EnrolledCourse[];
-}
+import { Course, EnrolledCourses, EnrolledCourse } from "../../types/course";
 
 const MyCoursesPart = () => {
     const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourses | null>(null);

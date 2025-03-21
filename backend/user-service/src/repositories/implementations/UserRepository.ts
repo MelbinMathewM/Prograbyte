@@ -62,4 +62,8 @@ export class UserRepository implements IUserRepository {
             throw new Error("Failed to fetch user");
         }
     }
+
+    async updateUserSave(user: IUser): Promise<void> {
+        await user.save();
+    }
 }

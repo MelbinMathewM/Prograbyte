@@ -5,16 +5,7 @@ import axiosInstance from "../../axios/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import VideoPlayer from "./video-player";
 import { useSelector } from "react-redux";
-
-interface Topic {
-    _id: string;
-    course_id: string;
-    title: string;
-    level: "Basic" | "Intermediate" | "Advanced";
-    video_url: string;
-    notes_url: string;
-}
-
+import { Topic } from "../../types/course";
 const VideoPart = () => {
     const { courseName, topicId, topicsId } = useParams();
     console.log(topicId, "jj");
@@ -54,7 +45,7 @@ const VideoPart = () => {
                     Courses
                 </Link>
                 <ChevronRight size={16} />
-                <Link to={`/courses/${topic?.course_id}`} className="font-bold hover:text-blue-500">
+                <Link to={`/courses/${topicsId}`} className="font-bold hover:text-blue-500">
                     {courseName}
                 </Link>
                 <ChevronRight size={16} />

@@ -1,7 +1,7 @@
 import {Router} from "express";
 import container from "../di/container";
 import multer from "multer";
-import { CourseController } from "../controllers/courseController";
+import { CourseController } from "../controllers/implementations/courseController";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinary";
 import { validate } from "../middlewares/validateMiddleware";

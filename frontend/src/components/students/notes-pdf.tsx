@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import Button from "../../components/ui/Button";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { PDFViewerProps } from "../../types/course";
 
 // ✅ Dynamically Set Worker Path
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -9,10 +10,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-interface PDFViewerProps {
-    notesUrl: string;
-    isDark: boolean;
-}
 
 const PDFViewer: React.FC<PDFViewerProps> = ({ notesUrl, isDark }) => {
     const [numPages, setNumPages] = useState<number | null>(null);

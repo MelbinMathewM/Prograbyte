@@ -11,7 +11,7 @@ import { rabbitMQService } from './RabbitMQService';
 
 @injectable()
 export class UserService {
-    constructor(@inject("IUserRepository") private userRepository: IUserRepository) {}
+    constructor(@inject("IUserRepository") private userRepository: IUserRepository) { }
 
     async registerUser(user: IUser): Promise<void> {
 
@@ -37,7 +37,7 @@ export class UserService {
                 );
             }
         );
-    
+
         if (!grpcResponse.success) {
             await this.userRepository.deleteUserById(newUser._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR)
@@ -46,13 +46,13 @@ export class UserService {
 
     async registerTutor(tutor: IUser): Promise<IUser> {
         const existingUser = await this.userRepository.getUserByEmail(tutor.email);
-    
+
         if (existingUser) {
             throw createHttpError(HttpStatus.CONFLICT, HttpResponse.TUTOR_EMAIL_EXIST_ERROR);
         }
-    
+
         const newTutor = await this.userRepository.createUser(tutor);
-    
+
         const grpcResponse = await new Promise<{ success: boolean, message: string }>(
             (resolve, reject) => {
                 authClient.RegisterUser(
@@ -67,7 +67,7 @@ export class UserService {
                 );
             }
         );
-    
+
         if (!grpcResponse.success) {
             await this.userRepository.deleteUserById(newTutor._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR);
@@ -80,14 +80,14 @@ export class UserService {
         };
 
         await rabbitMQService.publishMessage("tutor.registered", tutorData);
-    
+
         return newTutor;
     }
-    
 
-    async registerUserGAuth(userData: { googleId: string; email: string; name: string }): Promise<{accessToken: string, refreshToken: string, role: string}> {
 
-        if(!userData) throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.USER_NOT_FOUND);
+    async registerUserGAuth(userData: { googleId: string; email: string; name: string }): Promise<{ accessToken: string, refreshToken: string, role: string }> {
+
+        if (!userData) throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.USER_NOT_FOUND);
 
         let user = await this.userRepository.getUserByEmail(userData.email);
 
@@ -100,7 +100,7 @@ export class UserService {
                 role: "student",
             };
             newUser = await this.userRepository.createUser(newUserData as IUser);
-        }else{
+        } else {
             newUser = user;
         }
 
@@ -109,21 +109,21 @@ export class UserService {
         const accessToken = generateAccessToken(payload);
         const refreshToken = generateRefreshToken(payload);
 
-        return {accessToken, refreshToken, role: newUser.role}
-        
+        return { accessToken, refreshToken, role: newUser.role }
+
     }
 
     async getUserById(token: string): Promise<Partial<IUser>> {
 
-        if(!token) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_ACCESS_TOKEN);
+        if (!token) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_ACCESS_TOKEN);
 
         const decoded = verifyAccessToken(token) as JwtPayload;
 
-        if(!decoded) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_DECODED_TOKEN);
-        
+        if (!decoded) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_DECODED_TOKEN);
+
         const user = await this.userRepository.getUserById(decoded.id);
 
-        if(!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 
         const newUser = {
             _id: user._id,
@@ -147,15 +147,15 @@ export class UserService {
 
     async updateProfile(userId: string, updatedUser: Partial<IUser>): Promise<IUser> {
 
-        if(updatedUser.username){
+        if (updatedUser.username) {
             const existingUser = await this.userRepository.findUserByUsername(updatedUser.username);
 
-            if(existingUser && (existingUser._id as string).toString() !== userId){
+            if (existingUser && (existingUser._id as string).toString() !== userId) {
                 throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USERNAME_EXIST);
             }
         }
 
-        if(updatedUser.email){
+        if (updatedUser.email) {
             throw createHttpError(HttpStatus.FORBIDDEN, "email cannot be edited for now")
         }
 
@@ -171,12 +171,12 @@ export class UserService {
     async addSkill(userId: string, skill: string): Promise<string[]> {
 
         const user = await this.userRepository.getUserById(userId);
-        if(!user) {
+        if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
 
-        if(user.skills.includes(skill)){
-            throw createHttpError(HttpStatus.CONFLICT,HttpResponse.SKILL_EXIST);
+        if (user.skills.includes(skill)) {
+            throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SKILL_EXIST);
         }
 
         user.skills.push(skill);
@@ -188,13 +188,17 @@ export class UserService {
     async editSkill(userId: string, oldSkill: string, newSkill: string): Promise<string[]> {
 
         const user = await this.userRepository.getUserById(userId);
-        if(!user) {
+        if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
 
         const skillIndex = user.skills.indexOf(oldSkill);
-        if(skillIndex === -1){
+        if (skillIndex === -1) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.SKILL_NOT_FOUND);
+        }
+
+        if(user.skills.includes(newSkill)){
+            throw createHttpError(HttpStatus.CONFLICT, HttpResponse.SKILL_EXIST);
         }
 
         user.skills[skillIndex] = newSkill;
@@ -206,7 +210,7 @@ export class UserService {
     async deleteSkill(userId: string, skill: string): Promise<string[]> {
 
         const user = await this.userRepository.getUserById(userId);
-        if(!user) {
+        if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
 
@@ -214,5 +218,18 @@ export class UserService {
         await user.save();
 
         return user.skills;
+    }
+
+    async updateToPremium(email: string): Promise<void> {
+        const user = await this.userRepository.getUserByEmail(email);
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        user.isPremium = true;
+        await this.userRepository.updateUserSave(user);
+
+        console.log(`✅ User ${email} upgraded to Premium!`);
     }
 }

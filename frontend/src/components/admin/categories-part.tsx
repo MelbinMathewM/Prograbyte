@@ -2,13 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Edit, Trash, X } from "lucide-react";
 import axiosInstance from "../../axios/axiosConfig";
-
-// Define Category Type
-type Category = {
-    _id: number;
-    name: string;
-    type: string;
-};
+import { Category } from "../../types/course";
 
 const CategoriesPart: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
@@ -179,7 +173,7 @@ const CategoriesPart: React.FC = () => {
                     <div 
                     key={_id} 
                     className="bg-gray-400 shadow-md rounded-lg overflow-hidden cursor-pointer" 
-                    onClick={() => handleCategoryClick(name,_id)}
+                    onClick={() => handleCategoryClick(name,_id as number)}
                 >
                     <div className="p-4">
                         <h3 className="text-lg font-bold">{name}</h3>

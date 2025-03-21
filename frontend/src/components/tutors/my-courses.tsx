@@ -5,14 +5,7 @@ import { TutorContext } from "../../contexts/tutor-context";
 import { fetchCoursesByTutor } from "../../api/course";
 import Pagination from "./pagination";
 import { useTheme } from "../../contexts/theme-context";
-
-interface Course {
-    _id: string;
-    title: string;
-    description: string;
-    price: number;
-    poster_url?: string;
-}
+import { Course } from "../../types/course";
 
 const TutorMyCoursesPart = () => {
     const [courses, setCourses] = useState<Course[]>([]);

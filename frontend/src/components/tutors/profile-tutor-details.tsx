@@ -1,17 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, Pencil } from "lucide-react";
-
-interface Profile {
-    _id?: string;
-    name: string;
-    email: string;
-    username?: string;
-    profileImage: string | null;
-    bio?: string;
-    skills: string[];
-    role: string;
-    isEmailVerified: boolean;
-}
+import { Profile } from "../../types/user";
 
 interface UserDetailsProps {
     profile: Profile;

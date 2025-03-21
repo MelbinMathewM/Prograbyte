@@ -31,5 +31,8 @@ export const env = {
     },
     get SESSION_SECRET_KEY() {
         return process.env.SESSION_SECRET_KEY;
+    },
+    get STRIPE_SECRET_KEY() {
+        return process.env.STRIPE_SECRET_KEY
     }
 }

@@ -25,29 +25,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import CropImageModal from "../ui/crop-image-modal";
 import { getCroppedPosterImage } from "../../libs/courseImageCropper";
-
-interface Category {
-  _id: string;
-  name: string;
-}
-
-interface Course {
-  title: string;
-  description: string;
-  category_id: string;
-  tutor_id: string;
-  price: string;
-  poster: File | null;
-  preview_video: File | null;
-  createdAt: dayjs.Dayjs;
-}
-
-interface CroppedArea {
-  width: number;
-  height: number;
-  x: number;
-  y: number;
-}
+import { Category } from "../../types/course";
+import { AddCourse } from "../../types/course";
+import { CroppedArea } from "../../types/user";
 
 const AddCoursePart = () => {
   const { tutor } = useContext(TutorContext) || {};
@@ -56,7 +36,7 @@ const AddCoursePart = () => {
   const { theme } = useTheme();
   const isDarkMode = theme.includes("dark");
 
-  const [course, setCourse] = useState<Course>({
+  const [course, setCourse] = useState<AddCourse>({
     title: "",
     description: "",
     category_id: "",
@@ -64,7 +44,6 @@ const AddCoursePart = () => {
     price: "",
     poster: null,
     preview_video: null,
-    createdAt: dayjs(),
   });
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -92,7 +71,7 @@ const AddCoursePart = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }>) => {
     const { name, value } = e.target as HTMLInputElement;
-    setCourse((prev) => ({ ...prev, [name as keyof Course]: value }));
+    setCourse((prev) => ({ ...prev, [name as keyof AddCourse]: value }));
   };
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
@@ -150,7 +129,7 @@ const AddCoursePart = () => {
     setPosterPreview(null);
   };
 
-  const validateCourse = (course: Course): boolean => {
+  const validateCourse = (course: AddCourse): boolean => {
     if (!course.title.trim() || !course.description.trim() || !course.category_id || !course.price.trim()) {
       toast.error("Please fill in all required fields.");
       return false;
@@ -196,7 +175,7 @@ const AddCoursePart = () => {
     e.preventDefault();
     setCourse((prev) => ({ ...prev, tutor_id: tutorId ?? "" }));
 
-    if (!validateCourse(course)) return;
+    // if (!validateCourse(course)) return;
     setIsLoading(true);
 
     try {
@@ -214,7 +193,7 @@ const AddCoursePart = () => {
 
       // Append preview videos (if exists)
       if (course.preview_video) {
-          formData.append("preview_video", course.preview_video);
+        formData.append("preview_video", course.preview_video);
       }
 
       const response = await axiosInstance.post("/course/courses", formData, {
@@ -456,11 +435,38 @@ const AddCoursePart = () => {
                   disabled={isLoading}
                   sx={{
                     backgroundColor: isDarkMode ? "#2e7d32" : "#4caf50",
-                    color: isDarkMode ? "#fff" : "#fff",
-                    "&:hover": { backgroundColor: isDarkMode ? "#388e3c" : "#388e3c" },
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#388e3c" },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1, // Adds spacing between the spinner and text
                   }}
                 >
-                  Add Course
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
               </Grid>
             </Grid>

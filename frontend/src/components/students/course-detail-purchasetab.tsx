@@ -1,20 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Progress from "../../components/ui/progress";
-
-interface Course {
-    _id: string;
-    title: string;
-    price: number;
-    progress?: number;
-}
-
-interface CoursePurchaseProps {
-    course: Course;
-    enrolledCourses: Course[];
-    isDark: boolean;
-    isInWishlist: boolean;
-    handleWishlistClick: () => void;
-}
+import { CoursePurchaseProps } from "../../types/course";
 
 const CoursePurchaseSection: React.FC<CoursePurchaseProps> = ({ course,enrolledCourses, isDark, isInWishlist, handleWishlistClick }) => {
     const navigate = useNavigate();

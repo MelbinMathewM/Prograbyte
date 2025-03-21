@@ -4,12 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import PDFViewer from "./notes-pdf";
-
-interface Topic {
-    _id: string;
-    title: string;
-    notes_url: string;
-}
+import { Topic } from "../../types/course";
 
 const ViewNotes = () => {
     const { courseName, topicsId, topicId } = useParams();

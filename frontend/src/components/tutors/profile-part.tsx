@@ -10,25 +10,7 @@ import CropImageModal from "../ui/crop-image-modal";
 import TutorDetails from "./profile-tutor-details";
 import { getCroppedImage } from "../../libs/imageCropper";
 import SkillPart from "./profile-skill";
-
-interface Profile {
-    _id?: string;
-    name: string;
-    email: string;
-    username?: string;
-    profileImage: string | null;
-    bio?: string;
-    skills: string[];
-    role: string;
-    isEmailVerified: boolean;
-}
-
-interface CroppedArea {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-}
+import { Profile, CroppedArea } from "../../types/user";
 
 export default function TutorProfilePart() {
     const { theme } = useTheme();

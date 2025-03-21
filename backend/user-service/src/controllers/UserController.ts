@@ -5,6 +5,8 @@ import { IUser } from "../models/UserModel";
 import { env } from "../config/env";
 import { HttpStatus } from "../constants/status";
 import { HttpResponse } from "../constants/responseMessage";
+import stripe from "../config/stripe";
+import Stripe from "stripe";
 
 export class UserController {
   constructor(@inject(UserService) private userService: UserService) { }
@@ -15,7 +17,7 @@ export class UserController {
 
       await this.userService.registerUser(user);
 
-      res.status(HttpStatus.CREATED).json({message : HttpResponse.USER_REGISTERED});
+      res.status(HttpStatus.CREATED).json({ message: HttpResponse.USER_REGISTERED });
     } catch (err) {
       next(err)
     }
@@ -59,7 +61,7 @@ export class UserController {
     try {
       const token = req.headers["authorization"]?.split(' ')[1];
 
-      console.log(token)
+      console.log(token, "dd")
 
       const user = await this.userService.getUserById(token!);
 
@@ -70,65 +72,139 @@ export class UserController {
   }
 
   async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { userId } = req.params;
 
       const user = await this.userService.getProfile(userId);
 
       res.status(HttpStatus.OK).json(user);
-    }catch(err){
+    } catch (err) {
       next(err);
     }
   }
 
   async updateProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { userId } = req.params;
       const updateData = req.body;
 
       const user = await this.userService.updateProfile(userId, updateData);
 
-      res.status(HttpStatus.OK).json({message: HttpResponse.PROFILE_UPDATED,user});
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.PROFILE_UPDATED, user });
+    } catch (err) {
       next(err);
     }
   }
 
   async addSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { skill } = req.body;
       const { userId } = req.params;
 
       const skills = await this.userService.addSkill(userId, skill);
 
-      res.status(HttpStatus.OK).json({message: HttpResponse.SKILL_ADDED, skills})
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.SKILL_ADDED, skills })
+    } catch (err) {
       next(err);
     }
   }
 
   async editSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { oldSkill, newSkill } = req.body;
       const { userId } = req.params;
 
       const skills = await this.userService.editSkill(userId, oldSkill, newSkill);
 
-      res.status(HttpStatus.OK).json({message: HttpResponse.SKILL_EDITED, skills})
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.SKILL_EDITED, skills })
+    } catch (err) {
       next(err);
     }
   }
 
   async deleteSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { userId, skill } = req.params;
 
       const skills = await this.userService.deleteSkill(userId, skill);
 
-      res.status(HttpStatus.OK).json({message: HttpResponse.SKILL_DELETED, skills});
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.SKILL_DELETED, skills });
+    } catch (err) {
       next(err);
+    }
+  }
+
+  async createCheckoutSession(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        res.status(400).json({ error: "Email is required" });
+        return;
+      }
+
+      // Create Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "subscription",
+        customer_email: email, // Associate the session with the user
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Premium Subscription",
+                description: "Get full access to all premium features.",
+              },
+              unit_amount: 999, // $9.99 in cents
+              recurring: { interval: "month" }, // Monthly subscription
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${process.env.FRONTEND_URL}/payment-success`,
+        cancel_url: `${process.env.FRONTEND_URL}/payment-failed`,
+      });
+
+      res.status(200).json({ sessionId: session.id });
+    } catch (error) {
+      console.error("❌ Error creating checkout session:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+
+  async stripeWebhook(req: Request, res: Response): Promise<void> {
+    try {
+      const sig = req.headers["stripe-signature"];
+      if (!sig) {
+        res.status(400).send("Missing Stripe Signature");
+        return;
+      }
+
+      let event;
+      try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+      } catch (err: any) {
+        console.error("⚠️  Webhook signature verification failed.", err.message);
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+      }
+
+      // Process event
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+        const email = session.customer_email;
+
+        if (email) {
+          await this.userService.updateToPremium(email);
+          console.log(`✅ User ${email} upgraded to Premium`);
+        }
+      }
+
+      res.status(200).send("Webhook received.");
+    } catch (error) {
+      console.error("❌ Webhook processing error:", error);
+      res.status(500).send("Internal Server Error");
     }
   }
 }

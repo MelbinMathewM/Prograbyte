@@ -20,25 +20,16 @@ import { useTheme } from "../../contexts/theme-context";
 import { ChevronRight } from "lucide-react";
 import axiosInstance from "../../axios/axiosConfig";
 import { toast } from "react-toastify";
-
-interface AddTopic {
-  course_id: string;
-  title: string;
-  level: string;
-  video: File | null;
-  notes: File | null;
-  createdAt: dayjs.Dayjs;
-  videoPreview?: string | null;
-}
+import { AddTopic } from "../../types/course";
 
 const AddTopicPart = () => {
   const { theme } = useTheme();
   const isDarkMode = theme.includes("dark");
   const navigate = useNavigate();
   const { courseId } = useParams();
-  
+
   const [topics, setTopics] = useState<AddTopic[]>([
-    { title: "", level: "Basic", course_id: courseId ?? "", video: null, notes: null, createdAt: dayjs(), videoPreview: null },
+    { title: "", level: "Basic", course_id: courseId ?? "", video: null, notes: null, videoPreview: null },
   ]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,10 +45,10 @@ const AddTopicPart = () => {
       prev.map((topic, i) =>
         i === index
           ? {
-              ...topic,
-              [field]: file,
-              ...(field === "video" ? { videoPreview: file ? URL.createObjectURL(file) : null } : {}),
-            }
+            ...topic,
+            [field]: file,
+            ...(field === "video" ? { videoPreview: file ? URL.createObjectURL(file) : null } : {}),
+          }
           : topic
       )
     );
@@ -72,7 +63,7 @@ const AddTopicPart = () => {
   };
 
   const addTopic = () => {
-    setTopics([...topics, { title: "", level: "Basic", course_id: courseId ?? "", video: null, notes: null, createdAt: dayjs(), videoPreview: null }]);
+    setTopics([...topics, { title: "", level: "Basic", course_id: courseId ?? "", video: null, notes: null, videoPreview: null }]);
   };
 
   const validateTopics = (topics: AddTopic[]): boolean => {
@@ -107,10 +98,10 @@ const AddTopicPart = () => {
       }
       return false;
     });
-  
+
     return !hasError;
   };
-  
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -129,13 +120,13 @@ const AddTopicPart = () => {
         if (topic.notes) formData.append(`topics[${index}][notes]`, topic.notes);
       });
 
-      await axiosInstance.post("/course/topics",formData, {
+      await axiosInstance.post("/course/topics", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-        toast.success("Topics created successfully!");
-        setIsLoading(false);
-        setTimeout(() => navigate("/tutor/courses"), 1000);
+      toast.success("Topics created successfully!");
+      setIsLoading(false);
+      setTimeout(() => navigate("/tutor/courses"), 1000);
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || "An error occurred";
       toast.error(errorMessage);
@@ -369,12 +360,44 @@ const AddTopicPart = () => {
               <Grid item xs={12} sm={6}>
                 <Button
                   type="submit"
-                  disabled={isLoading}
                   variant="contained"
                   color="success"
                   fullWidth
+                  disabled={isLoading}
+                  sx={{
+                    backgroundColor: isDarkMode ? "#2e7d32" : "#4caf50",
+                    color: "#fff",
+                    "&:hover": { backgroundColor: "#388e3c" },
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                  }}
                 >
-                  Submit Topics
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 01-8 8z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    "Submit"
+                  )}
                 </Button>
               </Grid>
             </Grid>

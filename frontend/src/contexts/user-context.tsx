@@ -12,6 +12,7 @@ interface User {
   bio?: string;
   profilePic?: string;
   skills?: string[];
+  isPremium?: boolean;
 }
 
 interface UserContextType {
@@ -45,6 +46,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     const fetchStudent = async () => {
       try {
         const res = await axiosInstance.get("/user/user");
+        console.log('uehfgef')
         if (res.status === 200) {
           setUser({ id: res.data._id, name: res.data.name, email: res.data.email });
         } else {

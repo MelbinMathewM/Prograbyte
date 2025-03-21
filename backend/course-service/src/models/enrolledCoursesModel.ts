@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, mongo } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IEnrolledCourse {
     courseId: mongoose.Types.ObjectId;
@@ -7,7 +7,7 @@ export interface IEnrolledCourse {
     paymentId: string;
 }
 
-export interface IEnrolledCourses {
+export interface IEnrolledCourses extends Document {
     userId: mongoose.Types.ObjectId;
     courses: IEnrolledCourse[];
 }

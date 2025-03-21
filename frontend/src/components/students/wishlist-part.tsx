@@ -6,21 +6,10 @@ import { useTheme } from "../../contexts/theme-context";
 import { getWishlist, removeFromWishlist } from "../../api/wishlist";
 import { UserContext } from "../../contexts/user-context";
 import toast from "react-hot-toast";
-
-interface IWishlistItem {
-    _id: string;
-    title: string;
-    price: number;
-    poster_url: string;
-}
-
-interface IWishlist {
-    userId: string;
-    items: IWishlistItem[];
-}
+import { Wishlist, WishlistItem } from "../../types/user";
 
 const WishlistPage = () => {
-    const [wishlist, setWishlist] = useState<IWishlist | null>(null);
+    const [wishlist, setWishlist] = useState<Wishlist | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { user } = useContext(UserContext) ?? {};

@@ -15,14 +15,6 @@ export class AuthController {
 
       const data = await this.authService.loginUser(email, password);
 
-      res.cookie(`accessToken`, data.accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        path: "/",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      })
-
       res.cookie(`refreshToken_${data?.role}`, data?.refreshToken, {
         httpOnly: true,
         secure: false,
