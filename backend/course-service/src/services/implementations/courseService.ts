@@ -13,7 +13,7 @@ import { ICourseService } from "../interfaces/ICourseService";
 export class CourseService implements ICourseService {
     constructor(
         @inject("ICourseRepository") private courseRepository: ICourseRepository,
-        @inject("TopicService") private topicService: TopicService
+        @inject(TopicService) private topicService: TopicService
     ) {}
 
 

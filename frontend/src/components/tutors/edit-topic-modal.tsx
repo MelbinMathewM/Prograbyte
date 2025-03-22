@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../../components/ui/dialog";
-import Input from "../ui/Input";
-import { Label } from "../../components/ui/label";
-import Button from "../../components/ui/Button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
-import { Separator } from "../../components/ui/separator";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import Input from "@/components/ui/Input";
+import { Label } from "@/components/ui/label";
+import Button from "@/components/ui/Button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "react-hot-toast";
-import { Topic } from "../../types/course";
+import { Topic } from "@/types/course";
 
 interface EditTopicModalProps {
     topic: Topic;

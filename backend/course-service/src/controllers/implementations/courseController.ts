@@ -147,5 +147,4 @@ export class CourseController implements ICourseController {
       next(err)
     }
   }
-
 }

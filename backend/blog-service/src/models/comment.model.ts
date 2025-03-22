@@ -1,0 +1,44 @@
+import { Schema, Document, Types, model } from "mongoose";
+
+export interface ICommentContent extends Document {
+    user_id: Types.ObjectId | string;
+    content: string;
+    likes: Types.ObjectId[];
+}
+
+export interface IComment extends Document {
+    post_id: Types.ObjectId | string;
+    comments: ICommentContent[];
+}
+
+const commentContentSchema = new Schema<ICommentContent>({
+    user_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'BlogUser',
+        required: true,
+    },
+    content: {
+        type: String,
+        required: true,
+    },
+    likes: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'BlogUser',
+            default: [],
+        }
+    ]
+}, { timestamps: true });
+
+const commentSchema = new Schema<IComment>({
+    post_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+        required: true,
+    },
+    comments: [commentContentSchema]
+}, { timestamps: true });
+
+const Comment = model<IComment>("Comment", commentSchema);
+
+export default Comment;

@@ -1,5 +1,5 @@
 import { ToastContainer } from "react-toastify";
-import ResetPasswordPart from "../../components/students/reset-password-part"
+import ResetPasswordPart from "@/components/students/reset-password-part"
 
 const ResetPassword = () => {
     return (

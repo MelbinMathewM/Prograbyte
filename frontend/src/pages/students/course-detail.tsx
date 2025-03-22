@@ -1,13 +1,9 @@
-import StudentCourseDetailPart from "../../components/students/course-detail-part";
-import StudentNavbar from "../../components/students/navbar";
+import StudentCourseDetailPart from "@/components/students/course-detail-part";
 
 const StudentCourseDetail = () => {
     return (
         <div>
-            <StudentNavbar />
-            <div className="pt-15">
-                <StudentCourseDetailPart />
-            </div>
+            <StudentCourseDetailPart />
         </div>
     )
 }

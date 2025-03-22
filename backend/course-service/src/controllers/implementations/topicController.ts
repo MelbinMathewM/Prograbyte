@@ -48,11 +48,11 @@ export class TopicController implements ITopicController {
 
     async getTopics(req: Request, res: Response): Promise<void> {
         try {
-            const { course_id } = req.params;
+            const { courseId } = req.params;
 
-            console.log(course_id)
+            console.log(courseId)
 
-            const topics = await this.topicService.getTopics(course_id);
+            const topics = await this.topicService.getTopics(courseId);
 
             res.status(200).json(topics);
         } catch (err: unknown) {

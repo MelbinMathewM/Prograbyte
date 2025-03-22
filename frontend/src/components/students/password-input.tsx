@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react"; // Using lucide-react icons
+import { Eye, EyeOff } from "lucide-react";
 
 const PasswordInput: React.FC<{
   password: string;

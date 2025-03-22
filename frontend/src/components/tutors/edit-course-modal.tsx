@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog";
-import { Label } from "../../components/ui/label";
-import Input from "../../components/ui/Input";
-import { Textarea } from "../../components/ui/textarea";
-import Button from "../../components/ui/Button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import Input from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/textarea";
+import Button from "@/components/ui/Button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "react-hot-toast";
-import { Course } from "../../types/course";
+import { Category, Course } from "@/types/course";
 
 interface EditCourseModalProps {
     open: boolean;
     course: Partial<Course>;
-    categories: { _id: string; name: string }[];
+    categories: Category[];
     onClose: () => void;
     onSave: (updatedCourse: Partial<Course>, files: { poster?: File; video?: File }) => void;
     isDark?: boolean;
@@ -79,7 +79,7 @@ const EditCourseModal: React.FC<EditCourseModalProps> = ({ open, course, categor
                                 </SelectTrigger>
                                 <SelectContent className={`${isDark ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-black"}`}>
                                     {categories.map((category) => (
-                                        <SelectItem key={category._id} value={category._id}>
+                                        <SelectItem key={category._id} value={category._id as string}>
                                             {category.name}
                                         </SelectItem>
                                     ))}

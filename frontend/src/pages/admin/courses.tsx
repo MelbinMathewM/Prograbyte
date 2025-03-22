@@ -1,5 +1,5 @@
-import CoursePart from "../../components/admin/courses-part";
-import FooterPart from "../../components/admin/footer";
+import CoursePart from "@/components/admin/courses-part";
+import FooterPart from "@/components/admin/footer";
 
 const AdminCourses = () => {
     return (

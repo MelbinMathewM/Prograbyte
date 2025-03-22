@@ -1,13 +1,9 @@
-import WishlistPage from "../../components/students/wishlist-part"
-import StudentNavbar from "../../components/students/navbar"
+import WishlistPage from "@/components/students/wishlist-part"
 
 const Wishlist = () => {
     return (
         <div>
-            <StudentNavbar />
-            <div className="pt-15">
-                <WishlistPage />
-            </div>
+            <WishlistPage />
         </div>
     )
 }

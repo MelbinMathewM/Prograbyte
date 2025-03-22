@@ -11,6 +11,7 @@ import UserDetails from "./profile-user-details";
 import { getCroppedImage } from "../../libs/imageCropper";
 import SkillPart from "./profile-skill";
 import { Profile, CroppedArea } from "../../types/user";
+import ProfileBlogs from "./profile-blogs";
 
 
 export default function ProfilePage() {
@@ -20,14 +21,13 @@ export default function ProfilePage() {
     const isDark = theme === "dark-theme";
 
     const { user, logout } = useContext(UserContext) ?? {};
-    const [userData, setUserData] = useState<{ id?: string; email?: string; name?: string }>({});
+    const [userData, setUserData] = useState<{ id?: string; username?: string }>({});
 
     useEffect(() => {
         if (user) {
             setUserData({
                 id: user.id,
-                email: user.email,
-                name: user.name,
+                username: user.username
             });
         }
     }, [user]);
@@ -187,7 +187,7 @@ export default function ProfilePage() {
                                     { label: "Wallet", icon: Wallet, link: "/wallet" },
                                     { label: "Certificates", icon: Award, link: "/certificates" },
                                     { label: "Settings", icon: Settings, link: "/settings" },
-                                    { label: "Premium", icon: Crown, link: "/profile/premium"}
+                                    { label: "Premium", icon: Crown, link: "/profile/premium" }
                                 ].map((item, index) => (
                                     <Link
                                         key={index}
@@ -204,7 +204,10 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Skills Section */}
-                        <SkillPart skills={skills} isDark={isDark} userId={profile?._id as string} setSkills={setSkills} />
+                        <div className="col-span-3">
+                            <SkillPart skills={skills} isDark={isDark} userId={profile?._id as string} setSkills={setSkills} />
+                            <ProfileBlogs userId={userData.id as string} isDark={isDark} />
+                        </div>
                     </div>
                 </div>
 

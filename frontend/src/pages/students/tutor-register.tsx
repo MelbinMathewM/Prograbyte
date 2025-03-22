@@ -1,4 +1,4 @@
-import TutorRegisterPage from "../../components/students/tutor-register"
+import TutorRegisterPage from "@/components/students/tutor-register"
 
 const TutorRegister = () => {
     return (

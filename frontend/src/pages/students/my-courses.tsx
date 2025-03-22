@@ -1,13 +1,9 @@
-import MyCoursesPart from "../../components/students/my-courses"
-import StudentNavbar from "../../components/students/navbar"
+import MyCoursesPart from "@/components/students/my-courses"
 
 const MyCourses = () => {
     return (
         <div>
-            <StudentNavbar />
-            <div className="pt-15">
-                <MyCoursesPart />
-            </div>
+            <MyCoursesPart />
         </div>
     )
 }

@@ -1,5 +1,5 @@
-import DashboardPart from "../../components/admin/dashboard-part";
-import FooterPart from "../../components/admin/footer";
+import DashboardPart from "@/components/admin/dashboard-part";
+import FooterPart from "@/components/admin/footer";
 
 
 const Dashboard = () => {

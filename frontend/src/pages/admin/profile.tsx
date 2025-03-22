@@ -1,5 +1,5 @@
-import FooterPart from "../../components/admin/footer";
-import AdminProfilePart from "../../components/admin/profile"
+import FooterPart from "@/components/admin/footer";
+import AdminProfilePart from "@/components/admin/profile"
 
 const AdminProfile = () => {
     return (

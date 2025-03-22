@@ -1,11 +1,11 @@
 import { Route } from "react-router-dom";
 import AdminLayout from "./admin-layout";
-import Dashboard from "../../pages/admin/dashboard";
-import Categories from "../../pages/admin/categories";
-import AdminCourses from "../../pages/admin/courses";
-import AdminProfile from "../../pages/admin/profile";
-import CourseDetail from "../../pages/admin/course-detail";
-import ProtectedRoute from "../../routes/protectedRoutes";
+import Dashboard from "@/pages/admin/dashboard";
+import Categories from "@/pages/admin/categories";
+import AdminCourses from "@/pages/admin/courses";
+import AdminProfile from "@/pages/admin/profile";
+import CourseDetail from "@/pages/admin/course-detail";
+import ProtectedRoute from "@/routes/protectedRoutes";
 
 const AdminRoutes = () => {
     return (

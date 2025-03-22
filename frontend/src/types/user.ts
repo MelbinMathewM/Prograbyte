@@ -1,3 +1,15 @@
+export interface User {
+    id: string;
+    username: string;
+    isPremium?: boolean;
+}
+
+export interface UserContextType {
+    isAuth: boolean;
+    user: User | null;
+    logout: () => void;
+}
+
 export interface Profile {
     _id?: string;
     name: string;

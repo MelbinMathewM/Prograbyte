@@ -1,13 +1,9 @@
-import HomePart from "../../components/students/home";
-import StudentNavbar from "../../components/students/navbar"
+import HomePart from "@/components/students/home";
 
 const Home = () => {
     return (
         <>
-            <StudentNavbar />
-            <div className="pt-15">
-                <HomePart />
-            </div>
+            <HomePart />
         </>
     )
 }

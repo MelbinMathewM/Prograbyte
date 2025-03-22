@@ -4,22 +4,8 @@ import { logout as reduxLogout } from "../redux/slices/authSlice";
 import Cookies from "js-cookie";
 import axiosInstance from "../axios/axiosConfig";
 import { useNavigate } from "react-router-dom";
+import { User, UserContextType } from "@/types/user";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  bio?: string;
-  profilePic?: string;
-  skills?: string[];
-  isPremium?: boolean;
-}
-
-interface UserContextType {
-  isAuth: boolean;
-  user: User | null;
-  logout: () => void;
-}
 
 const UserContext = createContext<UserContextType | null>(null);
 
@@ -48,7 +34,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         const res = await axiosInstance.get("/user/user");
         console.log('uehfgef')
         if (res.status === 200) {
-          setUser({ id: res.data._id, name: res.data.name, email: res.data.email });
+          setUser({ id: res.data._id, username: res.data.username });
         } else {
           logout();
         }

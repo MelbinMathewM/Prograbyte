@@ -277,7 +277,7 @@ const TutorCourseDetailPart = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Object.entries(categorizedTopics).map(([level, topics]) => (
+            {Object.entries(categorizedTopics).map(([_, topics]) => (
               topics.map((topic) => (
                 <TableRow key={topic._id}>
                   <TableCell>{topic.title}</TableCell>

@@ -7,4 +7,5 @@ export interface ICourseController {
   getCourseDetail(req: Request, res: Response, next: NextFunction): Promise<void>;
   editCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
+  createPayment(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
