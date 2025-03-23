@@ -1,4 +1,4 @@
-import ProfilePart from "@/components/students/profile"
+import ProfilePart from "@/components/students/profile/profile"
 
 const StudentProfile = () => {
     return (

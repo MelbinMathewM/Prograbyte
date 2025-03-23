@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, CheckCircle2, Pencil, ShieldAlert } from "lucide-react";
-import { UserDetailsProps } from "../../types/user";
+import { UserDetailsProps } from "@/types/user";
 
 const UserDetails: React.FC<UserDetailsProps> = ({ profile, isDark, updateProfile }) => {
     const [editingField, setEditingField] = useState<string | null>(null);

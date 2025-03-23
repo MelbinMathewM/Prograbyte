@@ -2,6 +2,7 @@ import { Schema, Document, Types, model } from "mongoose";
 
 export interface ICommentContent extends Document {
     user_id: Types.ObjectId | string;
+    username: string;
     content: string;
     likes: Types.ObjectId[];
 }
@@ -16,6 +17,9 @@ const commentContentSchema = new Schema<ICommentContent>({
         type: Schema.Types.ObjectId,
         ref: 'BlogUser',
         required: true,
+    },
+    username: {
+        type: String
     },
     content: {
         type: String,

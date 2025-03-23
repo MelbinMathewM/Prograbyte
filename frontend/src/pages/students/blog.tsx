@@ -1,4 +1,4 @@
-import BlogPart from "@/components/students/blog-part";
+import BlogPart from "@/components/students/blog/blog-part";
 
 const Blog = () => {
     return (

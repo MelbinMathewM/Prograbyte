@@ -12,6 +12,16 @@ export const HttpResponse = {
     UNEXPECTED_KEY_FOUND: "Unexpected key found",
     INVALID_CREDENTIALS: "Invalid credentials",
     MISSING_OR_INVALID_FIELDS: "Missing or invalid required fields",
-    POST_ADDED: "Post added successfully"
+    POST_ADDED: "Post added successfully",
+    POST_UPDATED: "Post updated successfully",
+    POST_DELETED: "Post deleted successfully",
+    BLOG_ID_REQUIRED: "Blog Id is required",
+    COMMENT_ID_REQUIRED: "Comment Id is required",
+    BLOG_NOT_FOUND: "Blog not found",
+    LIKE_UPDATED: "Like status updated",
+    COMMENT_ADDED: "Comment created successfully",
+    COMMENT_REMOVED: "Comment removed successfully",
+    COMMENTS_NOT_FOUND: "Comments not found",
+    COMMENT_NOT_FOUND: "Comment not found",
     
 }

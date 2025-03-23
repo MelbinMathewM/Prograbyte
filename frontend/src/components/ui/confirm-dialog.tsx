@@ -33,13 +33,13 @@ const ConfirmDialog = ({
                 <DialogFooter className="mt-6">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 rounded bg-gray-400 text-white hover:bg-gray-500"
+                        className="px-4 py-2 rounded bg-gray-400 text-white hover:bg-gray-500 cursor-pointer"
                     >
                         {cancelText}
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
+                        className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer"
                     >
                         {confirmText}
                     </button>

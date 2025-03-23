@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Pencil, X, Trash } from "lucide-react";
-import { getMyBlogs, updateBlog, deleteBlog } from "../../api/blog";
+import { Pencil, Trash } from "lucide-react";
+import { getMyBlogs, updateBlog, deleteBlog } from "@/api/blog";
 import toast from "react-hot-toast";
 import { Blog } from "@/types/blog";
 import {
@@ -11,7 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import ConfirmDialog from "../ui/confirm-dialog";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 interface ProfileBlogsSectionProps {
     userId: string;
@@ -21,12 +21,11 @@ interface ProfileBlogsSectionProps {
 export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSectionProps) {
     const [blogs, setBlogs] = useState<Blog[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const blogsPerPage = 4; // 4 per page (2 per row in md)
+    const blogsPerPage = 4;
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
     const [editTitle, setEditTitle] = useState("");
     const [editContent, setEditContent] = useState("");
-    const [editImages, setEditImages] = useState<string[]>([]);
 
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [deletingBlog, setDeletingBlog] = useState<Blog | null>(null);
@@ -48,7 +47,6 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
         setEditingBlog(blog);
         setEditTitle(blog.title);
         setEditContent(blog.content);
-        setEditImages(blog.images || []);
         setEditModalOpen(true);
     };
 
@@ -58,7 +56,6 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
             await updateBlog(editingBlog._id, {
                 title: editTitle,
                 content: editContent,
-                images: editImages,
             });
             toast.success("Blog updated");
             setEditModalOpen(false);
@@ -66,10 +63,6 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
         } catch (err) {
             toast.error("Failed to update blog");
         }
-    };
-
-    const handleRemoveImage = (index: number) => {
-        setEditImages((prev) => prev.filter((_, i) => i !== index));
     };
 
     const openDeleteConfirm = (blog: Blog) => {
@@ -80,7 +73,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
     const handleDeleteBlog = async () => {
         if (!deletingBlog) return;
         try {
-            await deleteBlog(userId, deletingBlog._id);
+            await deleteBlog(deletingBlog._id);
             toast.success("Blog deleted");
             setDeleteConfirm(false);
             fetchBlogs();
@@ -99,28 +92,58 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
             {paginatedBlogs.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {paginatedBlogs.map((blog) => (
-                        <div key={blog._id} className={`p-4 rounded-lg ${isDark ? "bg-gray-700" : "bg-gray-100"}`}>
-                            <div className="flex justify-between items-center">
-                                <Link to={`/blog/${blog._id}`} className="text-lg font-semibold hover:underline">{blog.title}</Link>
-                                <div className="flex gap-2">
-                                    <button onClick={() => openEditModal(blog)}>
-                                        <Pencil size={20} className="text-blue-500 hover:text-blue-700" />
-                                    </button>
-                                    <button onClick={() => openDeleteConfirm(blog)}>
-                                        <Trash size={20} className="text-red-500 hover:text-red-700" />
-                                    </button>
-                                </div>
+                        <div 
+                        key={blog._id} 
+                        className={`relative rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl ${isDark ? "bg-gray-700" : "bg-white"}`}
+                      >
+                        {/* Blog Image with Action Buttons */}
+                        <div className="relative">
+                          <img src={blog?.image} alt="Blog" className="w-full h-48 object-cover" />
+                      
+                          {/* Edit & Delete Buttons */}
+                          <div className="absolute top-2 right-2 flex gap-2">
+                            {/* Edit Button */}
+                            <div className="relative group cursor-pointer">
+                              <button 
+                                onClick={() => openEditModal(blog)} 
+                                className="bg-white p-1 rounded-full shadow hover:bg-blue-100"
+                              >
+                                <Pencil size={18} className="text-blue-500" />
+                              </button>
+                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap z-50">
+                                Edit
+                              </div>
                             </div>
-                            <p className={`mt-2 ${isDark ? "text-gray-300" : "text-gray-600"}`}>{blog.content}</p>
-
-                            <div className="mt-3 flex flex-wrap gap-4">
-                                {blog?.images?.map((img, index) => (
-                                    <div key={index} className="relative w-32 h-32">
-                                        <img src={img} alt="Blog" className="w-full h-full object-cover rounded" />
-                                    </div>
-                                ))}
+                      
+                            {/* Delete Button */}
+                            <div className="relative group cursor-pointer">
+                              <button 
+                                onClick={() => openDeleteConfirm(blog)} 
+                                className="bg-white p-1 rounded-full shadow hover:bg-red-100"
+                              >
+                                <Trash size={18} className="text-red-500" />
+                              </button>
+                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap z-50">
+                                Delete
+                              </div>
                             </div>
+                          </div>
                         </div>
+                      
+                        {/* Blog Content */}
+                        <div className="p-4">
+                          <Link 
+                            to={`/blog/${blog._id}`} 
+                            className="text-lg font-semibold hover:underline"
+                          >
+                            {blog.title}
+                          </Link>
+                          <p className={`mt-2 line-clamp-3 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+                            {blog.content}
+                          </p>
+                        </div>
+                      </div>                      
+
                     ))}
                 </div>
             ) : (
@@ -129,19 +152,27 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-4 mt-6">
+                <div className="flex justify-center items-center gap-4 mt-8">
                     <button
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage((prev) => prev - 1)}
-                        className={`px-4 py-2 rounded ${isDark ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"} disabled:opacity-50`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow 
+                        ${isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-gray-700"} 
+                        disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
-                        Previous
+                        Prev
                     </button>
-                    <span>{currentPage} / {totalPages}</span>
+
+                    <span className={`font-semibold ${isDark ? "text-gray-300" : "text-gray-700"}`}>
+                        {currentPage} / {totalPages}
+                    </span>
+
                     <button
                         disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage((prev) => prev + 1)}
-                        className={`px-4 py-2 rounded ${isDark ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"} disabled:opacity-50`}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow 
+                        ${isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-gray-700"} 
+                        disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                         Next
                     </button>
@@ -175,24 +206,8 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
                                     className={`w-full p-2 rounded ${isDark ? "bg-gray-700 text-white" : "bg-gray-100 text-black"}`}
                                 />
                             </div>
-
-                            <div>
-                                <p className="font-medium mb-2">Images</p>
-                                <div className="flex flex-wrap gap-4">
-                                    {editImages.map((img, index) => (
-                                        <div key={index} className="relative w-24 h-24">
-                                            <img src={img} alt="Blog" className="w-full h-full object-cover rounded" />
-                                            <button
-                                                onClick={() => handleRemoveImage(index)}
-                                                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded hover:bg-red-600"
-                                            >
-                                                <X size={16} />
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
                         </div>
+                        <p className="text-gray-400">*Cannot edit blog images</p>
 
                         <DialogFooter className="mt-6">
                             <button
@@ -211,6 +226,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
                     </DialogContent>
                 </Dialog>
             )}
+
 
             {/* Delete Confirmation Dialog */}
             <ConfirmDialog

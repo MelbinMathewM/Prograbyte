@@ -1,17 +1,17 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Award, BookOpen, ChevronLeft, ChevronRight, Crown, Heart, Settings, Upload, Wallet } from "lucide-react";
-import { useTheme } from "../../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 import { Link, useNavigate } from "react-router-dom";
-import { getProfile, updateProfileInfo } from "../../api/profile";
-import { UserContext } from "../../contexts/user-context";
+import { getProfile, updateProfileInfo } from "@/api/profile";
+import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
 import default_image from "/default-user.avif";
-import CropImageModal from "../ui/crop-image-modal";
-import UserDetails from "./profile-user-details";
-import { getCroppedImage } from "../../libs/imageCropper";
-import SkillPart from "./profile-skill";
-import { Profile, CroppedArea } from "../../types/user";
-import ProfileBlogs from "./profile-blogs";
+import CropImageModal from "@/components/ui/crop-image-modal";
+import UserDetails from "@/components/students/profile/profile-user-details";
+import { getCroppedImage } from "@/libs/imageCropper";
+import SkillPart from "@/components/students/profile/profile-skill";
+import { Profile, CroppedArea } from "@/types/user";
+import ProfileBlogs from "@/components/students/profile/profile-blogs";
 
 
 export default function ProfilePage() {

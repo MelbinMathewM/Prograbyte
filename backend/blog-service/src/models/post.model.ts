@@ -1,13 +1,13 @@
-import { Schema, Document, ObjectId, model } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
 
 export interface IPost extends Document {
-    user_id: ObjectId | string;
+    user_id: Types.ObjectId | string;
     username: string;
     title: string;
     content: string;
-    image?: [string];
-    likes: ObjectId[];
-    comments: ObjectId[];
+    image?: string;
+    likes: Types.ObjectId[];
+    comments: number;
 }
 
 const postSchema = new Schema<IPost>({
@@ -24,20 +24,18 @@ const postSchema = new Schema<IPost>({
         type: String
     },
     image: {
-        type: [String]
+        type: String
     },
     likes: [
-        { 
-            type: Schema.Types.ObjectId ,
+        {
+            type: Schema.Types.ObjectId,
             ref: 'BlogUser'
         }
     ],
-    comments: [
-        { 
-            type: Schema.Types.ObjectId, 
-            ref: 'Comment' 
-        }
-    ],
+    comments: {
+        type: Number,
+        default: 0
+    }
 }, { timestamps: true });
 
 const Post = model("Post", postSchema);

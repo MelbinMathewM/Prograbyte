@@ -1,4 +1,4 @@
-import { IBaseRepository } from "../IBase.repository";
+import { IBaseRepository } from "@/repositories/IBase.repository";
 import { IPost } from "@/models/post.model";
 
 export interface IPostRepository extends IBaseRepository<IPost> {
