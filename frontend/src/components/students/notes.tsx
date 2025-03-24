@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
@@ -28,37 +28,35 @@ const ViewNotes = () => {
 
     return (
         <div className={`${isDark ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"} min-h-screen p-6`}>
-            {/* Breadcrumb Navigation */}
-            <nav className={`p-6 rounded mb-4 text-sm flex items-center ${isDark ? "bg-gray-800 text-gray-400" : "bg-gray-200 text-gray-500"}`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronLeft size={16} />
-                <Link to="/courses" className="font-bold hover:text-blue-500">Courses</Link>
-                <ChevronLeft size={16} />
-                <Link to={`/courses/${courseName}`} className="font-bold hover:text-blue-500">{courseName}</Link>
-                <ChevronLeft size={16} />
-                <span className="text-gray-300">{topic?.title}</span>
+            {/* ✅ Breadcrumb Navigation */}
+            <nav className={`p-4 md:p-6 rounded mb-8 text-sm flex flex-wrap items-center gap-2 ${isDark ? "bg-gray-800 text-gray-400" : "bg-gray-200 text-gray-600"}`}>
+                <Link to="/home" className="font-semibold hover:text-blue-500">Home</Link>
+                <ChevronRight size={16} />
+                <Link to="/courses" className="font-semibold hover:text-blue-500">Courses</Link>
+                <ChevronRight size={16} />
+                <Link to={`/courses/${courseName}`} className="font-semibold hover:text-blue-500 capitalize">{courseName}</Link>
+                <ChevronRight size={16} />
+                <span className="text-gray-400">{topic?.title}</span>
             </nav>
 
-            {/* Title & Back Button */}
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">{topic?.title} - Notes</h2>
+            {/* ✅ Title & Back Button */}
+            <div className="flex w-full sm:mx-auto justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Notes - {topic?.title}</h2>
                 <button
                     onClick={() => navigate(-1)}
                     className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"}`}
                 >
-                    <ChevronLeft className="mt-1" size={16} />
+                    <ChevronLeft size={16} />
                     Back
                 </button>
             </div>
 
-            {/* Notes Content */}
-            <div className={`w-full max-w-4xl mx-auto rounded-lg shadow-lg ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
+            {/* ✅ Notes Content */}
+            <div className="mx-auto">
                 {topic?.notes_url ? (
-                    <div>
-                        <PDFViewer notesUrl={topic?.notes_url} isDark={isDark} />
-                    </div>
+                    <PDFViewer notesUrl={topic?.notes_url} isDark={isDark} />
                 ) : (
-                    <p className="text-center py-6 text-gray-500">No notes available for this topic.</p>
+                    <p className="text-center py-10 text-gray-500">No notes available for this topic.</p>
                 )}
             </div>
         </div>
