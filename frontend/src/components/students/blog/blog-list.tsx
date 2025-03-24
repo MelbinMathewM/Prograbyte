@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import CommentModal from "./comment-part";
 import { BlogListProps } from "@/types/blog";
+import dayjs from "dayjs";
 
 const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, setBlogs }) => {
     const [imageModal, setImageModal] = useState<{ open: boolean; image: string, title: string, content: string }>({
@@ -47,7 +48,7 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {blogs.map((blog) => (
                     <motion.div
                         key={blog?._id}
@@ -63,7 +64,11 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
                             />
                             <div>
                                 <h2 className="font-bold">{blog?.username}</h2>
-                                <p className="text-xs text-gray-400">Just now</p>
+
+                                <p className="text-xs text-gray-400">
+                                    {dayjs(blog?.createdAt).format('DD MMM YYYY')}
+                                </p>
+
                             </div>
                         </div>
 
@@ -91,7 +96,7 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
                                 onClick={() => setCommentsModal({ open: true, blogId: blog?._id, user_id: blog?.user_id })}
                             >
                                 <FaCommentDots />
-                                <span>{ blog?.comments ? blog?.comments : 0 } Comments</span>
+                                <span>{blog?.comments ? blog?.comments : 0} Comments</span>
                             </button>
                         </div>
                     </motion.div>

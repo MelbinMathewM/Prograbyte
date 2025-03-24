@@ -58,8 +58,9 @@ export class TopicService implements ITopicService {
 
         const topics = await this.topicRepository.findById(topicsId);
 
+        
         if (!topics) return null;
-
+        
         const topic = topics.topics.find((t: any) => t._id.toString() === topicId);
 
         if (!topic) return null;
@@ -69,7 +70,7 @@ export class TopicService implements ITopicService {
             title: topic.title,
             level: topic.level,
             video_url: extractCloudinaryPublicId(topic.video_url),
-            notes_url: topic.notes_url ? extractCloudinaryPublicId(topic.notes_url) : "",
+            notes_url: topic.notes_url ? topic.notes_url : "",
         };
     }
 

@@ -12,13 +12,14 @@ export class PostController implements IPostController {
     async addPost(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const post = req.body;
+            const { userId } = req.params;
 
             let imageUrl = '';
             if (req.file) {
                 imageUrl = await uploadToCloudinary(req.file.buffer);
             }
 
-            const blog = await this.postService.addPost({ ...post, image: imageUrl });
+            const blog = await this.postService.addPost({ ...post, image: imageUrl }, userId);
 
             res.status(HttpStatus.CREATED).json({ message: HttpResponse.POST_ADDED, blog });
         } catch (err) {

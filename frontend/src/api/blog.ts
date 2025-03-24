@@ -21,9 +21,9 @@ export const getMyBlogs = async (userId: string) => {
     }
 }
 
-export const addPost = async (blogData: FormData) => {
+export const addPost = async (blogData: FormData, userId: string) => {
     try {
-        const response = await axiosInstance.post('/blog/post', blogData);
+        const response = await axiosInstance.post(`/blog/post/${userId}`, blogData);
         return response.data;
 
     } catch (err) {

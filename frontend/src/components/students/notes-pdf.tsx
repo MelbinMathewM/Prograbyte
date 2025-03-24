@@ -18,7 +18,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ notesUrl, isDark }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("PDF URL:", notesUrl); // ✅ Debugging
+        console.log("PDF URL:", notesUrl);
     }, [notesUrl]);
 
     return (
@@ -37,7 +37,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({ notesUrl, isDark }) => {
                                 setNumPages(numPages);
                                 setLoading(false);
                             }}
-                            onLoadError={(error) => console.error("PDF Load Error:", error)} // ✅ Debugging PDF errors
+                            onLoadError={(error) => console.error("PDF Load Error:", error)}
                             className="flex justify-center w-full"
                         >
                             {loading ? (

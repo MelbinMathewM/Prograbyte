@@ -7,6 +7,7 @@ export interface Blog {
     username: string;
     likes: string[];
     comments: number;
+    createdAt?: Date;
 }
 
 export interface Comment {

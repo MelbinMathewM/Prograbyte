@@ -90,15 +90,15 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
             <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
 
             {paginatedBlogs.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {paginatedBlogs.map((blog) => (
                         <div 
                         key={blog._id} 
-                        className={`relative rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl ${isDark ? "bg-gray-700" : "bg-white"}`}
+                        className={`relative rounded-md shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl ${isDark ? "bg-gray-700" : "bg-white"}`}
                       >
                         {/* Blog Image with Action Buttons */}
                         <div className="relative">
-                          <img src={blog?.image} alt="Blog" className="w-full h-48 object-cover" />
+                          <img src={blog?.image} alt="Blog" className="w-full object-cover" />
                       
                           {/* Edit & Delete Buttons */}
                           <div className="absolute top-2 right-2 flex gap-2">
@@ -110,7 +110,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
                               >
                                 <Pencil size={18} className="text-blue-500" />
                               </button>
-                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap z-50">
+                              <div className="absolute top-10 left-2/5 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap z-50">
                                 Edit
                               </div>
                             </div>
@@ -123,7 +123,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
                               >
                                 <Trash size={18} className="text-red-500" />
                               </button>
-                              <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap z-50">
+                              <div className="absolute top-10 left-2/5 -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap z-50">
                                 Delete
                               </div>
                             </div>
