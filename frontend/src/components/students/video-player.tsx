@@ -37,7 +37,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
         const fetchSecureVideoUrl = async () => {
             try {
                 const response = await getSecureUrl(token);
-                setVideoUrl(`${BASE_URL}${response.videoUrl}`);
+                setVideoUrl(response.videoUrl);
             } catch (error: any) {
                 const backendMessage = error.response?.data?.error || "An error occurred";
                 toast.error(backendMessage);
@@ -50,21 +50,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
     useEffect(() => {
         if (!videoUrl || !videoRef.current) return;
 
-        const accessToken = Cookies.get("accessToken");
-        console.log(accessToken,"nn")
-
         playerRef.current = videojs(videoRef.current, {
             controls: true,
             autoplay: true,
             preload: "auto",
             fluid: true,
-            playbackRates: [0.5, 1, 1.25, 1.5, 2], // ✅ Playback speed options
+            playbackRates: [0.5, 1, 1.25, 1.5, 2],
             html5: {
                 hls: {
                     withCredentials: true,
                 },
                 xhr: {
                     beforeSend: function (xhr: XMLHttpRequest) {
+                        const accessToken = Cookies.get("accessToken");
                         if (accessToken) {
                             xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
                         }
@@ -73,7 +71,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
             },
             sources: [
                 {
-                    src: videoUrl,
+                    src:  `${BASE_URL}/course/topics/proxy-stream/${token}`,
                     type: "video/mp4",
                 },
             ],

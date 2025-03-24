@@ -18,7 +18,12 @@ export class PostService implements IPostService {
         @inject("ICommentRepository") private commentRepository: ICommentRepository
     ) { }
 
-    async addPost(post: IPost): Promise<IPost> {
+    async addPost(post: IPost, user_id: string): Promise<IPost> {
+        const blogs = await this.postRepository.find({user_id});
+        // console.log(blogs,'hh')
+        if(blogs.length > 2){
+            throw createHttpError(HttpStatus.BAD_REQUEST," Maximum blog count exceeded");
+        }
         const blog = await this.postRepository.create(post);
 
         console.log(blog)

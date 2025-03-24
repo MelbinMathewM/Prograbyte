@@ -46,21 +46,15 @@ export class TopicController implements ITopicController {
         }
     }
 
-    async getTopics(req: Request, res: Response): Promise<void> {
+    async getTopics(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { courseId } = req.params;
-
-            console.log(courseId)
 
             const topics = await this.topicService.getTopics(courseId);
 
             res.status(200).json(topics);
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                res.status(400).json({ error: err.message });
-            } else {
-                res.status(400).json({ error: "An unknown error occurred" });
-            }
+        } catch (err) {
+            next(err);
         }
     }
 
@@ -119,10 +113,8 @@ export class TopicController implements ITopicController {
                 res.status(HttpStatus.BAD_REQUEST).json(HttpResponse.NO_TOKEN);
                 return
             }
-
-            console.log('hhhhh')
-
-            res.status(HttpStatus.OK).json({ videoUrl: `/course/proxy-stream/${token}` });
+            
+            res.status(HttpStatus.OK).json({ videoUrl: `/course/topics/proxy-stream/${token}` });
         } catch (err) {
             next(err)
         }
@@ -132,10 +124,10 @@ export class TopicController implements ITopicController {
         try {
             const { token } = req.params;
             console.log('kkx')
-            // const accessToken = req.headers.authorization?.replace("Bearer ", "");
+            const accessToken = req.headers.authorization?.replace("Bearer ", "");
 
             console.log("Proxy Streaming Token:", token);
-            // console.log("Access Token:", accessToken);
+            console.log("Access Token:", accessToken);
 
             if (!token) {
                 res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN);
@@ -147,9 +139,9 @@ export class TopicController implements ITopicController {
             const videoStream = await axios({
                 method: "get",
                 url: secureUrl,
-                // headers: {
-                //   Authorization: `Bearer ${accessToken}`,
-                // },
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
                 responseType: "stream",
             });
 

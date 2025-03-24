@@ -17,7 +17,7 @@ const ViewNotes = () => {
         const fetchNotes = async () => {
             if (!topicId) return;
             try {
-                const response = await axiosInstance.get(`/course/topics/${topicsId}/topic/${topicId}`);
+                const response = await axiosInstance.get(`/course/topics/${topicsId}/${topicId}`);
                 setTopic(response.data);
             } catch (error) {
                 console.error("Error fetching notes");

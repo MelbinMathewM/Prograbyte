@@ -101,7 +101,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                 transition={{ duration: 0.3 }}
                             >
                                 <div className="flex-1">
-                                    <p><span className="font-medium">{comment.username}:</span> {comment.content}</p>
+                                    <p><span className="font-medium font-semibold italic">{comment.username}:</span> {comment.content}</p>
                                 </div>
 
                                 <div className="flex items-center gap-2">

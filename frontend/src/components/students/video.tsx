@@ -4,7 +4,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../../axios/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import VideoPlayer from "./video-player";
-import { useSelector } from "react-redux";
 import { Topic } from "../../types/course";
 const VideoPart = () => {
     const { courseName, topicId, topicsId } = useParams();
@@ -20,7 +19,7 @@ const VideoPart = () => {
         const fetchTopic = async () => {
             if (!topicId) return;
             try {
-                const response = await axiosInstance.get(`/course/topics/${topicsId}/topic/${topicId}`);
+                const response = await axiosInstance.get(`/course/topics/${topicsId}/${topicId}`);
                 console.log(response.data);
                 setTopic(response.data);
             } catch (error) {

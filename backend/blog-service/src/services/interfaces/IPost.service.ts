@@ -2,7 +2,7 @@ import { IComment } from "@/models/comment.model";
 import { IPost } from "@/models/post.model";
 
 export interface IPostService {
-    addPost(post: IPost): Promise<IPost>;
+    addPost(post: IPost, user_id: string): Promise<IPost>;
     getPosts(): Promise<IPost[]>;
     getPostsByUserId(user_id: string): Promise<IPost[]>;
     updatePost(blog_id: string, updateData: Partial<IPost>): Promise<IPost | null>;

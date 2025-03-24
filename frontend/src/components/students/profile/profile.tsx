@@ -176,11 +176,11 @@ export default function ProfilePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                 <UserDetails profile={profile} isDark={isDark} updateProfile={updateProfile} />
                 <div className="col-span-1 md:col-span-2">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 ">
 
                         {/* Profile Navigation Buttons */}
                         <div className="col-span-1 md:col-span-3">
-                            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 w-full">
                                 {[
                                     { label: "My Courses", icon: BookOpen, link: "/profile/my-courses" },
                                     { label: "Wishlist", icon: Heart, link: "/wishlist" },
@@ -192,7 +192,7 @@ export default function ProfilePage() {
                                     <Link
                                         key={index}
                                         to={item.link}
-                                        className={`p-3 flex flex-col items-center justify-center rounded-lg shadow-md transition-all 
+                                        className={`p-2 flex flex-col items-center justify-center rounded-lg shadow-md transition-all 
                                         ${isDark ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                                     >
                                         <item.icon size={24} />
@@ -204,7 +204,7 @@ export default function ProfilePage() {
                         </div>
 
                         {/* Skills Section */}
-                        <div className="col-span-3">
+                        <div className="col-span-3 mt-6">
                             <SkillPart skills={skills} isDark={isDark} userId={profile?._id as string} setSkills={setSkills} />
                             <ProfileBlogs userId={userData.id as string} isDark={isDark} />
                         </div>
