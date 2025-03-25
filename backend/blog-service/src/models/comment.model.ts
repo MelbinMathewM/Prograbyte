@@ -15,7 +15,7 @@ export interface IComment extends Document {
 const commentContentSchema = new Schema<ICommentContent>({
     user_id: {
         type: Schema.Types.ObjectId,
-        ref: 'BlogUser',
+        ref: 'BlogProfile',
         required: true,
     },
     username: {
@@ -28,7 +28,7 @@ const commentContentSchema = new Schema<ICommentContent>({
     likes: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'BlogUser',
+            ref: 'BlogProfile',
             default: [],
         }
     ]

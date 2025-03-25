@@ -4,14 +4,14 @@ import { env } from "../config/env";
 class RabbitMQService {
     private connection: amqp.Connection | null = null;
     private channel: amqp.Channel | null = null;
-    private readonly exchange = "course_service";
+    private readonly exchange = "user_service";
 
     async connect(): Promise<void> {
         try {
             this.connection = await amqp.connect(env.RABBITMQ_URL as string);
             this.channel = await this.connection.createChannel();
             await this.channel.assertExchange(this.exchange, "topic", { durable: true });
-            console.log("✅ Connected to RabbitMQ");
+            console.log("✅ Connected to RabbitMQ (User Service)");
         } catch (error) {
             console.error("❌ RabbitMQ Connection Error:", error);
         }
@@ -53,6 +53,12 @@ class RabbitMQService {
             }
         });
     }
+
+    async closeRabbitMQ () {
+        await this.channel?.close();
+        await this.connection?.close();
+        console.log("✅ RabbitMQ Connection Closed (User Service)");
+      };
 }
 
 export const rabbitMQService = new RabbitMQService();

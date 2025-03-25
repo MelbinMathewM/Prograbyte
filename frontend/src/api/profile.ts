@@ -62,3 +62,13 @@ export const getEnrolledCourses = async (userId: string) => {
         throw error;
     }
 }
+
+export const getPublicProfile = async (username: string) => {
+    try{
+        const response = await axiosInstance.get(`/blog/blog-profile/public/${username}`);
+        return response.data;
+    }catch(err){
+        console.error("Error fetching user profile", err);
+        throw err;
+    }
+}

@@ -6,8 +6,8 @@ import {
 import { motion } from "framer-motion";
 import { UserContext } from "@/contexts/user-context";
 import { useTheme } from "@/contexts/theme-context";
-import { addPost, getPosts } from "@/api/blog";
-import { Blog } from "@/types/blog";
+import { addPost, getBlogProfile, getPosts } from "@/api/blog";
+import { Blog, BlogProfile } from "@/types/blog";
 import { User } from "@/types/user";
 import AddBlogModal from "./add-blog";
 import BlogList from "./blog-list";
@@ -27,6 +27,7 @@ const BlogPart = () => {
   const [newImage, setNewImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [blogProfile, setBlogProfile] = useState<BlogProfile | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +54,21 @@ const BlogPart = () => {
     fetchBlogs();
   }, []);
 
+  useEffect(() => {
+    fetchBlogProfile();
+  },[userData]);
+
+  const fetchBlogProfile = async () => {
+    if(!userData?.id) return;
+    try{
+      const response = await getBlogProfile(userData?.id as string);
+      console.log(response.profile,'hsiu')
+      setBlogProfile(response.profile);
+    }catch(err: any){
+      console.error("Failed to fetch blog profile:", err.response?.data?.error || err.message);
+    }
+  };
+
   const handleAddBlog = async () => {
 
     if (!newTitle || !newContent) return;
@@ -75,7 +91,7 @@ const BlogPart = () => {
   };
 
   return (
-    <div className={`p-8 min-h-screen ${isDark ? "bg-black text-gray-200" : "bg-white text-gray-900"} font-medium`}>
+    <div className={`p-8 min-h-screen ${isDark ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"} font-medium`}>
 
       {/* Breadcrumb / Navbar */}
       <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"} p-6 rounded mb-8 flex items-center`}>
@@ -98,7 +114,6 @@ const BlogPart = () => {
 
       {/* Toggle Profile on small screens */}
       <div className="sm:hidden mb-4 flex w-full gap-4">
-        {/* Show/Hide Profile Button */}
         <button
           onClick={() => setShowProfile(!showProfile)}
           className={`px-4 py-2 rounded-md font-bold w-full ${isDark ? "bg-gray-800 hover:bg-gray-700 text-white" : "bg-white shadow-md hover:bg-gray-100 text-gray-800"}`}
@@ -106,7 +121,6 @@ const BlogPart = () => {
           {showProfile ? "Hide Profile" : "Show Profile"}
         </button>
 
-        {/* Add Blog Button */}
         <button
           onClick={() => setAddModalOpen(true)}
           className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-bold w-full justify-center"
@@ -123,20 +137,20 @@ const BlogPart = () => {
               alt="User Avatar"
               className="w-24 h-24 rounded-full border mb-4"
             />
-            <h3 className="text-lg font-semibold">{userData?.username || "Alex Johnson"}</h3>
+            <h3 className="text-lg font-semibold">{blogProfile?.username || "Alex Johnson"}</h3>
             <p className="mt-1 text-xs text-gray-500">Full Stack Developer</p>
 
             <div className="flex justify-between w-full mt-6 text-center text-sm">
               <div>
-                <p className="font-bold">150</p>
-                <p className="text-gray-500">Friends</p>
+                <p className="font-bold">{blogProfile?.following.length}</p>
+                <p className="text-gray-500">Following</p>
               </div>
               <div>
-                <p className="font-bold">35</p>
+                <p className="font-bold">{blogProfile?.totalPosts}</p>
                 <p className="text-gray-500">Posts</p>
               </div>
               <div>
-                <p className="font-bold">22</p>
+                <p className="font-bold">{blogProfile?.followers.length}</p>
                 <p className="text-gray-500">Followers</p>
               </div>
             </div>
@@ -163,20 +177,20 @@ const BlogPart = () => {
               alt="User Avatar"
               className="w-24 h-24 rounded-full border mb-4"
             />
-            <h3 className="text-lg font-semibold">{userData?.username || "Alex Johnson"}</h3>
+            <h3 className="text-lg font-semibold">{blogProfile?.username || "Alex Johnson"}</h3>
             <p className="mt-1 text-xs text-gray-500">Full Stack Developer</p>
 
             <div className="flex justify-between w-full mt-6 text-center text-sm">
               <div>
-                <p className="font-bold">150</p>
-                <p className="text-gray-500">Friends</p>
+                <p className="font-bold">{blogProfile?.following.length}</p>
+                <p className="text-gray-500">Following</p>
               </div>
               <div>
-                <p className="font-bold">35</p>
+                <p className="font-bold">{blogProfile?.totalPosts}</p>
                 <p className="text-gray-500">Posts</p>
               </div>
               <div>
-                <p className="font-bold">22</p>
+                <p className="font-bold">{blogProfile?.followers.length}</p>
                 <p className="text-gray-500">Followers</p>
               </div>
             </div>

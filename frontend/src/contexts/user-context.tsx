@@ -34,7 +34,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         const res = await axiosInstance.get("/user/user");
         console.log('uehfgef')
         if (res.status === 200) {
-          setUser({ id: res.data._id, username: res.data.username });
+          setUser({ id: res.data._id,email: res.data.email, username: res.data.username });
         } else {
           logout();
         }

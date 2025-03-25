@@ -6,9 +6,10 @@ dotenv.config();
 
 import { validateEnv } from "@/utils/validate-env.util";
 import verifyApiKey from "@/configs/api-key.config";
-import { env } from "@/configs/env.config";
-import connectDB from "./configs/db.config";
-import { errorHandler } from "./middlewares/error.middleware";
+import connectDB from "@/configs/db.config";
+import { errorHandler } from "@/middlewares/error.middleware";
+import { initializeRabbitMQ } from "@/configs/rabbitmq.config";
+import { userRegisteredConsumer } from "@/rabbitmqs/user.consumer";
 
 validateEnv();
 
@@ -23,6 +24,11 @@ app.use(verifyApiKey as express.RequestHandler);
 app.use('/',router);
 
 app.use(errorHandler);
+
+(async () => {
+    await initializeRabbitMQ();
+    await userRegisteredConsumer();
+  })();
 
 
 const PORT = process.env.PORT || 5009;

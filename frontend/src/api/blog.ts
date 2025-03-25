@@ -11,6 +11,16 @@ export const getPosts = async () => {
     }
 }
 
+export const getBlogProfile = async (userId: string) => {
+    console.log(userId,'ff')
+    try{
+        const response = await axiosInstance.get(`/blog/blog-profile/${userId}`);
+        return response.data;
+    }catch(err){
+        console.error("Error fetching blog profile", err);
+    }
+}
+
 export const getMyBlogs = async (userId: string) => {
     try {
         const response = await axiosInstance.get(`/blog/post/${userId}`);

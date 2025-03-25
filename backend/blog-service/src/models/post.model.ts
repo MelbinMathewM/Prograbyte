@@ -13,6 +13,7 @@ export interface IPost extends Document {
 const postSchema = new Schema<IPost>({
     user_id: {
         type: Schema.Types.ObjectId,
+        ref: "BlogProfile"
     },
     username: {
         type: String
@@ -29,7 +30,7 @@ const postSchema = new Schema<IPost>({
     likes: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'BlogUser'
+            ref: 'BlogProfile'
         }
     ],
     comments: {

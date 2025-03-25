@@ -11,6 +11,7 @@ import {
 import CommentModal from "./comment-part";
 import { BlogListProps } from "@/types/blog";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
 const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, setBlogs }) => {
     const [imageModal, setImageModal] = useState<{ open: boolean; image: string, title: string, content: string }>({
@@ -48,12 +49,12 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {blogs.map((blog) => (
                     <motion.div
                         key={blog?._id}
                         className={`p-4 rounded shadow-md border 
-                        ${isDark ? "bg-gray-800 text-gray-200 border-gray-700" : "bg-white text-gray-800 border-gray-200"}`}
+                        ${isDark ? "bg-gray-850 text-gray-200 border-gray-700" : "bg-white text-gray-800 border-gray-200"}`}
                         whileHover={{ scale: 1.02 }}
                     >
                         <div className="flex items-center gap-4 mb-4">
@@ -63,7 +64,9 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
                                 className="w-12 h-12 rounded-full object-cover"
                             />
                             <div>
-                                <h2 className="font-bold">{blog?.username}</h2>
+                                <Link to={`/blog/profile/${blog?.username}`} className="font-semibold hover:text-blue-500">
+                                    @{blog?.username}
+                                </Link>
 
                                 <p className="text-xs text-gray-400">
                                     {dayjs(blog?.createdAt).format('DD MMM YYYY')}
