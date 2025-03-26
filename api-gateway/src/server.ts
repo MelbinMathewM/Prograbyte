@@ -1,20 +1,37 @@
 import express, { Application } from "express";
 import dotenv from "dotenv";
+import http from "http";
+import { Server } from "socket.io";
 import cors from "cors";
 
 import verifyToken from "./middlewares/verify-token";
 import createProxy from "./middlewares/proxy-middleware";
+import { SocketGateway } from "./sockets/gateway.socket";
 
 dotenv.config();
 
 const app: Application = express();
+const server = http.createServer(app);
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
   credentials: true,
 };
 
+// Initialize Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST"]
+  }
+});
+
+// Enable CORS
 app.use(cors(corsOptions));
+
+// Initialize Socket Gateway
+const socketGateway = new SocketGateway(io);
+socketGateway.initialize();
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,4 +42,5 @@ app.use("/api/course", verifyToken, createProxy(process.env.COURSE_SERVICE, "/ap
 app.use("/api/notification", createProxy(process.env.NOTIFICATION_SERVICE, "/api/notification"));
 app.use("/api/blog", createProxy(process.env.BLOG_SERVICE, "/api/blog"));
 
-app.listen(PORT, () => console.log(`API Gateway running on port ${PORT}`));
+// ✅ FIXED: Start server with `server.listen()`
+server.listen(PORT, () => console.log(`API Gateway running on port ${PORT}`));

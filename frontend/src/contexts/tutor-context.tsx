@@ -2,7 +2,7 @@ import { createContext, ReactNode, useLayoutEffect, useState, useCallback } from
 import { useDispatch, useSelector } from "react-redux";
 import { logout as reduxLogout } from "../redux/slices/authSlice";
 import Cookies from "js-cookie";
-import axiosInstance from "../axios/axiosConfig";
+import axiosInstance from "../configs/axiosConfig";
 import { useNavigate } from "react-router-dom";
 
 interface Tutor {

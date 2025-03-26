@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import AccordionItem from "../ui/accordian-item";
 import Accordion from "../ui/accordian";
 import { Link, useNavigate } from "react-router-dom";

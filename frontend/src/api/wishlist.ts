@@ -1,4 +1,4 @@
-import axiosInstance from "../axios/axiosConfig";
+import axiosInstance from "../configs/axiosConfig";
 
 export const addToWishlist = async (userId: string, courseId: string) => {
     try {

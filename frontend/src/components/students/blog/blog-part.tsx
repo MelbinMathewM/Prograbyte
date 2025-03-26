@@ -130,7 +130,7 @@ const BlogPart = () => {
       </div>
 
       {showProfile && (
-        <div className="sm:hidden mb-4 p-4 rounded-xl border shadow-md">
+        <div className="sm:hidden mb-4 p-4 rounded-sm border shadow-md">
           <div className="flex flex-col items-center">
             <img
               src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userData?.username || "User"}`}
@@ -166,7 +166,7 @@ const BlogPart = () => {
         </div>
 
         <motion.div
-          className={`hidden sm:block w-80 p-6 rounded-xl border h-fit sticky top-20 ${isDark ? "border-gray-700 bg-gray-900 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`}
+          className={`hidden sm:block w-80 p-6 rounded-sm border h-fit sticky top-20 ${isDark ? "border-gray-700 bg-gray-900 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`}
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}

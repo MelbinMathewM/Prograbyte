@@ -1,4 +1,4 @@
-import axiosInstance from "@/axios/axiosConfig";
+import axiosInstance from "@/configs/axiosConfig";
 import { Blog } from "@/types/blog";
 
 export const getPosts = async () => {

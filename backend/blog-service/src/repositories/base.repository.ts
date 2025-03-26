@@ -43,8 +43,16 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
   ): Promise<T[]> {
     return await this.model.find(filter).populate(populateFields);
   }
+  
+
+  async populateOne(
+    filter: FilterQuery<T> = {},
+    populateFields: string | any
+  ): Promise<T | null> {
+    return await this.model.findOne(filter).populate(populateFields);
+  }
 
   async save(document: T): Promise<T> {
-      return document.save();
+    return document.save();
   }
 }

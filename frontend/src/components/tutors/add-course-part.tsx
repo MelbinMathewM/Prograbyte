@@ -17,7 +17,7 @@ import {
 import { TutorContext } from "../../contexts/tutor-context";
 import dayjs from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";

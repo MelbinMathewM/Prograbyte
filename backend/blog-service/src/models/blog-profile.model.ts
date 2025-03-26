@@ -1,12 +1,17 @@
-import { model, Schema, Document, ObjectId } from "mongoose";
+import { model, Schema, Document, Types } from "mongoose";
 
 export interface IBlogProfile extends Document {
     username: string;
     totalPosts: number;
-    followers: ObjectId[];
-    following: ObjectId[];
+    followers: Types.ObjectId[];
+    following: Types.ObjectId[];
     totalFollowers: number;
     totalFollowing: number;
+}
+
+export interface MutualFollower {
+    _id: Types.ObjectId;
+    username: string;
 }
 
 const blogProfileSchema = new Schema({

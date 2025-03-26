@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import AdminPagination from "./pagination";
 import { Course } from "../../types/course";

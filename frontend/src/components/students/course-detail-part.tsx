@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTheme } from "../../contexts/theme-context";
 import TabNav from "./course-detail-tabnav";

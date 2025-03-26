@@ -1,19 +1,24 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getPublicProfile, getProfile } from "@/api/profile";
+import { useContext, useEffect, useState } from "react";
+import { getPublicProfile, getProfile, unfollowUser, followUser } from "@/api/profile";
 import default_image from "/default-user.avif";
 import { BlogProfile } from "@/types/blog";
 import { useTheme } from "@/contexts/theme-context";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Profile } from "@/types/user";
 import PublicProfileBlogs from "./public-profile-blogs";
+import { UserContext } from "@/contexts/user-context";
+import toast from "react-hot-toast";
+import { FaUserMinus, FaUserPlus } from "react-icons/fa";
 
 export default function PublicProfilePage() {
     const { theme } = useTheme();
     const isDark = theme === "dark-theme";
     const { username } = useParams<{ username: string }>();
     const [blogProfile, setBlogProfile] = useState<BlogProfile | null>(null);
+    const [isFollowing, setIsFollowing] = useState(false);
     const [profile, setProfile] = useState<Profile | null>(null);
+    const { user } = useContext(UserContext) ?? {};
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,10 +42,47 @@ export default function PublicProfilePage() {
         try {
             const res = await getProfile(userId);
             setProfile(res);
-        } catch (err) {
-            console.error("Failed to load detailed profile");
+        } catch (err: any) {
+            console.error(err.res.data.error);
         }
     };
+
+    useEffect(() => {
+        if (blogProfile && user) {
+            const following = blogProfile.followers.some(follower => follower === user?.id);
+            setIsFollowing(following);
+        }
+    }, [blogProfile, user]);
+
+
+    const handleFollow = async () => {
+        try {
+            await followUser(user?.id as string, blogProfile?._id as string);
+            setIsFollowing(true);
+            toast.success(`Following ${blogProfile?.username}`);
+            setBlogProfile(prev => prev ? {
+                ...prev,
+                followers: [...prev.followers, user?.id as string]
+            } : prev);
+        } catch (err: any) {
+            console.error(err.res.data.error);
+        }
+    };
+
+    const handleUnfollow = async () => {
+        try {
+            await unfollowUser(user?.id as string, blogProfile?._id as string);
+            setIsFollowing(false);
+            toast.success(`Unfollowed ${blogProfile?.username}`)
+            setBlogProfile(prev => prev ? {
+                ...prev,
+                followers: prev.followers.filter(f => f !== user?.id)
+            } : prev);
+        } catch (err) {
+            console.error("Failed to unfollow user");
+        }
+    };
+
 
     if (!blogProfile || !profile) {
         return <div className={`p-6 text-center ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>Loading...</div>;
@@ -69,20 +111,56 @@ export default function PublicProfilePage() {
             </div>
 
             {/* Profile Section */}
-            <div className={`shadow-md rounded-lg p-6 flex items-center space-x-6 w-full ${isDark ? "bg-gray-850 border border-gray-700" : "bg-white"}`}>
-                <img
-                    src={profile?.profileImage || default_image}
-                    alt="Profile"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
-                />
-                <div>
-                    <h1 className="text-2xl font-semibold">{profile?.name}</h1>
-                    <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>@{blogProfile.username}</p>
+            <div className={`shadow-md rounded-lg p-6 flex items-center justify-between w-full ${isDark ? "bg-gray-850 border border-gray-700" : "bg-white"}`}>
+                {/* Left Side - Profile */}
+                <div className="flex items-center space-x-6">
+                    <img
+                        src={profile?.profileImage || default_image}
+                        alt="Profile"
+                        className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
+                    />
+                    <div>
+                        <h1 className="text-2xl font-semibold">{profile?.name}</h1>
+                        <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>@{blogProfile.username}</p>
+                    </div>
                 </div>
+
+                {/* Right Side - Icon Only with Tooltip */}
+                {user && user.id !== blogProfile._id && (
+                    isFollowing ? (
+                        <div className="relative group">
+                            <button
+                                onClick={handleUnfollow}
+                                className="p-4 rounded-full bg-red-500 text-white hover:bg-red-600 shadow-lg"
+                            >
+                                <FaUserMinus size={20} />
+                            </button>
+
+                            {/* Custom Tooltip */}
+                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-sm px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Unfollow
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="relative group">
+                            <button
+                                onClick={handleFollow}
+                                className="p-4 rounded-full bg-blue-500 text-white hover:bg-blue-600 shadow-lg"
+                            >
+                                <FaUserPlus size={20} />
+                            </button>
+
+                            {/* Custom Tooltip */}
+                            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-gray-800 text-white text-sm px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                Follow
+                            </div>
+                        </div>
+                    )
+                )}
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mt-6">
+            <div className="grid grid-cols-3 gap-3 mt-6">
                 <div className={`shadow-md rounded-lg p-4 text-center ${isDark ? "bg-gray-850 border border-gray-700" : "bg-white"}`}>
                     <p className="text-xl font-bold">{blogProfile.followers.length}</p>
                     <span className="text-sm text-gray-500">Followers</span>
@@ -133,7 +211,7 @@ export default function PublicProfilePage() {
                             {blogProfile.followers.map((follower: any) => (
                                 <Link
                                     key={follower._id}
-                                    to={`/profile/${follower.username}`}
+                                    to={`/blog/profile/${follower.username}`}
                                     className={`px-4 py-2 rounded-lg ${isDark ? "bg-gray-700 text-gray-200 hover:bg-gray-600" : "bg-blue-200 text-blue-900 hover:bg-blue-300"}`}
                                 >
                                     @{follower.username}
@@ -153,7 +231,7 @@ export default function PublicProfilePage() {
                             {blogProfile.following.map((follow: any) => (
                                 <Link
                                     key={follow._id}
-                                    to={`/profile/${follow.username}`}
+                                    to={`/blog/profile/${follow.username}`}
                                     className={`px-4 py-2 rounded-lg ${isDark ? "bg-gray-700 text-gray-200 hover:bg-gray-600" : "bg-green-200 text-green-900 hover:bg-green-300"}`}
                                 >
                                     @{follow.username}

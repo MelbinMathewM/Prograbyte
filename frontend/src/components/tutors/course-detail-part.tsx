@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Pencil, Trash2, ChevronRight, FileText, PlayCircle, ChevronLeft } from "lucide-react";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import EditCourseModal from "./edit-course-modal";
 import { toast } from "react-toastify";
 import EditTopicModal from "./edit-topic-modal";

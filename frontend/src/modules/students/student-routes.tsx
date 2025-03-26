@@ -16,6 +16,7 @@ import PaymentFailure from "@/pages/students/payment-failure";
 import Blog from "@/pages/students/blog";
 import StudentLayout from "./student-layout";
 import PublicProfile from "@/pages/students/public-profile";
+import Chat from "@/pages/students/chat";
 
 const StudentRoutes = () => {
     return (
@@ -35,6 +36,7 @@ const StudentRoutes = () => {
                 <Route path="/payment-failure" element={<PaymentFailure />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/profile/:username" element={ <PublicProfile /> } />
+                <Route path="/blog/chat" element={ <Chat /> } />
             </Route>
         </Route>
     );
