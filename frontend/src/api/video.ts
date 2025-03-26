@@ -1,4 +1,4 @@
-import axiosInstance from "@/axios/axiosConfig";
+import axiosInstance from "@/configs/axiosConfig";
 
 export const fetchToken = async (publicId: string) => {
     try {

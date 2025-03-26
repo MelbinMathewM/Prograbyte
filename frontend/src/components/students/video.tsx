@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import VideoPlayer from "./video-player";
 import { Topic } from "../../types/course";

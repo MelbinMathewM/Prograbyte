@@ -23,5 +23,11 @@ export const HttpResponse = {
     COMMENT_REMOVED: "Comment removed successfully",
     COMMENTS_NOT_FOUND: "Comments not found",
     COMMENT_NOT_FOUND: "Comment not found",
+    SELF_FOLLOW_ERROR: "User can't follow himself",
+    SELF_UNFOLLOW_ERROR: "User can't unfollow himself",
+    USER_FOLLOWED: "Followed user successfully",
+    USER_UNFOLLOWED: "Unfollowed user successfully",
+    FOLLOWER_EXIST: "User already following",
+    BOTH_USER_IDS_REQUIRED: "Both user IDs are required",
     
 }

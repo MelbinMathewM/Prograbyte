@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Edit, Trash, X } from "lucide-react";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { Category } from "../../types/course";
 
 const CategoriesPart: React.FC = () => {

@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Button from "../../components/ui/Button";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Topic, Course, ApprovalStatus } from "../../types/course";
 

@@ -1,4 +1,4 @@
-import axiosInstance from "@/axios/axiosConfig";
+import axiosInstance from "@/configs/axiosConfig";
 import { Blog } from "@/types/blog";
 
 export const getPosts = async () => {
@@ -8,6 +8,16 @@ export const getPosts = async () => {
     } catch (err) {
         console.error("Error fetching blogs", err);
         throw err;
+    }
+}
+
+export const getBlogProfile = async (userId: string) => {
+    console.log(userId,'ff')
+    try{
+        const response = await axiosInstance.get(`/blog/blog-profile/${userId}`);
+        return response.data;
+    }catch(err){
+        console.error("Error fetching blog profile", err);
     }
 }
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../../contexts/theme-context";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";

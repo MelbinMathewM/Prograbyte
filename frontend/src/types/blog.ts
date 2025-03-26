@@ -48,3 +48,13 @@ export interface BlogListProps {
     blogs: Blog[];
     setBlogs: React.Dispatch<React.SetStateAction<Blog[]>>
 }
+
+export interface BlogProfile {
+    _id: string;
+    username: string;
+    totalPosts: number;
+    followers: string[];
+    following: string[];
+    totalFollowers: number;
+    totalFollowing: number;
+}

@@ -1,17 +1,22 @@
-import { model, Schema, Document, ObjectId } from "mongoose";
+import { model, Schema, Document, Types } from "mongoose";
 
 export interface IBlogProfile extends Document {
-    user_id: ObjectId | string;
+    username: string;
     totalPosts: number;
-    followers: ObjectId[];
-    following: ObjectId[];
+    followers: Types.ObjectId[];
+    following: Types.ObjectId[];
     totalFollowers: number;
     totalFollowing: number;
 }
 
+export interface MutualFollower {
+    _id: Types.ObjectId;
+    username: string;
+}
+
 const blogProfileSchema = new Schema({
-    user_id: {
-        type: Schema.Types.ObjectId,
+    username: {
+        type: String,
         required: true
     },
     totalPosts: {
@@ -21,11 +26,13 @@ const blogProfileSchema = new Schema({
     followers: [
         {
             type: Schema.Types.ObjectId,
+            ref: 'BlogProfile'
         }
     ],
     following: [
         {
             type: Schema.Types.ObjectId,
+            ref: 'BlogProfile'
         }
     ],
     totalFollowers: {
@@ -39,6 +46,6 @@ const blogProfileSchema = new Schema({
 }, { timestamps: true });
 
 
-const BlogProfile = model("BlogUser", blogProfileSchema);
+const BlogProfile = model<IBlogProfile>("BlogProfile", blogProfileSchema);
 
 export default BlogProfile;

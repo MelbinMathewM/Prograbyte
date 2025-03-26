@@ -26,6 +26,9 @@ export const env = {
     },
     get TOKEN_SECRET() {
         return process.env.TOKEN_SECRET;
+    },
+    get RABBITMQ_URL() {
+        return process.env.RABBITMQ_URL
     }
 
 }

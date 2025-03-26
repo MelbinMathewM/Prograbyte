@@ -9,5 +9,6 @@ export interface IBaseRepository<T extends Document> {
   delete(id: string): Promise<T | null>;
   count(filter?: FilterQuery<T>): Promise<number>;
   populate(filter: FilterQuery<T>, populateFields: string | string[]): Promise<T[]>;
+  populateOne(filter: FilterQuery<T>, populateFields: string | any): Promise<T | null>;
   save(document: T): Promise<T>;
 }

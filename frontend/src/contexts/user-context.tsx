@@ -2,7 +2,7 @@ import { createContext, ReactNode, useLayoutEffect, useState, useCallback } from
 import { useDispatch, useSelector } from "react-redux";
 import { logout as reduxLogout } from "../redux/slices/authSlice";
 import Cookies from "js-cookie";
-import axiosInstance from "../axios/axiosConfig";
+import axiosInstance from "../configs/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { User, UserContextType } from "@/types/user";
 
@@ -34,7 +34,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
         const res = await axiosInstance.get("/user/user");
         console.log('uehfgef')
         if (res.status === 200) {
-          setUser({ id: res.data._id, username: res.data.username });
+          setUser({ id: res.data._id,email: res.data.email, username: res.data.username });
         } else {
           logout();
         }

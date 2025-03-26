@@ -42,9 +42,16 @@ export class UserService {
             await this.userRepository.deleteUserById(newUser._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR)
         }
+
+        const userData = {
+            _id: newUser._id,
+            username:newUser.username
+        }
+
+        await rabbitMQService.publishMessage("user.registered.blog",userData);
     }
 
-    async registerTutor(tutor: IUser): Promise<IUser> {
+    async registerTutor(tutor: IUser): Promise<void> {
         const existingUser = await this.userRepository.getUserByEmail(tutor.email);
 
         if (existingUser) {
@@ -73,15 +80,12 @@ export class UserService {
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR);
         }
 
-        const tutorData = {
+        const userData = {
             _id: newTutor._id,
-            email: newTutor.email,
-            name: newTutor.name,
-        };
+            username:newTutor.username
+        }
 
-        await rabbitMQService.publishMessage("tutor.registered", tutorData);
-
-        return newTutor;
+        await rabbitMQService.publishMessage("user.registered",userData);
     }
 
 
@@ -127,6 +131,7 @@ export class UserService {
 
         const newUser = {
             _id: user._id,
+            email: user.email,
             username: user.username
         }
 

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 import Button from "../../components/ui/Button";
 import { Card, CardContent } from "../../components/ui/card";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { UserContext } from "../../contexts/user-context";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);

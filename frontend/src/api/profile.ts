@@ -1,4 +1,4 @@
-import axiosInstance from "../axios/axiosConfig";
+import axiosInstance from "../configs/axiosConfig";
 
 export const getProfile = async (userId: string) => {
     try{
@@ -60,5 +60,35 @@ export const getEnrolledCourses = async (userId: string) => {
     }catch(error){
         console.log('Error fetching enrolled courses');
         throw error;
+    }
+}
+
+export const getPublicProfile = async (username: string) => {
+    try{
+        const response = await axiosInstance.get(`/blog/blog-profile/public/${username}`);
+        return response.data;
+    }catch(err){
+        console.error("Error fetching user profile", err);
+        throw err;
+    }
+}
+
+export const followUser = async (userId: string, followerId: string) => {
+    try{
+        const response = await axiosInstance.post(`/blog/blog-profile/${userId}/follow`,{ followerId });
+        return response.data;
+    }catch(err){
+        console.error("Error following user",err);
+        throw err;
+    }
+}
+
+export const unfollowUser = async (userId: string, followerId: string) => {
+    try{
+        const response = await axiosInstance.post(`/blog/blog-profile/${userId}/unfollow`, { followerId });
+        return response.data;
+    }catch(err){
+        console.error("Error unfollowing user",err);
+        throw err;
     }
 }

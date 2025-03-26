@@ -18,7 +18,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Delete as DeleteIcon } from "@mui/icons-material";
 import { useTheme } from "../../contexts/theme-context";
 import { ChevronRight } from "lucide-react";
-import axiosInstance from "../../axios/axiosConfig";
+import axiosInstance from "../../configs/axiosConfig";
 import { toast } from "react-toastify";
 import { AddTopic } from "../../types/course";
 

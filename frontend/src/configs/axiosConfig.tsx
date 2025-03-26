@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { store } from "../redux/store";
-import { setUserToken, logout } from "../redux/slices/authSlice";
+import { store } from "@/redux/store";
+import { setUserToken, logout } from "@/redux/slices/authSlice";
 
 const BASE_URL = import.meta.env.VITE_BASE_API_URL;
 
