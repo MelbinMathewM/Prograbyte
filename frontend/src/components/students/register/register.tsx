@@ -5,11 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaGithub } from "react-icons/fa";
 import axios from "axios";
-import OTPInput from "../otp-input";
-import PasswordInput from "../password-input";
-import { registerUser, sendOtpToEmail, verifyOtpEmail } from "../../../api/register";
-import { AppDispatch } from "../../../redux/store";
-import { setUserToken } from "../../../redux/slices/authSlice";
+import OTPInput from "@/components/students/register/otp-input";
+import PasswordInput from "@/components/students/register/password-input";
+import { registerUser, sendOtpToEmail, verifyOtpEmail } from "@/api/register";
+import { AppDispatch } from "@/redux/store";
+import { setUserToken } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 
