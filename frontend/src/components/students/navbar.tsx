@@ -3,7 +3,8 @@ import { useState } from "react";
 import { FaUserCircle, FaHeart } from "react-icons/fa";
 import { useTheme } from "../../contexts/theme-context";
 import { motion } from "framer-motion";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Menu } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 const StudentNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -17,7 +18,7 @@ const StudentNavbar = () => {
     <nav className={`fixed top-0 left-0 w-full backdrop-blur-md z-50 shadow-md ${theme.includes("dark") ? "bg-gray-900/80 text-white" : "bg-white/70 text-gray-800"}`}>
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold italic text-red-600">
+        <Link to="/" className="text-xl font-bold italic text-blue-600">
           Prograbyte
         </Link>
 
@@ -27,7 +28,7 @@ const StudentNavbar = () => {
             <NavLink
               to="/home"
               className={({ isActive }) =>
-                `text-lg font-semibold transition-colors duration-300 ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-red-500" : "text-gray-800 hover:text-red-500"}`
+                `text-lg transition-colors duration-300 ${isActive ? "text-blue-600" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
               }>
               Home
             </NavLink>
@@ -37,7 +38,7 @@ const StudentNavbar = () => {
               <NavLink
                 to={`/${item.toLowerCase()}`}
                 className={({ isActive }) =>
-                  `text-lg font-semibold transition-colors duration-300 ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-red-500" : "text-gray-800 hover:text-red-500"}`
+                  `text-lg transition-colors duration-300 ${isActive ? "text-blue-600 font-medium" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
                 }>
                 {item}
               </NavLink>
@@ -46,29 +47,57 @@ const StudentNavbar = () => {
         </ul>
         {/* Auth Section (Desktop) */}
         <div className="flex items-center space-x-6 hidden md:flex">
-              <ThemeToggle />
-              <NavLink
-                to="/profile"
-                className={({ isActive }) =>
-                  `text-lg font-semibold transition flex items-center ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-red-500" : "text-gray-800 hover:text-red-500"}`
-                }>
-                <FaUserCircle className="mr-2" />
-              </NavLink>
-              <NavLink
-                to="/wishlist"
-                className={({ isActive }) =>
-                  `text-lg font-semibold transition flex items-center ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-red-500" : "text-gray-800 hover:text-red-500"}`
-                }>
-                <FaHeart className="mr-2" />
-              </NavLink>
+          <ThemeToggle />
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) =>
+                    `text-md transition flex items-center ${isActive
+                      ? "text-blue-600"
+                      : theme.includes("dark")
+                        ? "text-gray-300 hover:text-blue-500 hover:bg-blue-500"
+                        : "text-gray-800 hover:text-blue-500 hover:bg-blue-500"
+                    }`
+                  }
+                >
+                  <FaUserCircle size={15} />
+                </NavLink>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Profile</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <NavLink
+                  to="/wishlist"
+                  className={({ isActive }) =>
+                    `text-md transition flex items-center ${isActive
+                      ? "text-red-600"
+                      : theme.includes("dark")
+                        ? "text-gray-300 hover:text-blue-500 hover:bg-blue-500"
+                        : "text-gray-800 hover:text-blue-500 hover:bg-blue-500"
+                    }`
+                  }>
+                  <FaHeart size={15} />
+                </NavLink>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Wishlist</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         {/* Mobile Menu Icon */}
         <div className="md:hidden flex items-center">
           <button onClick={toggleMobileMenu} className="focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
-              <path d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
+            <Menu className="h-6 w-6" />
           </button>
         </div>
 
@@ -76,29 +105,27 @@ const StudentNavbar = () => {
         {isMobileMenuOpen && (
           <div className={`absolute top-16 right-0 w-full shadow-md rounded-md md:hidden ${theme.includes("dark") ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
             <div className="flex items-center justify-between px-6 py-4 border-b">
-                  <NavLink to="/profile" className="text-lg font-semibold flex items-center hover:text-red-500 transition">
-                    <FaUserCircle className="mr-2" /> Profile
-                  </NavLink>
-                  <NavLink to="/wishlist" className="text-lg font-semibold flex items-center hover:text-red-500 transition">
-                    <FaHeart className="mr-2" /> Cart
-                  </NavLink>
+              <NavLink to="/profile" className="text-lg flex items-center hover:text-blue-500 transition">
+                <FaUserCircle className="mr-2" /> Profile
+              </NavLink>
+              <NavLink to="/wishlist" className="text-lg flex items-center hover:text-blue-500 transition">
+                <FaHeart className="mr-2" /> Wishlist
+              </NavLink>
+              <ThemeToggle />
             </div>
             <ul className="flex flex-col space-y-4 py-4 px-6">
               <li>
-                <NavLink to="/" className="text-lg font-semibold hover:text-red-500 transition">
+                <NavLink to="/" className="text-lg hover:text-blue-500 transition">
                   Home
                 </NavLink>
               </li>
               {["Courses", "Blog"].map((item) => (
                 <li key={item}>
-                  <NavLink to={`/${item.toLowerCase()}`} className="text-lg font-semibold hover:text-red-500 transition">
+                  <NavLink to={`/${item.toLowerCase()}`} className="text-lg hover:text-blue-500 transition">
                     {item}
                   </NavLink>
                 </li>
               ))}
-              <li>
-                <ThemeToggle />
-              </li>
             </ul>
           </div>
         )}
@@ -115,20 +142,17 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggleDarkMode}
-      className={`relative flex items-center w-16 h-8 ${isDark ? "bg-gray-500" : "bg-gray-400 text-white"} rounded-full p-1 transition-all`}
+      className={`relative flex items-center w-12 h-6 ${isDark ? "bg-gray-800 border border-gray-700" : "bg-gray-100 shadow-sm"} rounded-full p-1 transition-all`}
     >
-      {/* Icons */}
-      <div className="absolute left-2 text-yellow-500">
-        <Sun size={18} />
-      </div>
-      <div className={`absolute right-2 ${isDark ? "text-white" : "text-white"}`}>
-        <Moon size={18} />
-      </div>
+      {isDark ? (
+        <Moon className="absolute left-2 text-white" size={14} />
+      ) : (
+        <Sun className="absolute right-2 text-yellow-500" size={14} />
+      )}
 
-      {/* Animated Slider */}
       <motion.div
-        className={`absolute w-6 h-6 ${isDark ? "bg-gray-800 text-white" : "bg-white text-white"} rounded-full shadow-md`}
-        animate={{ x: isDark ? 32 : 0 }}
+        className={`absolute w-4 h-4 ${isDark ? "bg-gray-600 border border-gray-500 shadow-md" : "bg-white"} rounded-full shadow-md`}
+        animate={{ x: isDark ? 22 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       />
     </button>

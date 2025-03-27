@@ -30,7 +30,7 @@ const HomePage = () => {
     return (
         <div className={`${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"} min-h-screen`}>
             {/* Hero Section */}
-            <header className={`${isDarkMode ? "bg-blue-700" : "bg-blue-600"} text-white py-16 text-center`}>
+            <header className={`${isDarkMode ? "bg-blue-400" : "bg-blue-400"} text-white py-16 text-center`}>
                 <h1 className="text-4xl font-bold">Welcome Back to Codeon 🚀</h1>
                 <p className="mt-3 text-lg">Continue your learning journey with interactive courses, live sessions, and trending topics.</p>
                 <button onClick={() => navigate("/explore")} className="mt-6 px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow-md hover:bg-gray-200 transition">

@@ -56,23 +56,23 @@ const CourseListPage = () => {
     const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
 
     return (
-        <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"}`}>
+        <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"} mx-auto px-6 py-1` }>
 
             {/* Breadcrumb */}
-            <nav className="text-sm text-gray-500 flex items-center p-5">
-                <Link to="/home" className="hover:text-blue-500">Dashboard</Link>
+            <nav className={`${isDarkMode ? "bg-gray-800 text-gray-200" : "bg-gray-200 text-gray-600"} p-6 rounded my-6 flex items-center`}>
+                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
                 <ChevronRight size={16} />
-                <span className={`${isDarkMode ? "text-gray-400" : "text-gray-800"} dark:text-gray-300`}>Courses</span>
+                <span>Courses</span>
             </nav>
 
             {/* Hero Section */}
             <header className={`py-16 text-center ${isDarkMode ? "bg-gray-800 text-white" : "bg-blue-400 text-white"}`}>
-                <h1 className="text-4xl font-bold">Explore Courses 🚀</h1>
+                <h1 className="text-4xl font-bold">Explore Courses</h1>
                 <p className="mt-3 text-lg">Find the best courses to enhance your skills.</p>
             </header>
 
             {/* Filters & Search */}
-            <div className="py-6 px-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="py-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Search Bar */}
                 <div className={`relative rounded shadow-md flex items-center ${isDarkMode ? "bg-gray-800 text-white" : "bg-white"}`}>
                     <input
@@ -114,7 +114,7 @@ const CourseListPage = () => {
             </div>
 
             {/* Course List */}
-            <section className="py-8 px-6">
+            <section className="py-8">
                 <h2 className="text-3xl font-semibold text-center">Available Courses</h2>
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
                     {currentCourses.map((course) => (

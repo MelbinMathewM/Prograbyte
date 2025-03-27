@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Pencil, Trash2, ChevronRight, FileText, PlayCircle, ChevronLeft } from "lucide-react";
+import { Pencil, Trash2, ChevronRight, FileText, PlayCircle, ChevronLeft, Video } from "lucide-react";
 import axiosInstance from "../../configs/axiosConfig";
 import EditCourseModal from "./edit-course-modal";
 import { toast } from "react-toastify";
 import EditTopicModal from "./edit-topic-modal";
 import { useTheme } from "../../contexts/theme-context";
 import { CircularProgress } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 import { Card } from "../ui/card";
 import Button from "../ui/Button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Course, Topics, Topic, Category } from "../../types/course";
 import ConfirmDialog from "../ui/confirm-dialog";
+import { Dialog } from "@headlessui/react";
+import { createLiveSchedule } from "@/api/live";
 
 const TutorCourseDetailPart = () => {
   const { id } = useParams();
@@ -25,6 +28,9 @@ const TutorCourseDetailPart = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+  const [selectedScheduleTopic, setSelectedScheduleTopic] = useState<Topic | null>(null);
+  const [scheduleData, setScheduleData] = useState({ date: "", time: "", duration: "", description: "" });
   const navigate = useNavigate();
   const { theme } = useTheme();
   const isDarkMode = theme.includes("dark");
@@ -76,14 +82,52 @@ const TutorCourseDetailPart = () => {
   };
 
   const handleRemoveTopic = async (topicId: string) => {
-    try{
+    try {
       const response = await axiosInstance.delete(`/course/topics/${topics?._id}/${topicId}`)
       toast.success(response.data.message);
       setTopic((prevTopics) => prevTopics.filter((topic) => topic._id !== topicId));
-    }catch(err: any){
+    } catch (err: any) {
       toast.error(err.response.data.error)
     }
   }
+
+  const openScheduleModal = (topic: any) => {
+    setSelectedScheduleTopic(topic);
+    setIsScheduleOpen(true);
+  };
+
+  const handleScheduleSubmit = async () => {
+    if (!scheduleData.date || !scheduleData.time || !scheduleData.duration || !scheduleData.description) {
+      alert("Please fill in all fields.");
+      return;
+    }
+  
+    const scheduledDateTime = new Date(`${scheduleData.date}T${scheduleData.time}`);
+    const roomId = uuidv4();
+  
+    const liveData = {
+      course_id: course?._id as string,
+      topic_id: selectedScheduleTopic?._id as string,
+      tutor_id: course?.tutor_id as string,
+      title: selectedScheduleTopic?.title as string,
+      description: scheduleData?.description,
+      scheduled_date: scheduledDateTime,
+      duration: parseInt(scheduleData.duration, 10),
+      status: "scheduled" as const,
+      room_id: roomId,
+      meeting_link: `http://localhost:5000/api/course/live/${roomId}`
+    };
+  
+    console.log("Scheduling live for:", liveData);
+    try{
+      const response = await createLiveSchedule(liveData);
+      setIsScheduleOpen(false);
+      setScheduleData({ date: "", time: "", duration: "", description: "" });
+    }catch(err: any){
+      toast.error(err.response.data.error);
+    }
+    
+  };
 
   const validateCourse = (course: Partial<Course>, files: { poster?: File; video?: File }): boolean => {
     if (!course.title?.trim()) {
@@ -306,6 +350,9 @@ const TutorCourseDetailPart = () => {
                     }}>
                       <Trash2 size={16} /> Delete
                     </button>
+                    <button onClick={() => openScheduleModal(topic)} className="text-blue-600 flex items-center gap-1 cursor-pointer">
+                      <Video size={16} /> Schedule Live
+                    </button>
                   </TableCell>
                 </TableRow>
               ))
@@ -326,6 +373,59 @@ const TutorCourseDetailPart = () => {
         />
       )}
 
+      {isScheduleOpen && (
+        <Dialog open={isScheduleOpen} onClose={() => setIsScheduleOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
+          <div className="flex items-center justify-center min-h-screen px-4">
+            <Dialog.Panel className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 space-y-4">
+              <Dialog.Title className="text-xl font-bold">Schedule Live Class</Dialog.Title>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium">Date</label>
+                  <input
+                    type="date"
+                    className="w-full border rounded p-2"
+                    value={scheduleData.date}
+                    onChange={(e) => setScheduleData({ ...scheduleData, date: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Time</label>
+                  <input
+                    type="time"
+                    className="w-full border rounded p-2"
+                    value={scheduleData.time}
+                    onChange={(e) => setScheduleData({ ...scheduleData, time: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Duration (minutes)</label>
+                  <input
+                    type="number"
+                    className="w-full border rounded p-2"
+                    placeholder="60"
+                    value={scheduleData.duration}
+                    onChange={(e) => setScheduleData({ ...scheduleData, duration: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">Description</label>
+                  <textarea
+                    className="w-full border rounded p-2"
+                    placeholder="Enter live class details..."
+                    value={scheduleData.description}
+                    onChange={(e) => setScheduleData({ ...scheduleData, description: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-4 mt-4">
+                <button onClick={() => setIsScheduleOpen(false)} className="px-4 py-2 border rounded">Cancel</button>
+                <button onClick={handleScheduleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded">Schedule</button>
+              </div>
+            </Dialog.Panel>
+          </div>
+        </Dialog>
+      )}
+
       <ConfirmDialog
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
@@ -339,7 +439,7 @@ const TutorCourseDetailPart = () => {
         cancelText="Cancel"
         isDark={isDarkMode}
       />
-    </Card>
+    </Card >
   );
 };
 
