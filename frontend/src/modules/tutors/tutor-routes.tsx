@@ -8,6 +8,8 @@ import CourseDetail from "@/pages/tutors/course-detail";
 import AddTopic from "@/pages/tutors/add-topic";
 import ProtectedRoute from "@/routes/protectedRoutes";
 import TCourse from "@/pages/tutors/courses";
+import Live from "@/pages/tutors/live";
+import Streaming from "@/pages/tutors/streaming";
 
 const TutorRoutes = () => {
     return (
@@ -19,6 +21,8 @@ const TutorRoutes = () => {
             <Route path="/tutor/courses/:courseId/add-topic" element={<AddTopic />} />
             <Route path="/tutor/profile" element={<TutorProfile />} />
             <Route path="/tutor/profile/my-courses" element={<MyCourses />} />
+            <Route path="/tutor/live" element={ <Live /> } />
+            <Route path="/tutor/live/:id" element={ <Streaming /> } />
         </Route>
     );
 };

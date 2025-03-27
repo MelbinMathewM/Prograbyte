@@ -4,9 +4,10 @@ import http from "http";
 import { Server } from "socket.io";
 import cors from "cors";
 
-import verifyToken from "./middlewares/verify-token";
-import createProxy from "./middlewares/proxy-middleware";
-import { SocketGateway } from "./sockets/gateway.socket";
+import verifyToken from "./middlewares/verify-token.middleware";
+import createProxy from "./middlewares/proxy.middleware";
+import { BlogGateway } from "./sockets/blog.socket";
+import { LiveGateway } from "./sockets/live.socket";
 
 dotenv.config();
 
@@ -30,8 +31,11 @@ const io = new Server(server, {
 app.use(cors(corsOptions));
 
 // Initialize Socket Gateway
-const socketGateway = new SocketGateway(io);
-socketGateway.initialize();
+const blogGateway = new BlogGateway(io);
+blogGateway.initialize();
+
+const liveGateway = new LiveGateway(io);
+liveGateway.initialize();
 
 const PORT = process.env.PORT || 5000;
 

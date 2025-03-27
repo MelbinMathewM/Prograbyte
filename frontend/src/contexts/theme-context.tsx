@@ -1,12 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-type Theme =
-  | "admin-theme"
-  | "admin-dark-theme"
-  | "tutor-theme"
-  | "tutor-dark-theme"
-  | "light-theme"
-  | "dark-theme";
+type Theme = "light-theme" | "dark-theme";
 
 interface ThemeContextType {
     theme: Theme;
@@ -16,32 +10,12 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children, role }: { children: ReactNode; role: string | null }) => {
-    const getDefaultTheme = (role: string | null): Theme => {
-        const savedTheme = localStorage.getItem("theme") as Theme | null;
-        if (savedTheme) return savedTheme;
-
-        switch (role) {
-            case "admin":
-                return "admin-theme";
-            case "tutor":
-                return "tutor-theme";
-            default:
-                return "light-theme";
-        }
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+    const getDefaultTheme = (): Theme => {
+        return (localStorage.getItem("theme") as Theme) || "light-theme";
     };
 
-    // Initially set the theme based on role (if available)
-    const [theme, setTheme] = useState<Theme>("light-theme");
-
-    useEffect(() => {
-        if (role) {
-            const newTheme = getDefaultTheme(role);
-            if (newTheme !== theme) {
-                setTheme(newTheme);
-            }
-        }
-    }, [role]); // Run when role updates
+    const [theme, setTheme] = useState<Theme>(getDefaultTheme());
 
     useEffect(() => {
         document.documentElement.className = theme;
@@ -49,33 +23,7 @@ export const ThemeProvider = ({ children, role }: { children: ReactNode; role: s
     }, [theme]);
 
     const toggleDarkMode = () => {
-        setTheme((prevTheme) => {
-            let newTheme: Theme;
-            switch (prevTheme) {
-                case "admin-theme":
-                    newTheme = "admin-dark-theme";
-                    break;
-                case "admin-dark-theme":
-                    newTheme = "admin-theme";
-                    break;
-                case "tutor-theme":
-                    newTheme = "tutor-dark-theme";
-                    break;
-                case "tutor-dark-theme":
-                    newTheme = "tutor-theme";
-                    break;
-                case "light-theme":
-                    newTheme = "dark-theme";
-                    break;
-                case "dark-theme":
-                    newTheme = "light-theme";
-                    break;
-                default:
-                    newTheme = "light-theme";
-            }
-            localStorage.setItem("theme", newTheme);
-            return newTheme;
-        });
+        setTheme((prevTheme) => (prevTheme === "light-theme" ? "dark-theme" : "light-theme"));
     };
 
     return (

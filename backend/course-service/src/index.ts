@@ -1,24 +1,24 @@
 import express from "express";
 import dotenv from "dotenv";
 import router from "./routes/routes";
-import connectDB from "./config/db";
-import { errorHandler } from "./middlewares/errorMiddlewate";
+import connectDB from "./configs/db.config";
+import { errorHandler } from "./middlewares/error.middlewate";
 
 dotenv.config();
 
-import { validateEnv } from "./utils/envConfig";
-import { startRabbitMQConsumer } from "./services/rabbitMQService";
-import verifyApiKey from "./config/apiKey";
-import { env } from "./config/env";
+import { validateEnv } from "./utils/env-config.util";
+import { startRabbitMQConsumer } from "./services/rabbitmq.service";
+import verifyApiKey from "./configs/api-key.config";
+import { env } from "./configs/env.config";
+import { server } from "@/configs/inversify.config";
 
 validateEnv();
+
+connectDB();
 
 const app = express();
 
 const PORT = env.PORT || 5006;
-
-connectDB();
-
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(verifyApiKey as express.RequestHandler);
@@ -28,4 +28,4 @@ app.use(errorHandler);
 
 startRabbitMQConsumer();
 
-app.listen(PORT,() => console.log(`course service running on port ${PORT}`))
+server.listen(PORT,() => console.log(`course service running on port ${PORT}`))

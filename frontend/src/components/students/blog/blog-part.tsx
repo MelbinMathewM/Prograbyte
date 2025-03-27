@@ -9,8 +9,8 @@ import { useTheme } from "@/contexts/theme-context";
 import { addPost, getBlogProfile, getPosts } from "@/api/blog";
 import { Blog, BlogProfile } from "@/types/blog";
 import { User } from "@/types/user";
-import AddBlogModal from "./add-blog";
-import BlogList from "./blog-list";
+import AddBlogModal from "@/components/students/blog/add-blog";
+import BlogList from "@/components/students/blog/blog-list";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
