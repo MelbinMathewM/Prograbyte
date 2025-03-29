@@ -2,68 +2,82 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ChevronRight, PlayCircle, ChevronLeft } from "lucide-react";
 import { useTheme } from "../../contexts/theme-context";
+import Skeleton from "react-loading-skeleton";
+import Progress from "@/components/ui/progress";
 import { UserContext } from "../../contexts/user-context";
 import { getEnrolledCourses } from "../../api/profile";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { Course, EnrolledCourses, EnrolledCourse } from "../../types/course";
+import { EnrolledCourses } from "../../types/course";
+import axiosInstance from "@/configs/axiosConfig";
+import CourseRatingModal from "./course-rating-modal";
 
 const MyCoursesPart = () => {
     const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourses | null>(null);
+    const [tutorDetails, setTutorDetails] = useState<{ [key: string]: { name: string; username: string } }>({});
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const coursesPerPage = 8; // Number of courses per page
+    const coursesPerPage = 12;
+    const [loadingTutors, setLoadingTutors] = useState(false);
 
     const { theme } = useTheme();
     const isDark = theme.includes("dark");
     const { user } = useContext(UserContext) ?? {};
     const navigate = useNavigate();
 
-    const [userData, setUserData] = useState<{ id?: string; email?: string; name?: string }>({});
-    
-        useEffect(() => {
-            if (user) {
-                setUserData({
-                    id: user.id,
-                    email: user.email,
-                    name: user.name,
-                });
-            }
-        }, [user]);
-
     useEffect(() => {
-        if (!userData?.id) return;
+        if (!user?.id) return;
         const fetchEnrollCourses = async () => {
             try {
-                const response = await getEnrolledCourses(userData.id as string);
+                const response = await getEnrolledCourses(user.id);
                 setEnrolledCourses(response.enrolledCourses);
             } catch (err: any) {
                 console.error(err.response?.data?.error || "Error fetching courses");
             }
         };
         fetchEnrollCourses();
-    }, [userData]);
+    }, [user]);
 
-    // Filtering courses based on search
+    useEffect(() => {
+        const fetchTutorDetails = async () => {
+            if (!enrolledCourses) return;
+            setLoadingTutors(true);
+            const uniqueTutorIds = Array.from(new Set(enrolledCourses.courses.map(course => course.courseId.tutor_id)));
+            const tutorData: { [key: string]: { name: string; username: string } } = {};
+            try {
+                await Promise.all(uniqueTutorIds.map(async (tutorId) => {
+                    if (tutorId && !tutorDetails[tutorId]) {
+                        const res = await axiosInstance.get(`/user/user/${tutorId}`);
+                        tutorData[tutorId] = {
+                            name: res.data.user.name,
+                            username: res.data.user.username
+                        };
+                    }
+                }));
+                setTutorDetails(prev => ({ ...prev, ...tutorData }));
+            } catch (error) {
+                console.error("Error fetching tutor details", error);
+            }
+            setLoadingTutors(false);
+        };
+        fetchTutorDetails();
+    }, [enrolledCourses]);
+
     const filteredCourses = enrolledCourses?.courses?.filter(
         (course) => course.courseId?.title?.toLowerCase().includes(search.toLowerCase())
     ) ?? [];
 
-    // Pagination Logic
     const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
     const startIndex = (currentPage - 1) * coursesPerPage;
     const paginatedCourses = filteredCourses.slice(startIndex, startIndex + coursesPerPage);
 
     return (
         <div className={`min-h-screen p-6 ${isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-[#414040]"}`}>
-            {/* Breadcrumb Navigation */}
             <nav className={`p-6 rounded mb-4 flex items-center ${isDark ? "bg-gray-700 text-white" : "bg-[#ffffff] text-gray-600"}`}>
                 <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
                 <ChevronRight size={16} />
                 <span>My Courses</span>
             </nav>
 
-            {/* Header */}
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold">My Enrolled Courses</h2>
                 <div className="flex gap-3">
@@ -87,23 +101,10 @@ const MyCoursesPart = () => {
                 </div>
             </div>
 
-            {/* Course Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {enrolledCourses === null ? (
-                    // Skeleton Loader while fetching data
-                    Array(8).fill(0).map((_, index) => (
-                        <div key={index} className={`shadow-md rounded-lg p-4 ${isDark ? "bg-gray-800" : "bg-[#ffffff]"}`}>
-                            <Skeleton height={160} className="rounded-md mb-3" />
-                            <Skeleton height={20} width="80%" />
-                            <Skeleton height={16} width="60%" className="mt-2" />
-                            <div className="flex justify-between items-center mt-3">
-                                <Skeleton height={16} width="40%" />
-                                <Skeleton height={32} width={90} />
-                            </div>
-                        </div>
-                    ))
+                {loadingTutors ? (
+                    <Skeleton height={200} count={4} />
                 ) : paginatedCourses.length > 0 ? (
-                    // Render Courses
                     paginatedCourses.map((course) => (
                         <div key={course.courseId._id} className={`shadow-md rounded-lg p-4 transition-transform transform hover:scale-105 ${isDark ? "bg-gray-800 text-white" : "bg-[#ffffff] text-gray-700"}`}>
                             <img
@@ -112,43 +113,33 @@ const MyCoursesPart = () => {
                                 className="w-full h-40 object-cover rounded-md mb-3"
                             />
                             <h3 className="text-lg font-semibold">{course.courseId.title}</h3>
-                            <p className="text-sm text-gray-500">Instructor: {course.courseId.tutor_id || "Unknown"}</p>
+                            <p className="text-sm text-gray-500">Instructor: {tutorDetails[course.courseId.tutor_id]?.name || "Loading..."}</p>
+                            <Progress value={course.completionStatus || 0} isDark={isDark} />
+                            <span className="text-xs text-gray-500">{course.completionStatus}% completed</span>
                             <div className="flex justify-between items-center mt-3">
                                 <span className="text-sm font-medium text-green-500">Paid: ${course.paymentAmount}</span>
+                                {course.completionStatus === 100 && (
+                                    <div>
+                                        <CourseRatingModal courseId={course.courseId._id} isDark={isDark} userId={user?.id as string}/>
+                                    </div>
+                                )}
                                 <Link to={`/courses/${course.courseId._id}`} className="bg-blue-500 text-white px-3 py-1 rounded-md flex items-center gap-2 hover:bg-blue-600">
-                                    <PlayCircle size={16} /> Continue
+                                    <PlayCircle size={16} /> Details
                                 </Link>
                             </div>
                         </div>
                     ))
                 ) : (
-                    // No courses found
-                    <div className="m-auto">
-                        <p className="text-center text-gray-500">No enrolled courses found.</p>
-                    </div>
+                    <p className="text-center text-gray-500">No enrolled courses found.</p>
                 )}
             </div>
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-                <div className="flex justify-center items-center mt-6 gap-4">
-                    <button
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        className={`px-4 py-2 rounded-md font-bold transition ${isDark ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"} ${currentPage === 1 && "opacity-50 cursor-not-allowed"}`}
-                    >
-                        Previous
-                    </button>
-                    <span className="text-lg font-semibold">{currentPage} / {totalPages}</span>
-                    <button
-                        disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                        className={`px-4 py-2 rounded-md font-bold transition ${isDark ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-gray-700 hover:bg-gray-300"} ${currentPage === totalPages && "opacity-50 cursor-not-allowed"}`}
-                    >
-                        Next
-                    </button>
-                </div>
-            )}
+
+            <div className="flex justify-center items-center mt-6 gap-4">
+                <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)} className="px-4 py-2 rounded bg-blue-500 text-white disabled:opacity-50">Prev</button>
+                <span>{currentPage} / {totalPages}</span>
+                <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="px-4 py-2 rounded bg-blue-500 text-white disabled:opacity-50">Next</button>
+            </div>
         </div>
     );
 };

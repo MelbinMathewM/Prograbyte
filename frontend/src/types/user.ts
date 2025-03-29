@@ -54,6 +54,9 @@ export interface CroppedArea {
 export interface VideoPlayerProps {
     publicId: string;
     isDark: boolean;
+    userId: string;
+    courseId: string;
+    topicId: string;
 }
 
 export interface WishlistItem {

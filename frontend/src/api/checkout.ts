@@ -3,7 +3,7 @@ import axiosInstance from "../configs/axiosConfig";
 
 export const payCourse = async (amount: number, method: string) => {
     try{
-        const response = await axiosInstance.post(`/course/payments`, {amount, method});
+        const response = await axiosInstance.post(`/course/courses/payment/create`, {amount, method});
         return response.data;
     }catch(error){
         console.error("Error paying course", error);

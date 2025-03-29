@@ -117,7 +117,7 @@ export class UserService {
 
     }
 
-    async getUserById(token: string): Promise<Partial<IUser>> {
+    async getUserByToken(token: string): Promise<Partial<IUser>> {
 
         if (!token) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_ACCESS_TOKEN);
 
@@ -132,6 +132,21 @@ export class UserService {
         const newUser = {
             _id: user._id,
             email: user.email,
+            username: user.username
+        }
+
+        return newUser;
+    }
+
+    async getUserById(userId: string): Promise<Partial<IUser>> {
+
+        const user = await this.userRepository.getUserById(userId);
+
+        if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+
+        const newUser = {
+            _id: user._id,
+            name: user.name,
             username: user.username
         }
 

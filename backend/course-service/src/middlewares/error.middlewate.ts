@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { HttpError } from "../utils/http-error.util";
 import { HttpStatus } from "../constants/status.constant";
 import { HttpResponse } from "../constants/response.constant";
+import logger from "@/utils/logger.util";
 
 export const errorHandler = (
     err: HttpError | Error,
@@ -18,6 +19,6 @@ export const errorHandler = (
     }else{
         console.log("Unhandled", err)
     }
-
+    logger.error(`Error: ${err.message}`)
     res.status(statusCode).json({ error: message });
 }

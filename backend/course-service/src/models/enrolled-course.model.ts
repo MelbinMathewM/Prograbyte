@@ -5,6 +5,14 @@ export interface IEnrolledCourse {
     paymentAmount: number;
     enrolledAt: Date;
     paymentId: string;
+    completionStatus: number;
+    progress: IProgress[];
+}
+
+export interface IProgress {
+    topicId: mongoose.Types.ObjectId;
+    watchedDuration: number;
+    isCompleted: boolean;
 }
 
 export interface IEnrolledCourses extends Document {
@@ -35,7 +43,18 @@ const enrolledCourseSchema = new Schema<IEnrolledCourses>({
             paymentId: {
                 type: String,
                 required: true
-            }
+            },
+            completionStatus: {
+                type: Number,
+                default: 0
+            },
+            progress: [
+                {
+                    topicId: { type: Schema.Types.ObjectId, ref: "Topic" },
+                    watchedDuration: { type: Number, default: 0 },
+                    isCompleted: { type: Boolean, default: false }
+                }
+            ]
         }
     ]
 }, { timestamps: true });

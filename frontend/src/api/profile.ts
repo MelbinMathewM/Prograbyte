@@ -92,3 +92,13 @@ export const unfollowUser = async (userId: string, followerId: string) => {
         throw err;
     }
 }
+
+export const getUserData = async (userId: string) => {
+    try{
+        const response = await axiosInstance.get(`/user/user/${userId}`);
+        return response.data;
+    }catch(err){
+        console.error("Error fetching user data", err);
+        throw err;
+    }
+}

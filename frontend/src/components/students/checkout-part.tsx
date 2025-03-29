@@ -9,6 +9,7 @@ import { useWindowSize } from "react-use";
 import { payCourse, saveEnrolledCourse } from "../../api/checkout";
 import { UserContext } from "../../contexts/user-context";
 import { Course } from "../../types/course";
+import { fetchCourseDetail } from "@/api/course";
 
 const CheckoutPage: React.FC = () => {
     const stripe = useStripe();
@@ -27,8 +28,8 @@ const CheckoutPage: React.FC = () => {
     useEffect(() => {
         const fetchCourse = async () => {
             try {
-                const response = await axiosInstance.get<Course>(`/course/courses/${courseId}`);
-                setCourse(response.data);
+                const response = await fetchCourseDetail(courseId as string);
+                setCourse(response.course);
             } catch (err) {
                 console.error("Error fetching course details", err);
             }

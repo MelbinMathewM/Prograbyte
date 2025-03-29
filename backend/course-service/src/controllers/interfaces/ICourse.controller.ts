@@ -8,4 +8,6 @@ export interface ICourseController {
   editCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   deleteCourse(req: Request, res: Response, next: NextFunction): Promise<void>;
   createPayment(req: Request, res: Response, next: NextFunction): Promise<void>;
+  addRating(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getRatings(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

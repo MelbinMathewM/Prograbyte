@@ -52,7 +52,7 @@ export class TopicController implements ITopicController {
 
             const topics = await this.topicService.getTopics(courseId);
 
-            res.status(200).json(topics);
+            res.status(200).json({topicList: topics});
         } catch (err) {
             next(err);
         }

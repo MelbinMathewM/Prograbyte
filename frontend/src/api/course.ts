@@ -39,3 +39,13 @@ export const fetchCoursesByTutor = async (tutorId: string) => {
         throw err;
     }
 }
+
+export const fetchReviews = async (courseId: string) => {
+    try{
+        const response = await axiosInstance.get(`/course/courses/rating/${courseId}`);
+        return response.data;
+    }catch(err){
+        console.error("Failed to fetch reviews", err);
+        throw err;
+    }
+}

@@ -19,3 +19,13 @@ export const getSecureUrl = async (token: string) => {
         throw error;
     }
 };
+
+export const updateProgress = async (userId: string, courseId: string, topicId: string, watchedDuration: number, totalDuration: number) => {
+    try{
+        const response = await axiosInstance.post(`/course/enroll/${userId}/update-progress`, { courseId, topicId, watchedDuration, totalDuration});
+        return response.data;
+    }catch(err){
+        console.error("Error updating progrees",err);
+        throw err;
+    }
+}

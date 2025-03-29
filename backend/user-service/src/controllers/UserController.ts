@@ -63,10 +63,24 @@ export class UserController {
 
       console.log(token, "dd")
 
-      const user = await this.userService.getUserById(token!);
+      const user = await this.userService.getUserByToken(token!);
 
       res.status(HttpStatus.OK).json(user);
     } catch (err) {
+      next(err);
+    }
+  }
+
+  async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+
+      console.log(userId,'hh')
+
+      const user = await this.userService.getUserById(userId);
+
+      res.status(HttpStatus.OK).json({ user });
+    }catch(err){
       next(err);
     }
   }
