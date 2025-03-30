@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 const publicRoutes = [
   "/api/user/register",
   "/api/course/topics/proxy-stream",
+  "/api/user/stripe/webhook",
   "/api/user/tutor-register",
 ];
 

@@ -15,6 +15,7 @@ import { Course, Topics, Topic, Category } from "../../types/course";
 import ConfirmDialog from "../ui/confirm-dialog";
 import { Dialog } from "@headlessui/react";
 import { createLiveSchedule } from "@/api/live";
+import { fetchCourseDetail, fetchTopicsByCourse } from "@/api/course";
 
 const TutorCourseDetailPart = () => {
   const { id } = useParams();
@@ -38,9 +39,9 @@ const TutorCourseDetailPart = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const response = await axiosInstance.get(`/course/courses/${id}`);
-        setCourse(response.data);
-        setUpdatedCourse(response.data);
+        const response = await fetchCourseDetail(id as string);
+        setCourse(response.course);
+        setUpdatedCourse(response.course);
       } catch (err) {
         console.error("Error fetching course details");
       }
@@ -52,9 +53,9 @@ const TutorCourseDetailPart = () => {
     const fetchTopics = async () => {
       if (!course) return;
       try {
-        const response = await axiosInstance.get(`/course/topics/${course._id}`);
-        setTopics(response.data);
-        setTopic(response.data.topics);
+        const response = await fetchTopicsByCourse(course?._id);
+        setTopics(response.topicList);
+        setTopic(response.topicList.topics);
       } catch (err) {
         console.error("Error fetching topics");
       }
@@ -264,7 +265,7 @@ const TutorCourseDetailPart = () => {
       {/* Course Info */}
       <Card className="p-4 mb-4">
         <p className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-600'}`}>{course.description}</p>
-        <p className={`font-bold pt-2 ${isDarkMode ? 'bg-gray-900text-white' : 'bg-white text-gray-600'}`}>Category: {course.category_id.name}</p>
+        <p className={`font-bold pt-2 ${isDarkMode ? 'bg-gray-900text-white' : 'bg-white text-gray-600'}`}>Category: {course?.category_id?.name}</p>
         <p className="mt-2 font-bold">Price: <span className="text-blue-600">${course.price}</span></p>
         <p className="mt-2">Approval Status: {course.approval_status}</p>
 
