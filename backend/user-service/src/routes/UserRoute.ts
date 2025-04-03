@@ -1,14 +1,18 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import passport from "passport";
 import container from "../di/container";
 import { UserController } from "../controllers/UserController";
 import bodyParser from "body-parser";
+import stripe from "../config/stripe";
+import Stripe from "stripe";
+import express from "express";
 
 const userRouter = Router();
 const userController = container.get(UserController);
 
 userRouter.post('/register',(req,res,next) => userController.registerUser(req,res,next));
 userRouter.get('/user',(req,res,next) => userController.getUser(req,res,next));
+userRouter.get('/user/:userId',(req,res,next) => userController.getUserById(req,res,next));
 userRouter.get('/profile/:userId',(req,res,next) => userController.getProfile(req,res,next));
 userRouter.patch('/profile/:userId',(req,res,next) => userController.updateProfile(req,res,next));
 
@@ -23,11 +27,7 @@ userRouter.get(
 userRouter.get("/google/callback", passport.authenticate("google", { session: false }), (req, res,next) => {
     userController.googleAuthCallback(req,res,next) 
 });
-userRouter.post(
-    "/stripe/webhook",
-    bodyParser.raw({ type: "application/json" }),
-    (req, res) => userController.stripeWebhook(req, res) // Call without async
-);
+  
 
 // Checkout session route
 userRouter.post(

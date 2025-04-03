@@ -6,7 +6,7 @@ const AccordionItem = ({ title, children, isDark }: { title: string; children: R
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className={`shadow-md ${isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
+        <div>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={`w-full flex justify-between items-center p-4 font-medium transition

@@ -1,14 +1,17 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axiosInstance from "../../configs/axiosConfig";
 import { useTheme } from "../../contexts/theme-context";
 import VideoPlayer from "./video-player";
 import { Topic } from "../../types/course";
+import { UserContext } from "@/contexts/user-context";
 const VideoPart = () => {
     const { courseName, topicId, topicsId } = useParams();
-    console.log(topicId, "jj");
+    const [searchParams] = useSearchParams();
+    const courseId = searchParams.get("courseId");
     const [topic, setTopic] = useState<Topic | null>(null);
+    const { user } = useContext(UserContext) ?? {};
     const { theme } = useTheme();
     const isDark = theme === "dark-theme";
     const navigate = useNavigate();
@@ -64,7 +67,7 @@ const VideoPart = () => {
             </div>
 
             {/* Video Player Component */}
-            <VideoPlayer publicId={topic?.video_url as string} isDark={isDark} />
+            <VideoPlayer publicId={topic?.video_url as string} isDark={isDark} userId={user?.id as string} courseId={courseId as string} topicId={topic?._id as string} />
         </div>
     );
 };

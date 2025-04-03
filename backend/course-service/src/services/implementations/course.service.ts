@@ -7,12 +7,16 @@ import { HttpResponse } from "@/constants/response.constant";
 import { deleteFromCloudinary, extractCloudinaryDetails } from "@/utils/cloudinary.util";
 import { TopicService } from "./topic.service";
 import { ICourseService } from "../interfaces/ICourse.service";
+import { IRatingRepository } from "@/repositories/interfaces/IRating.repository";
+import { convertToObjectId } from "@/utils/convert-objectid.util";
+import { IRating } from "@/models/rating.model";
 
 
 @injectable()
 export class CourseService implements ICourseService {
     constructor(
         @inject("ICourseRepository") private courseRepository: ICourseRepository,
+        @inject("IRatingRepository") private ratingRepository: IRatingRepository,
         @inject(TopicService) private topicService: TopicService
     ) {}
 
@@ -40,27 +44,10 @@ export class CourseService implements ICourseService {
         await this.courseRepository.changeCourseStatus(courseId, status);
     }
 
-    async getCoursesByTutorId(tutor_id: string): Promise<ICourse[] | null> {
-        const courses = await this.courseRepository.getCoursesByTutorId(tutor_id);
-
-        return courses;
+    async getCourses(filters: object, sort: string): Promise<ICourse[]> {
+        return await this.courseRepository.getFilteredCourses(filters, sort);
     }
-
-    async getCourses(): Promise<ICourse[] | null> {
-        const courses = await this.courseRepository.findAll();
-
-        return courses;
-    }
-
-    async getCoursesByCategoryId(categoryId: string): Promise<ICourse[] | null> {
-        let courses = await this.courseRepository.getCoursesByCategoryId(categoryId);
-
-        if (!courses) {
-            courses = [];
-        }
-
-        return courses;
-    }
+    
 
     async getCourseDetail(id: string): Promise<ICourse | null> {
         const course = await this.courseRepository.getCourseDetail(id);
@@ -150,5 +137,33 @@ export class CourseService implements ICourseService {
         }
 
         await this.courseRepository.deleteById(courseId);
+    }
+
+    async addRating(userId: string, courseId: string, rating: number, review: string): Promise<void> {
+        
+        let ratingData = await this.ratingRepository.findOne({courseId});
+
+        const reviewObj = {
+            userId: convertToObjectId(userId),
+            rating,
+            review
+        }
+
+        if(ratingData){
+            ratingData.reviews.push(reviewObj)
+
+            await this.ratingRepository.save(ratingData);
+        }else{
+            const courseIdObj = convertToObjectId(courseId);
+            ratingData = await this.ratingRepository.create({courseId: courseIdObj, reviews: [reviewObj]});
+            await this.ratingRepository.save(ratingData);
+        }
+    }
+
+    async getRatings(courseId: string): Promise<IRating | null> {
+        
+        const ratings = await this.ratingRepository.findOne({courseId});
+
+        return ratings;
     }
 }

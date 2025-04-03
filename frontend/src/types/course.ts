@@ -37,7 +37,7 @@ export interface Category {
 
 export interface CoursePurchaseProps {
     course: Course;
-    enrolledCourses: Course[];
+    enrolledCourses: EnrolledCourses;
     isDark: boolean;
     isInWishlist: boolean;
     handleWishlistClick: () => void;
@@ -46,6 +46,7 @@ export interface CoursePurchaseProps {
 export interface EnrolledCourse {
     courseId: Course;
     paymentAmount: number;
+    completionStatus: number;
 }
 
 export interface EnrolledCourses {
@@ -76,5 +77,21 @@ export interface AddTopic {
     video: File | null;
     notes: File | null;
     videoPreview?: string | null;
-  }
+}
+
+export interface IReview {
+    _id: string;
+    userId: string;
+    rating: number;
+    review?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+  
+export interface IRating {
+    courseId: string;
+    reviews: IReview[];
+    createdAt?: Date;
+    updatedAt?: Date;
+}
   

@@ -13,8 +13,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 const PremiumPage = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    const { user } = useContext(UserContext) ?? {}; // Ensure context updates
-
+    const { user } = useContext(UserContext) ?? {}; 
     const handleUpgrade = async () => {
         if (!user?.email) {
             toast.error("User not found. Please log in.");

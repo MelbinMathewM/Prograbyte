@@ -28,6 +28,7 @@ import { TopicRepository } from "@/repositories/implementations/topic.repository
 import { EnrolledCourseRepository } from "@/repositories/implementations/enrolled-course.repository";
 import { WishlistRepository } from "@/repositories/implementations/wishlist.repository";
 import { LiveRepository } from "@/repositories/implementations/live.repository";
+import { RatingRepository } from "@/repositories/implementations/rating.repository";
 
 // Interfaces
 import { ICategoryRepository } from "@/repositories/interfaces/ICategory.repository";
@@ -36,6 +37,7 @@ import { ITopicRepository } from "@/repositories/interfaces/ITopic.repository";
 import { IEnrolledCourseRepository } from "@/repositories/interfaces/IEnrolled-course.repository";
 import { IWishlistRepository } from "@/repositories/interfaces/IWishlist.repository";
 import { ILiveRepository } from "@/repositories/interfaces/ILive.repository";
+import { IRatingRepository } from "@/repositories/interfaces/IRating.repository";
 
 // Express & Socket.IO setup
 const app = express();
@@ -55,6 +57,7 @@ container.bind<ITopicRepository>("ITopicRepository").to(TopicRepository);
 container.bind<IEnrolledCourseRepository>("IEnrolledCourseRepository").to(EnrolledCourseRepository);
 container.bind<IWishlistRepository>("IWishlistRepository").to(WishlistRepository);
 container.bind<ILiveRepository>("ILiveRepository").to(LiveRepository);
+container.bind<IRatingRepository>("IRatingRepository").to(RatingRepository);
 
 // Services Bindings
 container.bind<CategoryService>(CategoryService).toSelf();
@@ -72,7 +75,7 @@ container.bind<EnrolledCourseController>(EnrolledCourseController).toSelf();
 container.bind<WishlistController>(WishlistController).toSelf();
 container.bind<LiveController>(LiveController).toSelf();
 
-export {server};
+export {app, server};
 
 export default container;
 

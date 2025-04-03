@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
-import { CourseService } from "../../services/implementations/course.service";
-import { ICourse } from "../../models/course.model";
-import { HttpResponse } from "../../constants/response.constant";
-import stripe from "../../configs/stripe.config";
-import { HttpStatus } from "../../constants/status.constant";
-import { ICourseController } from "../interfaces/ICourse.controller";
+import { CourseService } from "@/services/implementations/course.service";
+import { ICourse } from "@/models/course.model";
+import { HttpResponse } from "@/constants/response.constant";
+import stripe from "@/configs/stripe.config";
+import { HttpStatus } from "@/constants/status.constant";
+import { ICourseController } from "@/controllers/interfaces/ICourse.controller";
 
 export class CourseController implements ICourseController {
   constructor(@inject(CourseService) private courseService: CourseService) { }
@@ -49,28 +49,27 @@ export class CourseController implements ICourseController {
 
   async getCourses(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tutor_id, category_id } = req.query;
+      const { tutor_id, category_id, min_price, max_price, sort, search } = req.query;
+      const filters: any = {};
 
-      if (tutor_id) {
+      if (tutor_id) filters.tutor_id = tutor_id;
+      if (category_id) filters.category_id = category_id;
+      if (min_price) filters.price = { ...filters.price, $gte: Number(min_price) };
+      if (max_price) filters.price = { ...filters.price, $lte: Number(max_price) };
 
-        const courses = await this.courseService.getCoursesByTutorId(tutor_id as string);
-        res.status(200).json(courses)
+      if (search) {
+        filters.$or = [
+            { title: { $regex: search, $options: "i" } },
+        ];
+    }
 
-      } else if (category_id) {
-
-        const courses = await this.courseService.getCoursesByCategoryId(category_id as string);
-        res.status(200).json(courses)
-
-      } else {
-
-        const courses = await this.courseService.getCourses();
-        res.status(200).json(courses)
-
-      }
+      const courses = await this.courseService.getCourses(filters, sort as string);
+      res.status(200).json(courses);
     } catch (err) {
-      next(err)
+      next(err);
     }
   }
+
 
   async getCourseDetail(req: Request, res: Response): Promise<void> {
     try {
@@ -78,7 +77,7 @@ export class CourseController implements ICourseController {
 
       const course = await this.courseService.getCourseDetail(id);
 
-      res.status(200).json(course)
+      res.status(200).json({ course })
     } catch (err: unknown) {
       if (err instanceof Error) {
         res.status(400).json({ error: err.message });
@@ -106,18 +105,18 @@ export class CourseController implements ICourseController {
   }
 
   async deleteCourse(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try{
+    try {
       const { courseId } = req.params;
 
-      if(!courseId){
-        res.status(HttpStatus.BAD_REQUEST).json({error: HttpResponse.COURSE_ID_REQUIRED});
+      if (!courseId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.COURSE_ID_REQUIRED });
         return;
       }
 
       await this.courseService.deleteCourse(courseId);
 
-      res.status(HttpStatus.OK).json({message: HttpResponse.COURSE_DELETED});
-    }catch(err){
+      res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_DELETED });
+    } catch (err) {
       next(err);
     }
   }
@@ -140,11 +139,36 @@ export class CourseController implements ICourseController {
         payment_method_types: ["card"],
       });
 
-      console.log(paymentIntent.client_secret,'client_secret')
+      console.log(paymentIntent.client_secret, 'client_secret')
 
       res.json({ clientSecret: paymentIntent.client_secret });
     } catch (err) {
       next(err)
     }
+  }
+
+  async addRating(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userId, courseId, rating, review } = req.body;
+
+      await this.courseService.addRating(userId, courseId, rating, review);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.REVIEW_ADDED });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getRatings(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const { courseId } = req.params;
+
+    if (!courseId) {
+      res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.COURSE_ID_REQUIRED });
+      return;
+    }
+
+    const reviews = await this.courseService.getRatings(courseId);
+
+    res.status(HttpStatus.OK).json({ reviews });
   }
 }

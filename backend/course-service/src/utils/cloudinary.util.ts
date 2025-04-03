@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import logger from "./logger.util";
 
 async function getSecureVideoUrl(publicId: string): Promise<string> {
     const secureUrl = cloudinary.url(publicId, {
@@ -61,8 +62,7 @@ export const deleteFromCloudinary = async (publicId: string, resourceType: strin
         console.log(`Cloudinary resource deleted: ${publicId}`);
 
     } catch (error) {
-        console.error("Error deleting from Cloudinary:", error);
+        logger.error("Error deleting from Cloudinary:", error);
         throw new Error("Error deleting from cloudinary");
     }
 };
-

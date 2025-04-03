@@ -37,5 +37,9 @@ export const HttpResponse = {
     TOPIC_DELETED: "Topic deleted successfully",
     LIVE_SCHEDULED: "Live scheduled successfully",
     STATUS_UPDATED: "Status updated successfully",
-    LIVE_SCHEDULE_NOT_FOUND: "Live schedule not found"
+    LIVE_SCHEDULE_NOT_FOUND: "Live schedule not found",
+    TOPIC_PROGRESS_NOT_FOUND: "Topic progress not found",
+    TOPIC_PROGRESS_UPDATED: "Topic progress updated",
+    COMPLETION_STATUS_UPDATED: "Completion status updated",
+    REVIEW_ADDED: "Review added",
 }

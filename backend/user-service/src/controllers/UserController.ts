@@ -61,12 +61,24 @@ export class UserController {
     try {
       const token = req.headers["authorization"]?.split(' ')[1];
 
-      console.log(token, "dd")
-
-      const user = await this.userService.getUserById(token!);
+      const user = await this.userService.getUserByToken(token!);
 
       res.status(HttpStatus.OK).json(user);
     } catch (err) {
+      next(err);
+    }
+  }
+
+  async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+
+      console.log(userId,'hh')
+
+      const user = await this.userService.getUserById(userId);
+
+      res.status(HttpStatus.OK).json({ user });
+    }catch(err){
       next(err);
     }
   }
@@ -176,6 +188,7 @@ export class UserController {
   async stripeWebhook(req: Request, res: Response): Promise<void> {
     try {
       const sig = req.headers["stripe-signature"];
+      console.log(sig,'hhs');
       if (!sig) {
         res.status(400).send("Missing Stripe Signature");
         return;
@@ -183,7 +196,9 @@ export class UserController {
 
       let event;
       try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+        const rawBody = req.body;
+        console.log(rawBody,'raw')
+        event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET as string);
       } catch (err: any) {
         console.error("⚠️  Webhook signature verification failed.", err.message);
         res.status(400).send(`Webhook Error: ${err.message}`);

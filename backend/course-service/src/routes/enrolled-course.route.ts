@@ -8,5 +8,6 @@ const enrolledCourseController = container.get<EnrolledCourseController>(Enrolle
 // Enrolled course routes
 enrolledCourseRouter.post("/", enrolledCourseController.enrollCourse.bind(enrolledCourseController));
 enrolledCourseRouter.get("/:userId", enrolledCourseController.getEnrollCourses.bind(enrolledCourseController));
+enrolledCourseRouter.post("/:userId/update-progress", enrolledCourseController.updateTopicProgress.bind(enrolledCourseController));
 
 export default enrolledCourseRouter;

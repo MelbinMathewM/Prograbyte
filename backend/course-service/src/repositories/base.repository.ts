@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose";
+import { Model, Document, FilterQuery } from "mongoose";
 import { IBaseRepository } from "./IBase.repository";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -22,6 +22,15 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             return await this.model.find(filter);
         } catch (error) {
             console.error("BaseRepository Find All Error:", error);
+            throw new Error("Failed to fetch data");
+        }
+    }
+    
+    async findOne(filter: FilterQuery<T>): Promise<T | null> {
+        try {
+            return await this.model.findOne(filter);
+        } catch (error) {
+            console.error("BaseRepository FindById Error:", error);
             throw new Error("Failed to fetch data");
         }
     }

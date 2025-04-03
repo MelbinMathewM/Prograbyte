@@ -18,5 +18,7 @@ courseRouter.get("/:id", courseController.getCourseDetail.bind(courseController)
 courseRouter.put("/:courseId",uploadCourse,attachFilesToCourse,validate(editCourseSchema), courseController.editCourse.bind(courseController));
 courseRouter.delete("/:courseId", courseController.deleteCourse.bind(courseController));
 courseRouter.post("/payment/create", courseController.createPayment.bind(courseController));
+courseRouter.post("/rating", courseController.addRating.bind(courseController));
+courseRouter.get("/rating/:courseId", courseController.getRatings.bind(courseController));
 
 export default courseRouter;
