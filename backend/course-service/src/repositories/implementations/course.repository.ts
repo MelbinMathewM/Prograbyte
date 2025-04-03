@@ -8,23 +8,43 @@ export class CourseRepository extends BaseRepository<ICourse> {
         super(Course);
     }
 
-    async getCoursesByTutorId(tutor_id: string): Promise<ICourse[]> {
+    async getFilteredCourses(filters: object, sort: string): Promise<ICourse[]> {
         try {
-            return await this.model.find({ tutor_id });
+            let query = Course.find(filters);
+    
+            switch (sort) {
+                case "price-low":
+                    query = query.sort({ price: 1 });
+                    break;
+                case "price-high":
+                    query = query.sort({ price: -1 });
+                    break;
+                case "newest":
+                    query = query.sort({ createdAt: -1 });
+                    break;
+                case "oldest":
+                    query = query.sort({ createdAt: 1 });
+                    break;
+                case "popularity":
+                    query = query.sort({ enrollments: -1 });
+                    break;
+                case "rating-high":
+                    query = query.sort({ rating: -1 });
+                    break;
+                case "rating-low":
+                    query = query.sort({ rating: 1 });
+                    break;
+                default:
+                    break;
+            }
+    
+            return await query;
         } catch (error) {
-            console.error("Error fetching courses by tutor ID:", error);
-            throw new Error("Failed to fetch tutor courses");
+            console.error("Error fetching filtered courses:", error);
+            throw new Error("Failed to fetch filtered courses");
         }
     }
-
-    async getCoursesByCategoryId(category_id: string): Promise<ICourse[]> {
-        try {
-            return await this.model.find({ category_id });
-        } catch (error) {
-            console.error("Error fetching courses by category ID:", error);
-            throw new Error("Failed to fetch category courses");
-        }
-    }
+    
 
     async changeCourseStatus(courseId: string, status: string): Promise<void> {
         try {

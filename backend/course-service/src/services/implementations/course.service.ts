@@ -44,27 +44,10 @@ export class CourseService implements ICourseService {
         await this.courseRepository.changeCourseStatus(courseId, status);
     }
 
-    async getCoursesByTutorId(tutor_id: string): Promise<ICourse[] | null> {
-        const courses = await this.courseRepository.getCoursesByTutorId(tutor_id);
-
-        return courses;
+    async getCourses(filters: object, sort: string): Promise<ICourse[]> {
+        return await this.courseRepository.getFilteredCourses(filters, sort);
     }
-
-    async getCourses(): Promise<ICourse[] | null> {
-        const courses = await this.courseRepository.findAll();
-
-        return courses;
-    }
-
-    async getCoursesByCategoryId(categoryId: string): Promise<ICourse[] | null> {
-        let courses = await this.courseRepository.getCoursesByCategoryId(categoryId);
-
-        if (!courses) {
-            courses = [];
-        }
-
-        return courses;
-    }
+    
 
     async getCourseDetail(id: string): Promise<ICourse | null> {
         const course = await this.courseRepository.getCourseDetail(id);

@@ -25,7 +25,7 @@ export class CategoryController implements ICategoryController {
         try {
           const categories = await this.categoryService.getCategories();
     
-          res.status(200).json(categories);
+          res.status(200).json({categories});
         } catch (err) {
           next(err)
         }

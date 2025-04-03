@@ -116,7 +116,7 @@ const Login = () => {
 
       {/* Right Section (Email & Password Login or Forgot Password Form) */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6 space-y-4">
-        <div className="w-96 bg-white dark:bg-gray-800 border border-gray-100 p-6 rounded-lg shadow-md">
+        <div className="w-96 bg-white border border-gray-100 p-6 rounded-lg shadow-md">
           <h2 className="text-xl">
             {isForgotPassword ? "Forgot Password" : "Login"}
           </h2>

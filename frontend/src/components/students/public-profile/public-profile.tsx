@@ -33,6 +33,9 @@ export default function PublicProfilePage() {
         try {
             const res = await getPublicProfile(username as string);
             setBlogProfile(res.profile);
+            if (res.profile && user?.id) {
+                setIsFollowing(res.profile.followers.includes(user.id));
+            }
         } catch (err) {
             console.error("Failed to load public profile");
         }
@@ -49,7 +52,9 @@ export default function PublicProfilePage() {
 
     useEffect(() => {
         if (blogProfile && user) {
-            const following = blogProfile.followers.some(follower => follower === user?.id);
+            console.log(blogProfile.followers,'ff')
+            const following = blogProfile.followers.some((follower) => follower === user?.id);
+            console.log(following,'j')
             setIsFollowing(following);
         }
     }, [blogProfile, user]);
@@ -57,13 +62,15 @@ export default function PublicProfilePage() {
 
     const handleFollow = async () => {
         try {
+            console.log('hii')
             await followUser(user?.id as string, blogProfile?._id as string);
-            setIsFollowing(true);
             toast.success(`Following ${blogProfile?.username}`);
             setBlogProfile(prev => prev ? {
                 ...prev,
                 followers: [...prev.followers, user?.id as string]
             } : prev);
+    
+            setIsFollowing(blogProfile ? [...blogProfile.followers, user?.id].includes(user?.id as string) : false);
         } catch (err: any) {
             console.error(err.res.data.error);
         }
@@ -72,12 +79,12 @@ export default function PublicProfilePage() {
     const handleUnfollow = async () => {
         try {
             await unfollowUser(user?.id as string, blogProfile?._id as string);
-            setIsFollowing(false);
             toast.success(`Unfollowed ${blogProfile?.username}`)
             setBlogProfile(prev => prev ? {
                 ...prev,
                 followers: prev.followers.filter(f => f !== user?.id)
             } : prev);
+            setIsFollowing(blogProfile ? blogProfile.followers.filter(f => f !== user?.id).includes(user?.id as string) : false);
         } catch (err) {
             console.error("Failed to unfollow user");
         }

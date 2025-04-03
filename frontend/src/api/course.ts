@@ -49,3 +49,13 @@ export const fetchReviews = async (courseId: string) => {
         throw err;
     }
 }
+
+export const fetchCategories = async () => {
+    try{
+        const response = await axiosInstance.get(`/course/categories`);
+        return response.data;
+    }catch(err){
+        console.error("Failed to fetch categories",err);
+        throw err;
+    }
+}

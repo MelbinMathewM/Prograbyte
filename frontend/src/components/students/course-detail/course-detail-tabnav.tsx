@@ -206,10 +206,10 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
                             <p className={`mt-2 ${isDark ? "text-gray-300" : "text-gray-700"}`}>Topics covered in this course:</p>
                             <div className="mt-4">
                                 {Object.entries(categorizedTopics).map(([level, topicItems]) => (
-                                    <div key={level} className={`mt-2 border rounded-lg ${isDark ? "border-gray-700" : "border-gray-300"}`}>
+                                    <div key={level} className={`mt-2 border rounded-lg ${isDark ? "border-gray-700" : "border-gray-100"}`}>
                                         {/* Dropdown Header */}
                                         <button
-                                            className={`w-full px-4 py-2 flex justify-between items-center font-semibold rounded-lg transition duration-300 cursor-pointer 
+                                            className={`w-full px-4 py-2 flex justify-between items-center font-semibold rounded-sm transition duration-300 cursor-pointer 
                                                     ${isDark
                                                     ? "outline outline-gray-700 text-gray-300 hover:bg-gray-700 hover:outline-gray-400"
                                                     : "outline outline-blue-100 text-blue-500 hover:outline-blue-500"
@@ -224,7 +224,7 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
                                         </button>
                                         {/* Dropdown Content */}
                                         {openSections[level] && (
-                                            <div className={`p-4 rounded-b-lg shadow-md ${isDark ? "bg-gray-850" : "bg-white"}`}>
+                                            <div className={`p-4 rounded-sm shadow-md ${isDark ? "bg-gray-850" : "bg-white"}`}>
                                                 {topicItems.length > 0 ? (
                                                     <TopicList topicsItems={topicItems} courseId={course?._id as string} courseName={course?.title as string} isDark={isDark} topicsId={topicsMain?._id as string} />
                                                 ) : (
@@ -322,7 +322,7 @@ const TopicItem = ({ topic, courseId, courseName, isDark, topicsId }: { topic: T
     }, [topic.title]);
 
     return (
-        <li className={`py-3 px-4 shadow-md rounded-lg flex justify-between items-center border transition
+        <li className={`py-3 px-4 shadow-md rounded-sm flex justify-between items-center border transition
             ${isDark ? "bg-gray-900 border-gray-600 hover:shadow-lg" : "bg-white border-gray-200 hover:shadow-lg"}`}>
 
             <div ref={containerRef} className="relative overflow-hidden">

@@ -28,7 +28,7 @@ const StudentCourseDetailPart = () => {
 
     return (
         <div className={`${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"} mx-auto p-6`}>
-            <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"} p-6 rounded mb-4 flex items-center`}>
+            <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-violet-50 text-gray-500"} p-6 rounded mb-4 flex items-center`}>
                 <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
                 <ChevronRight size={16} />
                 <Link to="/courses" className="font-bold hover:text-blue-500">Courses</Link>

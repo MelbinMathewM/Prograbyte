@@ -49,27 +49,27 @@ export class CourseController implements ICourseController {
 
   async getCourses(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tutor_id, category_id } = req.query;
+      const { tutor_id, category_id, min_price, max_price, sort, search } = req.query;
+      const filters: any = {};
 
-      if (tutor_id) {
+      if (tutor_id) filters.tutor_id = tutor_id;
+      if (category_id) filters.category_id = category_id;
+      if (min_price) filters.price = { ...filters.price, $gte: Number(min_price) };
+      if (max_price) filters.price = { ...filters.price, $lte: Number(max_price) };
 
-        const courses = await this.courseService.getCoursesByTutorId(tutor_id as string);
-        res.status(200).json(courses)
+      if (search) {
+        filters.$or = [
+            { title: { $regex: search, $options: "i" } },
+        ];
+    }
 
-      } else if (category_id) {
-
-        const courses = await this.courseService.getCoursesByCategoryId(category_id as string);
-        res.status(200).json(courses)
-
-      } else {
-        const courses = await this.courseService.getCourses();
-        res.status(200).json(courses)
-
-      }
+      const courses = await this.courseService.getCourses(filters, sort as string);
+      res.status(200).json(courses);
     } catch (err) {
-      next(err)
+      next(err);
     }
   }
+
 
   async getCourseDetail(req: Request, res: Response): Promise<void> {
     try {
@@ -160,15 +160,15 @@ export class CourseController implements ICourseController {
   }
 
   async getRatings(req: Request, res: Response, next: NextFunction): Promise<void> {
-      const { courseId } = req.params;
+    const { courseId } = req.params;
 
-      if (!courseId) {
-        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.COURSE_ID_REQUIRED });
-        return;
-      }
+    if (!courseId) {
+      res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.COURSE_ID_REQUIRED });
+      return;
+    }
 
-      const reviews = await this.courseService.getRatings(courseId);
+    const reviews = await this.courseService.getRatings(courseId);
 
-      res.status(HttpStatus.OK).json({ reviews });
+    res.status(HttpStatus.OK).json({ reviews });
   }
 }

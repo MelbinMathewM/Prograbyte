@@ -23,10 +23,10 @@ const CoursePurchaseSection: React.FC<CoursePurchaseProps> = ({ course, enrolled
                         <p className="text-lg mb-2 font-medium">{progress}% Completed</p>
                         <Progress value={progress} isDark={isDark} />
                         <button 
-                            className="mt-5 w-full py-3 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-500 transition-transform transform hover:scale-105"
+                            className="mt-5 w-full py-3 rounded-lg text-gray-500 font-semibold"
                             onClick={() => navigate(`/courses/${course?._id}`)}
                         >
-                            Continue Learning 🚀
+                            Continue Learning
                         </button>
                     </div>
                 ) : (
@@ -39,7 +39,7 @@ const CoursePurchaseSection: React.FC<CoursePurchaseProps> = ({ course, enrolled
                         </select>
 
                         {/* Pricing */}
-                        <div className="text-3xl font-bold text-blue-500 text-center flex flex-col items-center">
+                        <div className="text-2xl font-bold text-blue-500 text-center flex flex-col items-center">
                             <span className="relative">
                                 ₹{course?.price} 
                                 <span className={`text-lg ml-2 ${isDark ? "text-gray-400" : "text-gray-500"} line-through`}>₹999</span>
