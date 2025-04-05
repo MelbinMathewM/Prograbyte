@@ -15,9 +15,9 @@ import { IRating } from "@/models/rating.model";
 @injectable()
 export class CourseService implements ICourseService {
     constructor(
-        @inject("ICourseRepository") private courseRepository: ICourseRepository,
-        @inject("IRatingRepository") private ratingRepository: IRatingRepository,
-        @inject(TopicService) private topicService: TopicService
+        @inject("ICourseRepository") private _courseRepository: ICourseRepository,
+        @inject("IRatingRepository") private _ratingRepository: IRatingRepository,
+        @inject(TopicService) private _topicService: TopicService
     ) {}
 
 
@@ -35,22 +35,22 @@ export class CourseService implements ICourseService {
             poster_url: course.poster_url,
         };
 
-        const newCourse = await this.courseRepository.create(newCourseData as ICourse);
+        const newCourse = await this._courseRepository.create(newCourseData as ICourse);
 
         return newCourse
     }
 
     async changeCourseStatus(courseId: string, status: string): Promise<void> {
-        await this.courseRepository.changeCourseStatus(courseId, status);
+        await this._courseRepository.changeCourseStatus(courseId, status);
     }
 
     async getCourses(filters: object, sort: string): Promise<ICourse[]> {
-        return await this.courseRepository.getFilteredCourses(filters, sort);
+        return await this._courseRepository.getFilteredCourses(filters, sort);
     }
     
 
     async getCourseDetail(id: string): Promise<ICourse | null> {
-        const course = await this.courseRepository.getCourseDetail(id);
+        const course = await this._courseRepository.getCourseDetail(id);
         return course;
     }
 
@@ -59,7 +59,7 @@ export class CourseService implements ICourseService {
         courseData: Partial<ICourse>, 
         ): Promise<ICourse | null> {
 
-        const existingCourse = await this.courseRepository.getCourseDetail(courseId);
+        const existingCourse = await this._courseRepository.getCourseDetail(courseId);
 
         if (!existingCourse) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COURSE_NOT_FOUND);
 
@@ -92,7 +92,7 @@ export class CourseService implements ICourseService {
             updatedFields.preview_video_urls = [newPreviewVideoUrl];
         }
 
-        const updatedCourse = await this.courseRepository.updateById(courseId, {
+        const updatedCourse = await this._courseRepository.updateById(courseId, {
             ...courseData,
             ...updatedFields,
         });
@@ -101,13 +101,13 @@ export class CourseService implements ICourseService {
     }
 
     async deleteCourse(courseId: string): Promise<void> {
-        const course = await this.courseRepository.getCourseDetail(courseId);
+        const course = await this._courseRepository.getCourseDetail(courseId);
 
         if (!course) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COURSE_NOT_FOUND);
         }
 
-        const topics = await this.topicService.getTopics(courseId);
+        const topics = await this._topicService.getTopics(courseId);
 
         const mediaUrls = [
             ...course.preview_video_urls,
@@ -133,15 +133,15 @@ export class CourseService implements ICourseService {
         }
 
         if (topics) {
-            await this.courseRepository.deleteById(courseId);
+            await this._courseRepository.deleteById(courseId);
         }
 
-        await this.courseRepository.deleteById(courseId);
+        await this._courseRepository.deleteById(courseId);
     }
 
     async addRating(userId: string, courseId: string, rating: number, review: string): Promise<void> {
         
-        let ratingData = await this.ratingRepository.findOne({courseId});
+        let ratingData = await this._ratingRepository.findOne({courseId});
 
         const reviewObj = {
             userId: convertToObjectId(userId),
@@ -152,17 +152,17 @@ export class CourseService implements ICourseService {
         if(ratingData){
             ratingData.reviews.push(reviewObj)
 
-            await this.ratingRepository.save(ratingData);
+            await this._ratingRepository.save(ratingData);
         }else{
             const courseIdObj = convertToObjectId(courseId);
-            ratingData = await this.ratingRepository.create({courseId: courseIdObj, reviews: [reviewObj]});
-            await this.ratingRepository.save(ratingData);
+            ratingData = await this._ratingRepository.create({courseId: courseIdObj, reviews: [reviewObj]});
+            await this._ratingRepository.save(ratingData);
         }
     }
 
     async getRatings(courseId: string): Promise<IRating | null> {
         
-        const ratings = await this.ratingRepository.findOne({courseId});
+        const ratings = await this._ratingRepository.findOne({courseId});
 
         return ratings;
     }

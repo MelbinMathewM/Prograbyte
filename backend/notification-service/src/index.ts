@@ -18,7 +18,7 @@ app.use(verifyApiKey as express.RequestHandler);
 
 app.use("/", notificationRoutes);
 
-const PORT = process.env.PORT || 5004;
+const PORT = process.env.PORT || 5006;
 
 app.listen(PORT, async () => {
     console.log(`🚀 Notification Service running on port ${PORT}`);

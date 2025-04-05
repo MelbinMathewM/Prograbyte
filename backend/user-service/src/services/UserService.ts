@@ -4,8 +4,8 @@ import { IUser } from '../models/UserModel';
 import authClient from '../grpc/AuthServiceClient';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { createHttpError } from '../utils/httpError';
-import { HttpStatus } from '../constants/status';
-import { HttpResponse } from '../constants/responseMessage';
+import { HttpStatus } from '../constants/status.config';
+import { HttpResponse } from '../constants/response.constant';
 import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '../utils/jwt';
 import { rabbitMQService } from './RabbitMQService';
 

@@ -59,8 +59,8 @@ const AddCoursePart = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axiosInstance.get<Category[]>("/course/categories");
-        setCategories(response.data);
+        const response = await axiosInstance.get("/course/categories");
+        setCategories(response.data.categories);
       } catch (error) {
         console.error("Error fetching categories:", error);
         toast.error("Failed to load categories");
@@ -399,7 +399,7 @@ const AddCoursePart = () => {
                 onCropComplete={onCropComplete}
                 getCroppedImage={handleCroppedImage}
                 isDark={isDarkMode}
-                aspectRatio={window.innerWidth / window.innerHeight}
+                aspectRatio={8 / 6}
               />
 
               <Grid item xs={12} sm={6}>

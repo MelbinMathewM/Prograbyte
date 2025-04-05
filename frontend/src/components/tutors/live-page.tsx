@@ -32,7 +32,7 @@ const LivePart = () => {
     const handleCancel = async (scheduleId: string) => {
         if (!window.confirm("Are you sure you want to cancel this live class?")) return;
         try {
-            await changeLiveSchedule(scheduleId);
+            await changeLiveSchedule(scheduleId, "canceled");
             setLiveSchedules(prev => prev.map(schedule =>
                 schedule._id === scheduleId ? { ...schedule, status: "canceled" } : schedule
             ));
@@ -47,7 +47,11 @@ const LivePart = () => {
         try {
             const response = await checkLiveStart(scheduleId);
             if (response.canStart) {
-                navigate(`/tutor/live/${roomId}`);
+
+                const streamResponse = await changeLiveSchedule(scheduleId, "live");
+
+                if(!streamResponse.ok) toast.error("Failed to start stream");
+                navigate(`/tutor/live/${roomId}`, { state: { streamUrl: response.streamUrl }});
             } else {
                 toast.error("You cannot start the live class yet.");
             }

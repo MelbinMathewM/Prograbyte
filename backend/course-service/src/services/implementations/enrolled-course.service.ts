@@ -12,8 +12,8 @@ import { TopicService } from "./topic.service";
 @injectable()
 export class EnrolledCourseService implements IEnrolledCourseService {
     constructor(
-        @inject("IEnrolledCourseRepository") private enrolledCourseRepository: IEnrolledCourseRepository,
-        @inject(TopicService) private topicService: TopicService
+        @inject("IEnrolledCourseRepository") private _enrolledCourseRepository: IEnrolledCourseRepository,
+        @inject(TopicService) private _topicService: TopicService
     ) { }
 
     async enrollCourse(courseId: string, userId: string, paymentAmount: number, paymentId: string): Promise<void> {
@@ -21,9 +21,9 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         const objectIdUserId = convertToObjectId(userId);
         const objectIdCourseId = convertToObjectId(courseId);
 
-        let enrollment = await this.enrolledCourseRepository.getEnrolledCoursesByUserId(objectIdUserId);
+        let enrollment = await this._enrolledCourseRepository.getEnrolledCoursesByUserId(objectIdUserId);
 
-        const topics = await this.topicService.getTopics(courseId);
+        const topics = await this._topicService.getTopics(courseId);
 
         if (!topics) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPICS_NOT_FOUND);
@@ -52,9 +52,9 @@ export class EnrolledCourseService implements IEnrolledCourseService {
             }
 
             enrollment.courses.push(course);
-            await this.enrolledCourseRepository.save(enrollment);
+            await this._enrolledCourseRepository.save(enrollment);
         } else {
-            await this.enrolledCourseRepository.createEnrolledCourse(objectIdUserId, course)
+            await this._enrolledCourseRepository.createEnrolledCourse(objectIdUserId, course)
         }
     }
 
@@ -62,7 +62,7 @@ export class EnrolledCourseService implements IEnrolledCourseService {
 
         const objectIdUserId = convertToObjectId(userId);
 
-        const enrolledCourses = await this.enrolledCourseRepository.getEnrolledCoursesByUserId(objectIdUserId);
+        const enrolledCourses = await this._enrolledCourseRepository.getEnrolledCoursesByUserId(objectIdUserId);
 
         if (!enrolledCourses) {
             throw createHttpError(HttpStatus.NO_CONTENT, HttpResponse.ENROLLED_COURSES_NOT_FOUND);
@@ -79,7 +79,7 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         totalDuration: number
     ): Promise<void> {
 
-        const enrolledCourse = await this.enrolledCourseRepository.findOne({ userId, "courses.courseId": courseId });
+        const enrolledCourse = await this._enrolledCourseRepository.findOne({ userId, "courses.courseId": courseId });
 
         if (!enrolledCourse) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ENROLLED_COURSES_NOT_FOUND);
@@ -107,12 +107,12 @@ export class EnrolledCourseService implements IEnrolledCourseService {
             await this.updateCompletionStatus(userId, courseId);
         }
 
-        await this.enrolledCourseRepository.save(enrolledCourse);
+        await this._enrolledCourseRepository.save(enrolledCourse);
     }
 
     async updateCompletionStatus(userId: string, courseId: string): Promise<void> {
 
-        const enrolledCourse = await this.enrolledCourseRepository.findOne({ userId, "courses.courseId": courseId });
+        const enrolledCourse = await this._enrolledCourseRepository.findOne({ userId, "courses.courseId": courseId });
 
         if (!enrolledCourse) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ENROLLED_COURSES_NOT_FOUND);
@@ -126,6 +126,6 @@ export class EnrolledCourseService implements IEnrolledCourseService {
 
         course.completionStatus = Math.round((completedTopics / totalTopics) * 100);
 
-        await this.enrolledCourseRepository.save(enrolledCourse);
+        await this._enrolledCourseRepository.save(enrolledCourse);
     }
 }

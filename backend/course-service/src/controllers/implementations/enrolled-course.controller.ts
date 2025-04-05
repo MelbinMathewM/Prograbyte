@@ -6,13 +6,13 @@ import { inject } from "inversify";
 import { IEnrolledCourseController } from "../interfaces/IEnrolled-course.controller";
 
 export class EnrolledCourseController implements IEnrolledCourseController {
-  constructor(@inject(EnrolledCourseService) private enrolledCourseService: EnrolledCourseService) { }
+  constructor(@inject(EnrolledCourseService) private _enrolledCourseService: EnrolledCourseService) { }
 
   async enrollCourse(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { courseId, userId, paymentAmount, paymentId } = req.body;
 
-      await this.enrolledCourseService.enrollCourse(courseId, userId, paymentAmount, paymentId);
+      await this._enrolledCourseService.enrollCourse(courseId, userId, paymentAmount, paymentId);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_ENROLLED })
     } catch (err) {
@@ -29,7 +29,7 @@ export class EnrolledCourseController implements IEnrolledCourseController {
         return;
       }
 
-      const enrolledCourses = await this.enrolledCourseService.getEnrolledCourses(userId);
+      const enrolledCourses = await this._enrolledCourseService.getEnrolledCourses(userId);
 
       res.status(HttpStatus.OK).json({ enrolledCourses });
     } catch (err) {
@@ -48,7 +48,7 @@ export class EnrolledCourseController implements IEnrolledCourseController {
 
       const { courseId, topicId, watchedDuration, totalDuration } = req.body;
 
-      await this.enrolledCourseService.updateTopicProgress(userId, courseId, topicId, watchedDuration, totalDuration);
+      await this._enrolledCourseService.updateTopicProgress(userId, courseId, topicId, watchedDuration, totalDuration);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.TOPIC_PROGRESS_UPDATED });
     } catch (err) {

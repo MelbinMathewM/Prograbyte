@@ -14,17 +14,13 @@ import { IComment, ICommentContent } from "@/models/comment.model";
 @injectable()
 export class PostService implements IPostService {
     constructor(
-        @inject("IPostRepository") private postRepository: IPostRepository,
-        @inject("ICommentRepository") private commentRepository: ICommentRepository
+        @inject("IPostRepository") private _postRepository: IPostRepository,
+        @inject("ICommentRepository") private _commentRepository: ICommentRepository
     ) { }
 
-    async addPost(post: IPost, user_id: string): Promise<IPost> {
-        const blogs = await this.postRepository.find({user_id});
-        // console.log(blogs,'hh')
-        if(blogs.length > 2){
-            throw createHttpError(HttpStatus.BAD_REQUEST," Maximum blog count exceeded");
-        }
-        const blog = await this.postRepository.create(post);
+    async addPost(post: IPost): Promise<IPost> {
+        
+        const blog = await this._postRepository.create(post);
 
         console.log(blog)
 
@@ -32,26 +28,26 @@ export class PostService implements IPostService {
     }
 
     async getPosts(): Promise<IPost[]> {
-        const blogs = await this.postRepository.find();
+        const blogs = await this._postRepository.find();
 
         return blogs;
     }
 
     async getPostsByUserId(user_id: string): Promise<IPost[]> {
-        const blogs = await this.postRepository.getUserPosts(user_id);
+        const blogs = await this._postRepository.getUserPosts(user_id);
 
         return blogs;
     }
 
     async updatePost(blog_id: string, updateData: Partial<IPost>): Promise<IPost | null> {
-        const updatedPost = await this.postRepository.update(blog_id, updateData);
+        const updatedPost = await this._postRepository.update(blog_id, updateData);
 
         return updatedPost;
     }
 
     async deletePost(blog_id: string): Promise<void> {
 
-        const post = await this.postRepository.findById(blog_id);
+        const post = await this._postRepository.findById(blog_id);
         if (!post) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.BLOG_NOT_FOUND);
         }
@@ -63,14 +59,14 @@ export class PostService implements IPostService {
             }
         }
 
-        await this.commentRepository.deleteOneByPostId(blog_id);
+        await this._commentRepository.deleteOneByPostId(blog_id);
 
-        await this.postRepository.delete(blog_id);
+        await this._postRepository.delete(blog_id);
     }
 
     async toggleLike(blog_id: string, user_id: string): Promise<void> {
 
-        const blog = await this.postRepository.findById(blog_id);
+        const blog = await this._postRepository.findById(blog_id);
 
         if (!blog) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.BLOG_NOT_FOUND);
@@ -84,12 +80,12 @@ export class PostService implements IPostService {
             blog.likes.push(userObjectId);
         }
 
-        await this.postRepository.save(blog);
+        await this._postRepository.save(blog);
     }
 
     async addComment(post_id: string, user_id: string, content: string, username: string): Promise<IComment> {
 
-        let postComments = await this.commentRepository.findOne({ post_id });
+        let postComments = await this._commentRepository.findOne({ post_id });
 
         const newComment: Partial<ICommentContent> = {
             user_id: convertToObjectId(user_id),
@@ -99,40 +95,40 @@ export class PostService implements IPostService {
 
         if (postComments) {
             postComments.comments.push(newComment as ICommentContent);
-            await this.commentRepository.save(postComments);
+            await this._commentRepository.save(postComments);
         } else {
-            postComments = await this.commentRepository.create({
+            postComments = await this._commentRepository.create({
                 post_id: convertToObjectId(post_id),
                 comments: [newComment]
             } as Partial<IComment>);
         }
 
-        const post = await this.postRepository.findById(post_id);
+        const post = await this._postRepository.findById(post_id);
 
         if (post) {
             post.comments = post.comments + 1;
 
-            await this.postRepository.save(post);
+            await this._postRepository.save(post);
         }
 
         return postComments;
     }
 
     async getComments(post_id: string): Promise<IComment | null> {
-        const comments = await this.commentRepository.findOne({ post_id });
+        const comments = await this._commentRepository.findOne({ post_id });
 
         return comments;
     }
 
     async deleteComment(post_id: string, comment_id: string): Promise<void> {
 
-        const post = await this.postRepository.findById(post_id);
+        const post = await this._postRepository.findById(post_id);
 
         if (!post) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.BLOG_NOT_FOUND);
         }
 
-        const comments = await this.commentRepository.findOne({ post_id });
+        const comments = await this._commentRepository.findOne({ post_id });
 
         if (!comments) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COMMENTS_NOT_FOUND);
@@ -148,15 +144,15 @@ export class PostService implements IPostService {
         if (post) {
             post.comments = post.comments - 1;
 
-            await this.postRepository.save(post);
+            await this._postRepository.save(post);
         }
 
-        await this.commentRepository.save(comments);
+        await this._commentRepository.save(comments);
     }
 
     async toggleCommentLike(post_id: string, comment_id: string, user_id: string): Promise<void> {
 
-        const comments = await this.commentRepository.findOne({ post_id });
+        const comments = await this._commentRepository.findOne({ post_id });
 
         if (!comments) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.COMMENTS_NOT_FOUND);
@@ -176,6 +172,6 @@ export class PostService implements IPostService {
             targetComment.likes.push(userObjectId);
         }
 
-        await this.commentRepository.save(comments);
+        await this._commentRepository.save(comments);
     }
 }

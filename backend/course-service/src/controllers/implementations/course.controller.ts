@@ -8,7 +8,7 @@ import { HttpStatus } from "@/constants/status.constant";
 import { ICourseController } from "@/controllers/interfaces/ICourse.controller";
 
 export class CourseController implements ICourseController {
-  constructor(@inject(CourseService) private courseService: CourseService) { }
+  constructor(@inject(CourseService) private _courseService: CourseService) { }
 
   async createCourse(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -21,7 +21,7 @@ export class CourseController implements ICourseController {
         return;
       }
 
-      const newCourse = await this.courseService.createCourse(req.body as ICourse);
+      const newCourse = await this._courseService.createCourse(req.body as ICourse);
 
       console.log("Course Created:", newCourse);
 
@@ -39,7 +39,7 @@ export class CourseController implements ICourseController {
       const { courseId } = req.params;
       const { status } = req.body;
 
-      await this.courseService.changeCourseStatus(courseId, status);
+      await this._courseService.changeCourseStatus(courseId, status);
 
       res.sendStatus(200);
     } catch (err) {
@@ -49,13 +49,14 @@ export class CourseController implements ICourseController {
 
   async getCourses(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { tutor_id, category_id, min_price, max_price, sort, search } = req.query;
+      const { tutor_id, category_id, min_price, max_price, sort, search, status } = req.query;
       const filters: any = {};
 
       if (tutor_id) filters.tutor_id = tutor_id;
       if (category_id) filters.category_id = category_id;
       if (min_price) filters.price = { ...filters.price, $gte: Number(min_price) };
       if (max_price) filters.price = { ...filters.price, $lte: Number(max_price) };
+      if(status) filters.status = status;
 
       if (search) {
         filters.$or = [
@@ -63,8 +64,8 @@ export class CourseController implements ICourseController {
         ];
     }
 
-      const courses = await this.courseService.getCourses(filters, sort as string);
-      res.status(200).json(courses);
+      const courses = await this._courseService.getCourses(filters, sort as string);
+      res.status(200).json({courses});
     } catch (err) {
       next(err);
     }
@@ -75,7 +76,7 @@ export class CourseController implements ICourseController {
     try {
       const { id } = req.params;
 
-      const course = await this.courseService.getCourseDetail(id);
+      const course = await this._courseService.getCourseDetail(id);
 
       res.status(200).json({ course })
     } catch (err: unknown) {
@@ -91,7 +92,7 @@ export class CourseController implements ICourseController {
     try {
       const { courseId } = req.params;
 
-      const updatedCourse = await this.courseService.updateCourse(courseId, req.body);
+      const updatedCourse = await this._courseService.updateCourse(courseId, req.body);
 
       res.status(200).json({ message: "Course updated successfully", course: updatedCourse });
     } catch (err: unknown) {
@@ -113,7 +114,7 @@ export class CourseController implements ICourseController {
         return;
       }
 
-      await this.courseService.deleteCourse(courseId);
+      await this._courseService.deleteCourse(courseId);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_DELETED });
     } catch (err) {
@@ -151,7 +152,7 @@ export class CourseController implements ICourseController {
     try {
       const { userId, courseId, rating, review } = req.body;
 
-      await this.courseService.addRating(userId, courseId, rating, review);
+      await this._courseService.addRating(userId, courseId, rating, review);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.REVIEW_ADDED });
     } catch (err) {
@@ -167,7 +168,7 @@ export class CourseController implements ICourseController {
       return;
     }
 
-    const reviews = await this.courseService.getRatings(courseId);
+    const reviews = await this._courseService.getRatings(courseId);
 
     res.status(HttpStatus.OK).json({ reviews });
   }

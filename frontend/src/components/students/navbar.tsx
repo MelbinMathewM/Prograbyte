@@ -142,7 +142,7 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggleDarkMode}
-      className={`relative flex items-center w-12 h-6 ${isDark ? "bg-gray-800 border border-gray-700" : "bg-gray-100 shadow-sm"} rounded-full p-1 transition-all`}
+      className={`relative flex items-center w-12 h-6 bg-transparent ${isDark ? "border border-gray-700 shadow-lg" : " shadow-sm"} rounded-full p-1 transition-all`}
     >
       {isDark ? (
         <Moon className="absolute left-2 text-white" size={14} />

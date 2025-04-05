@@ -6,7 +6,7 @@ import { inject } from "inversify";
 import { IWishlistController } from "../interfaces/IWishlist.controller";
 
 export class WishlistController implements IWishlistController {
-    constructor(@inject(WishlistService) private wishlistService: WishlistService) { }
+    constructor(@inject(WishlistService) private _wishlistService: WishlistService) { }
 
     async getWishlist(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -17,7 +17,7 @@ export class WishlistController implements IWishlistController {
             return
           }
     
-          const wishlist = await this.wishlistService.getWishlist(userId);
+          const wishlist = await this._wishlistService.getWishlist(userId);
     
           res.status(HttpStatus.OK).json(wishlist);
         } catch (err) {
@@ -38,7 +38,7 @@ export class WishlistController implements IWishlistController {
             return
           }
     
-          const wishlist = await this.wishlistService.addWishlist(userId, courseId);
+          const wishlist = await this._wishlistService.addWishlist(userId, courseId);
     
           res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_ADDED_WISHLIST, wishlist });
         } catch (err) {
@@ -59,7 +59,7 @@ export class WishlistController implements IWishlistController {
             return
           }
     
-          await this.wishlistService.removeWishlist(userId, courseId);
+          await this._wishlistService.removeWishlist(userId, courseId);
     
           res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_REMOVED_WISHLIST })
         } catch (err) {

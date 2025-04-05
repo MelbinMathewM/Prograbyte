@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
 import passport from "passport";
-import container from "../di/container";
-import { UserController } from "../controllers/UserController";
+import container from "../configs/inversify.config";
+import { UserController } from "../controllers/implementations/user.controller";
 import bodyParser from "body-parser";
-import stripe from "../config/stripe";
+import stripe from "../configs/stripe.config";
 import Stripe from "stripe";
 import express from "express";
 

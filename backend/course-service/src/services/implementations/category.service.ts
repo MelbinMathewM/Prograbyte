@@ -9,15 +9,15 @@ import { ICategoryService } from "../interfaces/ICategory.service";
 
 @injectable()
 export class CategoryService implements ICategoryService {
-    constructor(@inject("ICategoryRepository") private categoryRepository: ICategoryRepository) {}
+    constructor(@inject("ICategoryRepository") private _categoryRepository: ICategoryRepository) {}
 
     async createCategory(category: ICategory): Promise<ICategory> {
     
-            const existingCategory = await this.categoryRepository.getCategoryByName(category.name.toLowerCase());
+            const existingCategory = await this._categoryRepository.getCategoryByName(category.name.toLowerCase());
     
             if (existingCategory) throw createHttpError(HttpStatus.CONFLICT, HttpResponse.CATEGORY_EXIST);
     
-            const newCategory = await this.categoryRepository.create(category);
+            const newCategory = await this._categoryRepository.create(category);
     
             if (!newCategory) throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.CATEGORY_INSERT_ERROR);
     
@@ -26,7 +26,7 @@ export class CategoryService implements ICategoryService {
     
         async getCategories(): Promise<ICategory[]> {
     
-            const categories = await this.categoryRepository.findAll();
+            const categories = await this._categoryRepository.findAll();
     
             if (!categories) throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.CATEGORY_FETCH_ERROR);
     
@@ -35,13 +35,13 @@ export class CategoryService implements ICategoryService {
     
         async updateCategory(id: string, updatedData: Partial<ICategory>): Promise<ICategory> {
     
-            const existingCategory = await this.categoryRepository.getCategoryByNameAndNotId(updatedData.name?.toLowerCase() as string, id);
+            const existingCategory = await this._categoryRepository.getCategoryByNameAndNotId(updatedData.name?.toLowerCase() as string, id);
     
             if (existingCategory) {
                 throw createHttpError(HttpStatus.CONFLICT, HttpResponse.CATEGORY_EXIST);
             }
     
-            const updatedCategory = await this.categoryRepository.updateById(id, updatedData);
+            const updatedCategory = await this._categoryRepository.updateById(id, updatedData);
     
             if (!updatedCategory) {
                 throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.CATEGORY_UPDATE_ERROR);
@@ -52,13 +52,13 @@ export class CategoryService implements ICategoryService {
     
         async deleteCategory(id: string): Promise<void> {
 
-            const existingCategory = await this.categoryRepository.findById(id);
+            const existingCategory = await this._categoryRepository.findById(id);
     
             if (!existingCategory) {
                 throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.CATEGORY_NOT_FOUND);
             }
     
-            const deleted = await this.categoryRepository.deleteById(id);
+            const deleted = await this._categoryRepository.deleteById(id);
     
             if (!deleted) {
                 throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.CATEGORY_DELETE_ERROR);

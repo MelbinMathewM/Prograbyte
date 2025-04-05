@@ -42,7 +42,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     setMaxPrice 
 }) => {
     return (
-        <Card className={`p-6 rounded-sm ${isDarkMode ? "bg-gray-800 text-white" : "bg-white shadow-lg"}`}>
+        <Card className={`p-6 rounded-sm ${isDarkMode ? "bg-gray-850 text-white border border-gray-700" : "bg-white shadow-lg"}`}>
             <h2 className="text-2xl font-semibold mb-4 flex items-center">
                 <SlidersHorizontal className="mr-2" /> Filters
             </h2>
@@ -52,7 +52,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 <Input 
                     type="text" 
                     placeholder="Search courses..." 
-                    className={`pr-10 ${isDarkMode ? "bg-gray-700 text-white placeholder-gray-400" : ""} border-gray-400`} 
+                    className={`pr-10 ${isDarkMode ? "bg-gray-850 text-white placeholder-gray-400" : ""} border-gray-400`} 
                     value={searchQuery} 
                     onChange={(e) => setSearchQuery(e.target.value)} 
                 />
@@ -62,10 +62,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             {/* Category Filter */}
             <Label className={`block font-semibold mb-2 text-gray-400`}>Category</Label>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className={`w-full ${isDarkMode ? "bg-gray-700 text-white" : ""}`}>
+                <SelectTrigger className={`w-full ${isDarkMode ? "bg-gray-850 text-white" : ""}`}>
                     <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
-                <SelectContent className={`${isDarkMode ? "bg-gray-700 text-white" : ""}`}>
+                <SelectContent className={`${isDarkMode ? "bg-gray-850 text-white" : ""}`}>
                     <SelectItem value="All">All Categories</SelectItem>
                     {categories.map((category) => (
                         <SelectItem key={category._id} value={category._id as string}>
@@ -78,7 +78,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             {/* Sorting Option */}
             <Label className="block font-semibold mt-4 mb-2 text-gray-400">Sort By</Label>
             <Select value={sortOption} onValueChange={setSortOption}>
-                <SelectTrigger className={`w-full ${isDarkMode ? "bg-gray-700 text-white" : ""}`}>
+                <SelectTrigger className={`w-full ${isDarkMode ? "bg-gray-850 text-white" : ""}`}>
                     <SelectValue placeholder="Select sorting option" />
                 </SelectTrigger>
                 <SelectContent className={`${isDarkMode ? "bg-gray-700 text-white" : ""}`}>
@@ -95,7 +95,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
             {/* Price Range */}
             <Label className="block font-semibold mt-4 mb-2 text-gray-400">Price Range ($)</Label>
-            <div className={`flex items-center justify-between gap-2 p-2 rounded-lg border ${isDarkMode ? "border-gray-600 bg-gray-700" : "border-gray-300 bg-gray-100"}`}>
+            <div className={`flex items-center justify-between gap-2 p-2 rounded-lg border ${isDarkMode ? "border-gray-600 bg-gray-850" : "border-gray-300 bg-gray-100"}`}>
                 <input 
                     type="null" 
                     placeholder="0" 

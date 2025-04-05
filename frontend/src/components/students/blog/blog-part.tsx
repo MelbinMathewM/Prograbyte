@@ -73,15 +73,16 @@ const BlogPart = () => {
 
     if (!newTitle || !newContent) return;
     setIsLoading(true);
+    debugger;
     const formData = new FormData();
     formData.append("user_id", userData?.id || "");
     formData.append("title", newTitle);
     formData.append("content", newContent);
     formData.append("username", userData?.username || "Unknown");
     if (newImage) formData.append("image", newImage);
-
+    console.log(...formData,'hh')
     try {
-      await addPost(formData, user?.id as string);
+      await addPost(formData);
       fetchBlogs();
       setIsLoading(false);
       clearModalData();

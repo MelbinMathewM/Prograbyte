@@ -2,9 +2,9 @@ import "reflect-metadata";
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
-import connectDB from "./config/db";
+import connectDB from "./configs/db.config";
 import passport from "passport";
-import "./config/passport";
+import "./configs/passport.config";
 import session from "express-session";
 import userRouter from "./routes/UserRoute";
 import { errorHandler } from "./middlewares/errorMiddlewate";
@@ -13,13 +13,13 @@ dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
 import { rabbitMQService } from "./services/RabbitMQService";
-import verifyApiKey from "./config/apiKey";
-import { env } from "./config/env";
-import stripe from "./config/stripe";
+import verifyApiKey from "./configs/api-key.config";
+import { env } from "./configs/env.config";
+import stripe from "./configs/stripe.config";
 validateEnv();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 
 // Stripe webhook endpoint must come before any body parsers
 app.post(

@@ -11,19 +11,19 @@ import { generateToken, verifyToken } from "@/utils/jwt.util";
 import { ITopicService } from "../interfaces/ITopic.service";
 @injectable()
 export class TopicService implements ITopicService {
-    constructor(@inject("ITopicRepository") private topicRepository: ITopicRepository) { }
+    constructor(@inject("ITopicRepository") private _topicRepository: ITopicRepository) { }
 
     async createTopic(topics: ITopics): Promise<ITopics | null> {
 
-        let existTopic = await this.topicRepository.getTopicsByCourseId(topics.course_id as string);
+        let existTopic = await this._topicRepository.getTopicsByCourseId(topics.course_id as string);
 
         let newTopics;
         if (existTopic) {
             existTopic.topics.push(...topics?.topics);
-            newTopics = await this.topicRepository.save(existTopic);
+            newTopics = await this._topicRepository.save(existTopic);
         } else {
             const objectIdCourseId = convertToObjectId(topics.course_id as string);
-            newTopics = await this.topicRepository.create({ course_id: objectIdCourseId, topics: topics.topics })
+            newTopics = await this._topicRepository.create({ course_id: objectIdCourseId, topics: topics.topics })
         }
 
         return newTopics;
@@ -31,7 +31,7 @@ export class TopicService implements ITopicService {
 
     async getTopics(course_id: string): Promise<Partial<ITopics> | null> {
 
-        const topics = await this.topicRepository.getTopicsByCourseId(course_id);
+        const topics = await this._topicRepository.getTopicsByCourseId(course_id);
 
         if (!topics) return null;
 
@@ -56,7 +56,7 @@ export class TopicService implements ITopicService {
 
     async getTopicById(topicsId: string, topicId: string): Promise<ITopic | null> {
 
-        const topics = await this.topicRepository.findById(topicsId);
+        const topics = await this._topicRepository.findById(topicsId);
 
         
         if (!topics) return null;
@@ -76,7 +76,7 @@ export class TopicService implements ITopicService {
 
     async updateTopic(topicsId: string, topicId: string, topicData: ITopic): Promise<ITopic> {
 
-        const topics = await this.topicRepository.findById(topicsId);
+        const topics = await this._topicRepository.findById(topicsId);
 
         if (!topics) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPICS_NOT_FOUND);
@@ -120,14 +120,14 @@ export class TopicService implements ITopicService {
             notes_url: topicData.notes_url || topic.notes_url
         };
 
-        await this.topicRepository.save(topics);
+        await this._topicRepository.save(topics);
 
         return topics.topics[topicIndex];
     }
 
     async deleteTopic(topicsId: string, topicId: string): Promise<void> {
 
-        const topics = await this.topicRepository.findById(topicsId);
+        const topics = await this._topicRepository.findById(topicsId);
 
         if (!topics) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPICS_NOT_FOUND);
@@ -158,7 +158,7 @@ export class TopicService implements ITopicService {
 
         topics.topics.splice(topicIndex, 1);
 
-        await this.topicRepository.save(topics);
+        await this._topicRepository.save(topics);
     }
 
     async getVideoToken(publicId: string): Promise<string> {

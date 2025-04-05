@@ -44,5 +44,5 @@ app.use(errorHandler);
   })();
 
 
-const PORT = process.env.PORT || 5009;
+const PORT = process.env.PORT || 5004;
 server.listen(PORT, () => { console.log(`Blog service running on PORT ${PORT}`) })

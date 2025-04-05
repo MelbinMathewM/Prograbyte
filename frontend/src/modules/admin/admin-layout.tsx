@@ -1,21 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/admin/sidebar";
 import Loader from "@/components/ui/loader";
 
 const AdminLayout = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(window.innerWidth >= 1024);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const isLargeScreen = window.innerWidth >= 1024;
+            setIsMobile(!isLargeScreen);
+            if (isLargeScreen) {
+                setIsOpen(true);
+            }
+        };
+        
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
-        <div className="flex h-screen w-full">
-            {/* Sidebar (Fixed) */}
+        <div className="h-screen w-full flex bg-gray-100">
             <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-            {/* Content Section */}
-            <div className={`flex-1 transition-all duration-300 ${isOpen ? "ml-64" : "ml-16"} pt-16 overflow-y-auto`}>
+            {isMobile && isOpen && (
+                <div 
+                    className="fixed inset-0 bg-transparent backdrop-blur-sm z-30"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            <main 
+                className={`flex-1 transition-all duration-300 pt-14
+                    ${isMobile ? 'ml-0' : (isOpen ? 'ml-64' : 'ml-16')}`}
+            >
                 <Loader />
                 <Outlet />
-            </div>
+            </main>
         </div>
     );
 };
