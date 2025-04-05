@@ -21,9 +21,9 @@ export const getLiveSchedules = async (tutor_id: string) => {
     }
 }
 
-export const changeLiveSchedule = async (schedule_id: string) => {
+export const changeLiveSchedule = async (schedule_id: string, status: string) => {
     try{
-        const response = await axiosInstance.patch(`/course/live/${schedule_id}/status`, {status: "canceled"} );
+        const response = await axiosInstance.patch(`/course/live/${schedule_id}/status`, {status} );
         return response.data;
     }catch(err){
         console.error("Error canceling live",err);

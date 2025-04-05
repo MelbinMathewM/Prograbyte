@@ -15,26 +15,26 @@ import { IMessageRepository } from "@/repositories/interfaces/IMessage.repositor
 @injectable()
 export class BlogProfileService implements IBlogProfileService {
     constructor(
-        @inject("IBlogProfileRepository") private blogProfileRepository: IBlogProfileRepository,
-        @inject("IConversationRepository") private conversationRepository: IConversationRepository,
-        @inject("IMessageRepository") private messageRepository: IMessageRepository,
+        @inject("IBlogProfileRepository") private _blogProfileRepository: IBlogProfileRepository,
+        @inject("IConversationRepository") private _conversationRepository: IConversationRepository,
+        @inject("IMessageRepository") private _messageRepository: IMessageRepository,
     ) { }
 
     async createProfile(_id: string, username: string): Promise<void> {
-        const userData = await this.blogProfileRepository.create({ _id, username });
+        const userData = await this._blogProfileRepository.create({ _id, username });
 
         console.log(userData);
     }
 
     async getProfile(_id: string): Promise<IBlogProfile | null> {
-        const profile = await this.blogProfileRepository.findById(_id);
+        const profile = await this._blogProfileRepository.findById(_id);
 
         return profile;
     }
 
 
     async getPublicProfile(username: string): Promise<IBlogProfile | null> {
-        return await this.blogProfileRepository.populateOne(
+        return await this._blogProfileRepository.populateOne(
             { username },
             [
                 { path: 'followers', select: '_id username' },
@@ -45,8 +45,8 @@ export class BlogProfileService implements IBlogProfileService {
 
     async followUser(userId: string, followerId: string): Promise<void> {
 
-        const target = await this.blogProfileRepository.findById(followerId);
-        const follower = await this.blogProfileRepository.findById(userId);
+        const target = await this._blogProfileRepository.findById(followerId);
+        const follower = await this._blogProfileRepository.findById(userId);
 
         if (!target || !follower) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
@@ -62,14 +62,14 @@ export class BlogProfileService implements IBlogProfileService {
         follower.following.push(tagetObjectId);
         target.followers.push(folowerObjectId);
 
-        await this.blogProfileRepository.save(follower);
-        await this.blogProfileRepository.save(target);
+        await this._blogProfileRepository.save(follower);
+        await this._blogProfileRepository.save(target);
     }
 
     async unfollowUser(userId: string, followerId: string): Promise<void> {
 
-        const target = await this.blogProfileRepository.findById(followerId);
-        const follower = await this.blogProfileRepository.findById(userId);
+        const target = await this._blogProfileRepository.findById(followerId);
+        const follower = await this._blogProfileRepository.findById(userId);
 
         if (!target || !follower) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
@@ -78,13 +78,13 @@ export class BlogProfileService implements IBlogProfileService {
         follower.following = follower.following.filter((id) => id.toString() !== (target._id as Types.ObjectId).toString());
         target.followers = target.followers.filter((id) => id.toString() !== (follower._id as Types.ObjectId).toString());
 
-        await this.blogProfileRepository.save(follower);
-        await this.blogProfileRepository.save(target);
+        await this._blogProfileRepository.save(follower);
+        await this._blogProfileRepository.save(target);
     }
 
     async getConversation(user1Id: string, user2Id: string): Promise<IConversation> {
 
-        let conversation = await this.conversationRepository.findOne({
+        let conversation = await this._conversationRepository.findOne({
             participants: { $all: [user1Id, user2Id], $size: 2 },
         })
 
@@ -92,16 +92,16 @@ export class BlogProfileService implements IBlogProfileService {
             const user1ObjectId = convertToObjectId(user1Id);
             const user2ObjectId = convertToObjectId(user2Id);
 
-            conversation = await this.conversationRepository.create({participants: [user1ObjectId, user2ObjectId]});
+            conversation = await this._conversationRepository.create({participants: [user1ObjectId, user2ObjectId]});
 
-            await this.conversationRepository.save(conversation);
+            await this._conversationRepository.save(conversation);
         }
 
         return conversation;
     }
 
     async getMutualUsers(userId: string): Promise<MutualFollower[]> {
-        const loggedUser = await this.blogProfileRepository.populateOne(
+        const loggedUser = await this._blogProfileRepository.populateOne(
             { _id: userId },
             ['followers', 'following']
         );
@@ -126,7 +126,7 @@ export class BlogProfileService implements IBlogProfileService {
     }
 
     async getMessages(conversationId: string, limit: number): Promise<IMessage[]> {
-        const messages = await this.messageRepository.findByQuery({ conversation: conversationId },
+        const messages = await this._messageRepository.findByQuery({ conversation: conversationId },
             { sort: { createdAt: 1 }, limit });
 
         console.log(messages,'hhz')

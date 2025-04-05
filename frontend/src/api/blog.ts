@@ -31,9 +31,11 @@ export const getMyBlogs = async (userId: string) => {
     }
 }
 
-export const addPost = async (blogData: FormData, userId: string) => {
+export const addPost = async (blogData: FormData) => {
+    console.log(blogData,'kk');
+    
     try {
-        const response = await axiosInstance.post(`/blog/post/${userId}`, blogData);
+        const response = await axiosInstance.post(`/blog/post`, blogData);
         return response.data;
 
     } catch (err) {

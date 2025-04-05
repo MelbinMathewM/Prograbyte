@@ -6,19 +6,19 @@ import { ISocketRepository } from "@/repositories/interfaces/ISocket.repository"
 
 @injectable()
 export class SocketService implements ISocketService {
-  private io: Server;
-  private socketRepo: ISocketRepository;
+  private _io: Server;
+  private _socketRepo: ISocketRepository;
 
   constructor(
-    @inject("SocketIO") io: Server,
-    @inject("ISocketRepository") socketRepo: ISocketRepository
+    @inject("SocketIO") _io: Server,
+    @inject("ISocketRepository") _socketRepo: ISocketRepository
   ) {
-    this.io = io;
-    this.socketRepo = socketRepo;
+    this._io = _io;
+    this._socketRepo = _socketRepo;
   }
 
   public init(): void {
-    this.io.on(SOCKET_EVENTS.CONNECTION, (socket: Socket) => {
+    this._io.on(SOCKET_EVENTS.CONNECTION, (socket: Socket) => {
       console.log("User connected:", socket.id);
 
       // User joins their personal room
@@ -31,14 +31,14 @@ export class SocketService implements ISocketService {
       socket.on(SOCKET_EVENTS.SEND_MESSAGE, async ({ conversation, sender, receiver, content }) => {
         console.log(conversation, sender, receiver, content,'jjh');
         try {
-          const message = await this.socketRepo.createMessage({
+          const message = await this._socketRepo.createMessage({
             conversation: conversation,
             sender,
             receiver,
             content,
           });
 
-          this.io.to(receiver).emit(SOCKET_EVENTS.RECEIVE_MESSAGE, {
+          this._io.to(receiver).emit(SOCKET_EVENTS.RECEIVE_MESSAGE, {
             conversation,
             sender,
             content,

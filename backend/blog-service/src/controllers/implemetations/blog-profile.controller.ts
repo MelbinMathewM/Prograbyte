@@ -6,10 +6,10 @@ import { Request, Response, NextFunction } from "express";
 import { inject } from "inversify";
 
 export class BlogProfileController implements IBlogProfileController {
-    constructor(@inject(BlogProfileService) private blogProfileService: BlogProfileService) { }
+    constructor(@inject(BlogProfileService) private _blogProfileService: BlogProfileService) { }
 
     async createBlogUser(userId: string, username: string): Promise<void> {
-        await this.blogProfileService.createProfile(userId, username);
+        await this._blogProfileService.createProfile(userId, username);
     }
 
     async getProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -20,7 +20,7 @@ export class BlogProfileController implements IBlogProfileController {
                 res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.USER_ID_REQUIRED });
                 return;
             }
-            const profile = await this.blogProfileService.getProfile(user_id);
+            const profile = await this._blogProfileService.getProfile(user_id);
 
             res.status(HttpStatus.OK).json({ profile });
         } catch (err) {
@@ -37,7 +37,7 @@ export class BlogProfileController implements IBlogProfileController {
                 return;
             }
 
-            const profile = await this.blogProfileService.getPublicProfile(username);
+            const profile = await this._blogProfileService.getPublicProfile(username);
 
             res.status(HttpStatus.OK).json({ profile })
         } catch (err) {
@@ -54,7 +54,7 @@ export class BlogProfileController implements IBlogProfileController {
                 res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.SELF_FOLLOW_ERROR });
             }
 
-            await this.blogProfileService.followUser(userId, followerId);
+            await this._blogProfileService.followUser(userId, followerId);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.USER_FOLLOWED})
         } catch (err) {
@@ -71,7 +71,7 @@ export class BlogProfileController implements IBlogProfileController {
                 res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.SELF_UNFOLLOW_ERROR });
             }
 
-            await this.blogProfileService.unfollowUser(userId, followerId);
+            await this._blogProfileService.unfollowUser(userId, followerId);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.USER_UNFOLLOWED})
         } catch (err) {
@@ -88,7 +88,7 @@ export class BlogProfileController implements IBlogProfileController {
                 return;
             }
 
-            const conversation = await this.blogProfileService.getConversation(user1Id, user2Id);
+            const conversation = await this._blogProfileService.getConversation(user1Id, user2Id);
 
             res.status(HttpStatus.OK).json({ conversationId: conversation._id });
         }catch(err){
@@ -105,7 +105,7 @@ export class BlogProfileController implements IBlogProfileController {
                 return;
             }
 
-            const users = await this.blogProfileService.getMutualUsers(userId);
+            const users = await this._blogProfileService.getMutualUsers(userId);
 
             res.status(HttpStatus.OK).json({ users });
         }catch(err){
@@ -121,7 +121,7 @@ export class BlogProfileController implements IBlogProfileController {
             console.log(conversationId, 'kk', limit)
 
 
-            const messages = await this.blogProfileService.getMessages(conversationId,limit);
+            const messages = await this._blogProfileService.getMessages(conversationId,limit);
 
             res.status(HttpStatus.OK).json({ messages });
         }catch(err){

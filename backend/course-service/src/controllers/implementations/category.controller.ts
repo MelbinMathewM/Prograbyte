@@ -7,13 +7,13 @@ import { inject } from "inversify";
 import { ICategoryController } from "../interfaces/ICategory.controller";
 
 export class CategoryController implements ICategoryController {
-    constructor(@inject(CategoryService) private categoryService: CategoryService) { }
+    constructor(@inject(CategoryService) private _categoryService: CategoryService) { }
 
     async createCategory(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
           const category: ICategory = req.body;
     
-          const newCategory = await this.categoryService.createCategory(category);
+          const newCategory = await this._categoryService.createCategory(category);
     
           res.status(201).json(newCategory);
         } catch (err) {
@@ -23,7 +23,7 @@ export class CategoryController implements ICategoryController {
     
       async getCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-          const categories = await this.categoryService.getCategories();
+          const categories = await this._categoryService.getCategories();
     
           res.status(200).json({categories});
         } catch (err) {
@@ -36,7 +36,7 @@ export class CategoryController implements ICategoryController {
           const { id } = req.params;
           const updatedData: Partial<ICategory> = req.body;
     
-          const updatedCategory = await this.categoryService.updateCategory(id, updatedData);
+          const updatedCategory = await this._categoryService.updateCategory(id, updatedData);
     
           res.status(200).json(updatedCategory);
         } catch (err) {
@@ -48,7 +48,7 @@ export class CategoryController implements ICategoryController {
         try {
           const { id } = req.params;
     
-          await this.categoryService.deleteCategory(id);
+          await this._categoryService.deleteCategory(id);
     
           res.status(HttpStatus.OK).json({ message: HttpResponse.CATEGORY_DELETED });
         } catch (err) {

@@ -10,14 +10,14 @@ import { IWishlistService } from "../interfaces/IWishlist.service";
 
 @injectable()
 export class WishlistService implements IWishlistService {
-    constructor(@inject("IWishlistRepository") private wishlistRepository: IWishlistRepository) { }
+    constructor(@inject("IWishlistRepository") private _wishlistRepository: IWishlistRepository) { }
 
     async getWishlist(userId: string): Promise<IWishlist> {
-        let wishlist = await this.wishlistRepository.getWishlistByUserId(userId);
+        let wishlist = await this._wishlistRepository.getWishlistByUserId(userId);
 
         const objectIdUser = convertToObjectId(userId)
         if (!wishlist) {
-            wishlist = await this.wishlistRepository.create({ userId: objectIdUser, items: [] });
+            wishlist = await this._wishlistRepository.create({ userId: objectIdUser, items: [] });
         }
 
         return wishlist;
@@ -25,13 +25,13 @@ export class WishlistService implements IWishlistService {
 
     async addWishlist(userId: string, courseId: string): Promise<IWishlist> {
 
-        let wishlist = await this.wishlistRepository.getWishlistByUserId(userId);
+        let wishlist = await this._wishlistRepository.getWishlistByUserId(userId);
 
         const objectIdCourse = convertToObjectId(courseId);
         const objectIdUser = convertToObjectId(userId);
 
         if (!wishlist) {
-            wishlist = await this.wishlistRepository.create({ userId: objectIdUser, items: [objectIdCourse] });
+            wishlist = await this._wishlistRepository.create({ userId: objectIdUser, items: [objectIdCourse] });
         } else {
             const itemExists = wishlist.items.some(item => item.toString() === courseId);
             if (!itemExists) {
@@ -41,13 +41,13 @@ export class WishlistService implements IWishlistService {
             }
         }
 
-        const newWishlist = await this.wishlistRepository.save(wishlist);
+        const newWishlist = await this._wishlistRepository.save(wishlist);
 
         return newWishlist;
     }
 
     async removeWishlist(userId: string, courseId: string): Promise<void> {
-        const wishlist = await this.wishlistRepository.getWishlistByUserId(userId);
+        const wishlist = await this._wishlistRepository.getWishlistByUserId(userId);
         if (!wishlist) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.WISHLIST_NOT_FOUND);
         }
@@ -60,6 +60,6 @@ export class WishlistService implements IWishlistService {
 
         wishlist.items.splice(itemIndex, 1);
 
-        await this.wishlistRepository.save(wishlist);
+        await this._wishlistRepository.save(wishlist);
     }
 }

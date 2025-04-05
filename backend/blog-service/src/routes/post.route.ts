@@ -7,7 +7,7 @@ const postRouter = Router();
 
 const postController = container.get<PostController>(PostController);
 
-postRouter.post('/:userId',upload.single('image'),postController.addPost.bind(postController));
+postRouter.post('/',upload.single('image'),postController.addPost.bind(postController));
 postRouter.get('/',postController.getPosts.bind(postController));
 postRouter.get('/:user_id',postController.getPostsByUserId.bind(postController));
 postRouter.put('/:blog_id',postController.updatePost.bind(postController));

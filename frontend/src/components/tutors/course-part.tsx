@@ -27,7 +27,7 @@ const CoursePart = () => {
             setLoading(true);
             try {
                 const response = await axiosInstance.get(`/course/courses?tutor_id=${tutorId}`);
-                setCourses(response.data);
+                setCourses(response.data.courses);
             } catch (err) {
                 console.error("Error fetching courses:", err);
             } finally {

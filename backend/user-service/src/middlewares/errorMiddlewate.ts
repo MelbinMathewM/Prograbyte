@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { HttpError } from "../utils/httpError";
-import { HttpStatus } from "../constants/status";
-import { HttpResponse } from "../constants/responseMessage";
+import { HttpStatus } from "../constants/status.config";
+import { HttpResponse } from "../constants/response.constant";
 
 export const errorHandler = (
     err: HttpError | Error,

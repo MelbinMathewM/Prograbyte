@@ -10,36 +10,36 @@ import { SOCKET_EVENTS } from "@/configs/socket.config";
 
 injectable()
 export class LiveService implements ILiveService {
-    private io: Server;
+    private _io: Server;
 
     constructor(
-        @inject("ILiveRepository") private liveRepository: ILiveRepository,
-        @inject("SocketIO") io: Server
+        @inject("ILiveRepository") private _liveRepository: ILiveRepository,
+        @inject("SocketIO") _io: Server
     ) { 
-        this.io = io;
+        this._io = _io;
         this.initSocketListener();
     }
 
     async postLiveSchedule(data: ILiveClass): Promise<void> {
 
-        await this.liveRepository.create(data);
+        await this._liveRepository.create(data);
 
     }
 
     async getLiveScheduleByTutorId(tutor_id: string): Promise<ILiveClass[]> {
-        const schedules = await this.liveRepository.findAll({tutor_id});
+        const schedules = await this._liveRepository.findAll({tutor_id});
 
         return schedules;
     }
 
     async changeLiveStatus(schedule_id: string, status: Partial<ILiveClass>): Promise<void> {
 
-        await this.liveRepository.updateById(schedule_id, status);
+        await this._liveRepository.updateById(schedule_id, status);
     }
 
     async checkLiveStatus(schedule_id: string): Promise<boolean> {
 
-        const schedule = await this.liveRepository.findById(schedule_id);
+        const schedule = await this._liveRepository.findById(schedule_id);
         if(!schedule){
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.LIVE_SCHEDULE_NOT_FOUND);
         }
@@ -55,7 +55,7 @@ export class LiveService implements ILiveService {
     }
 
     public initSocketListener(): void {
-        this.io.on(SOCKET_EVENTS.CONNECTION, (socket: Socket) => {
+        this._io.on(SOCKET_EVENTS.CONNECTION, (socket: Socket) => {
             console.log("📡 New WebRTC Connection:", socket.id);
 
             socket.on(SOCKET_EVENTS.LIVE_JOIN, (roomId: string) => {

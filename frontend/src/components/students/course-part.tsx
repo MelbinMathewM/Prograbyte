@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronRight, Search, SlidersHorizontal } from "lucide-react";
-import axiosInstance from "../../configs/axiosConfig";
+import { ChevronRight, SlidersHorizontal } from "lucide-react";
 import { useTheme } from "../../contexts/theme-context";
 import { Category, Course } from "../../types/course";
-import { fetchCategories } from "@/api/course";
+import { fetchCategories, fetchCourses } from "@/api/course";
 import FilterSidebar from "./course-sidebar";
 
 const CourseListPage = () => {
@@ -21,11 +20,10 @@ const CourseListPage = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [sortOption, setSortOption] = useState("default");
     const [currentPage, setCurrentPage] = useState(1);
-    const coursesPerPage = 3;
+    const coursesPerPage = 12;
     const [minPrice, setMinPrice] = useState<number | null>(null);
     const [maxPrice, setMaxPrice] = useState<number | null>(null);
-
-
+    const [showFilters, setShowFilters] = useState(false);
 
     // Fetch Courses
     useEffect(() => {
@@ -39,8 +37,8 @@ const CourseListPage = () => {
                 if (minPrice) params.min_price = minPrice;
                 if (maxPrice) params.max_price = maxPrice;
 
-                const response = await axiosInstance.get(`/course/courses`, { params });
-                setCourses(response.data);
+                const response = await fetchCourses(params);
+                setCourses(response.courses);
             } catch (err) {
                 console.error("Error fetching courses:", err);
             } finally {
@@ -80,29 +78,39 @@ const CourseListPage = () => {
             </nav>
 
             {/* Hero Section */}
-            <header className={`py-16 text-center ${isDarkMode ? "bg-blue-400 text-white" : "bg-blue-400 text-white"}`}>
+            <header className={`py-16 text-center rounded-sm ${isDarkMode ? "bg-blue-400 text-white" : "bg-blue-400 text-white"}`}>
                 <h1 className="text-4xl font-bold">Explore Courses</h1>
                 <p className="mt-3 text-lg">Find the best courses to enhance your skills.</p>
             </header>
 
-            {/* Filters & Search */}
-            <div className="py-6 grid grid-cols-1 md:grid-cols-4 space-y-6 md:gap-6">
+            {/* Mobile Filter Toggle */}
+            <button
+                className="md:hidden flex items-center gap-4 w-full bg-blue-500 text-white px-4 py-2 rounded shadow-md mt-2"
+                onClick={() => setShowFilters(!showFilters)}
+            >
+                <SlidersHorizontal size={20} /> {showFilters ? "Hide Filters" : "Show Filters"}
+            </button>
 
-                {/* Sidebar */}
-                <FilterSidebar
-                    isDarkMode={isDarkMode}
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
-                    sortOption={sortOption}
-                    setSortOption={setSortOption}
-                    minPrice={minPrice as number}
-                    setMinPrice={setMinPrice}
-                    maxPrice={maxPrice as number}
-                    setMaxPrice={setMaxPrice}
-                />
+            <div className="py-4 grid grid-cols-1 md:grid-cols-4 space-y-6 md:gap-6 relative">
+                {/* Sidebar - Sticky on larger screens */}
+                <div
+                    className={`md:block ${showFilters ? "block" : "hidden md:block"} md:sticky top-20 h-fit md:self-start`}
+                >
+                    <FilterSidebar
+                        isDarkMode={isDarkMode}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        categories={categories}
+                        selectedCategory={selectedCategory}
+                        setSelectedCategory={setSelectedCategory}
+                        sortOption={sortOption}
+                        setSortOption={setSortOption}
+                        minPrice={minPrice as number}
+                        setMinPrice={setMinPrice}
+                        maxPrice={maxPrice as number}
+                        setMaxPrice={setMaxPrice}
+                    />
+                </div>
 
                 {/* Course List */}
                 <section className="col-span-3">
@@ -110,7 +118,7 @@ const CourseListPage = () => {
                         {currentCourses.map((course) => (
                             <motion.div
                                 key={course._id}
-                                className={`p-3 shadow-lg rounded-sm hover:shadow-xl transition cursor-pointer ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}
+                                className={`p-3 shadow-lg rounded-sm hover:shadow-xl transition cursor-pointer ${isDarkMode ? "bg-gray-850 text-white border border-gray-700" : "bg-white text-gray-900"}`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6 }}
@@ -123,31 +131,24 @@ const CourseListPage = () => {
                             </motion.div>
                         ))}
                     </div>
+
+                    {/* Pagination */}
+                    <div className="flex justify-center items-center mt-8 space-x-4">
+                        <button
+                            className="px-4 py-2 rounded shadow-md bg-blue-400 text-white hover:bg-blue-500 cursor-pointer"
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                        >Prev</button>
+                        <span className="px-4 py-2 shadow-md rounded bg-white text-gray-900">{currentPage} / {totalPages}</span>
+                        <button
+                            className="px-4 py-2 rounded shadow-md bg-blue-400 text-white hover:bg-blue-500 cursor-pointer"
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        >Next</button>
+                    </div>
                 </section>
             </div>
-
-            {/* Pagination */}
-            <div className="flex justify-center items-center mt-8 space-x-4">
-                <button
-                    className={`px-4 py-2 rounded shadow-md ${currentPage === 1 ? "bg-gray-500 cursor-not-allowed text-gray-700" : "bg-blue-400 text-white hover:bg-blue-500 cursor-pointer"}`}
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    disabled={currentPage === 1}
-                >
-                    Prev
-                </button>
-                <span className={`px-4 py-2 shadow-md rounded ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-                    {currentPage} / {totalPages}
-                </span>
-                <button
-                    className={`px-4 py-2 shadow-md rounded ${currentPage === totalPages ? "bg-gray-500 cursor-not-allowed text-gray-700" : "bg-blue-400 text-white hover:bg-blue-500 cursor-pointer"}`}
-                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                >
-                    Next
-                </button>
-            </div>
         </div>
-
     );
 };
 

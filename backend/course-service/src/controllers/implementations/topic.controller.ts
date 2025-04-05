@@ -8,7 +8,7 @@ import { inject } from "inversify";
 import { ITopicController } from "../interfaces/ITopic.controller";
 
 export class TopicController implements ITopicController {
-    constructor(@inject(TopicService) private topicService: TopicService) { }
+    constructor(@inject(TopicService) private _topicService: TopicService) { }
 
     async createTopic(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -19,7 +19,7 @@ export class TopicController implements ITopicController {
                 return;
             }
 
-            const savedTopics = await this.topicService.createTopic(req.body as ITopics);
+            const savedTopics = await this._topicService.createTopic(req.body as ITopics);
             console.log('topic ok');
             res.status(201).json(savedTopics);
         } catch (err) {
@@ -36,7 +36,7 @@ export class TopicController implements ITopicController {
                 return;
             }
 
-            const topic = await this.topicService.updateTopic(topicsId, topicId, req.body);
+            const topic = await this._topicService.updateTopic(topicsId, topicId, req.body);
 
             console.log(topic)
 
@@ -51,7 +51,7 @@ export class TopicController implements ITopicController {
             const { courseId } = req.params;
             console.log(courseId,"jj")
 
-            const topics = await this.topicService.getTopics(courseId);
+            const topics = await this._topicService.getTopics(courseId);
 
             res.status(200).json({topicList: topics});
         } catch (err) {
@@ -64,7 +64,7 @@ export class TopicController implements ITopicController {
 
             const { topicsId, topicId } = req.params;
 
-            const topic = await this.topicService.getTopicById(topicsId, topicId);
+            const topic = await this._topicService.getTopicById(topicsId, topicId);
 
             res.status(200).json(topic);
         } catch (err) {
@@ -81,7 +81,7 @@ export class TopicController implements ITopicController {
                 return;
             }
 
-            await this.topicService.deleteTopic(topicsId, topicId);
+            await this._topicService.deleteTopic(topicsId, topicId);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.TOPIC_DELETED });
         } catch (err) {
@@ -98,7 +98,7 @@ export class TopicController implements ITopicController {
                 return;
             }
 
-            const token = await this.topicService.getVideoToken(publicId as string);
+            const token = await this._topicService.getVideoToken(publicId as string);
 
             res.status(HttpStatus.OK).json({ token });
         } catch (err) {
@@ -135,7 +135,7 @@ export class TopicController implements ITopicController {
                 return;
             }
 
-            const secureUrl = await this.topicService.getSecureVideo(token);
+            const secureUrl = await this._topicService.getSecureVideo(token);
 
             const videoStream = await axios({
                 method: "get",

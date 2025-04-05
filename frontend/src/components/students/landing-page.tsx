@@ -2,8 +2,29 @@ import { FaPlay, FaCheckCircle, FaChalkboardTeacher, FaClock } from "react-icons
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
+// import "swiper/css";
+// import "swiper/css/pagination";
+
+const features = [
+    {
+        title: "Expert Instructors",
+        desc: "Learn from top professionals in the field with real-world experience.",
+        icon: <FaChalkboardTeacher />,
+        image: "/images/expert-teacher.jpg",
+    },
+    {
+        title: "Hands-on Projects",
+        desc: "Gain practical experience with real-world projects and interactive learning.",
+        icon: <FaCheckCircle />,
+        image: "/images/hands-on.jpg",
+    },
+    {
+        title: "Flexible Schedule",
+        desc: "Learn at your own pace, anytime, anywhere, with lifetime access.",
+        icon: <FaClock />,
+        image: "/images/flexible-learning.jpg",
+    },
+];
 
 const LandingPagePart = () => {
 
@@ -34,23 +55,31 @@ const LandingPagePart = () => {
 
             {/* Features Section */}
             <section className="py-16 px-6 text-center">
-                <h2 className="text-3xl font-bold">Why Learn with Prograbyte?</h2>
-                <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {[
-                        { icon: <FaChalkboardTeacher />, title: "Expert Instructors", desc: "Learn from top professionals in the field." },
-                        { icon: <FaCheckCircle />, title: "Hands-on Projects", desc: "Gain real-world experience with practical learning." },
-                        { icon: <FaClock />, title: "Flexible Schedule", desc: "Learn at your own pace, anytime, anywhere." }
-                    ].map((feature, index) => (
+                <h2 className="text-4xl font-bold mb-10 text-gray-900">Why Learn with <span className="text-blue-600 italic">Prograbyte?</span></h2>
+                <div className="space-y-16">
+                    {features.map((feature, index) => (
                         <motion.div
                             key={index}
-                            className="p-6 rounded-lg bg-white shadow-md hover:-translate-y-2 hover:scale-100 transition duration-300 cursor-pointer"
-                            initial={{ opacity: 0, y: 20 }}
+                            className={`flex flex-col-reverse md:flex-row items-center gap-8 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
+                            initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.2, duration: 0.6 }}
                         >
-                            <div className="text-4xl text-red-500 mb-4">{feature.icon}</div>
-                            <h3 className="text-xl font-semibold">{feature.title}</h3>
-                            <p className="text-gray-600 mt-2">{feature.desc}</p>
+                            {/* Text Section */}
+                            <div className="md:w-1/2 text-left">
+                                <div className="text-5xl text-blue-500 mb-4">{feature.icon}</div>
+                                <h3 className="text-2xl font-semibold text-gray-900">{feature.title}</h3>
+                                <p className="text-gray-600 mt-2 text-lg">{feature.desc}</p>
+                            </div>
+
+                            {/* Image Section */}
+                            <div className="md:w-1/2">
+                                <img
+                                    src={feature.image}
+                                    alt={feature.title}
+                                    className="rounded-xl shadow-lg hover:scale-105 transition duration-300"
+                                />
+                            </div>
                         </motion.div>
                     ))}
                 </div>

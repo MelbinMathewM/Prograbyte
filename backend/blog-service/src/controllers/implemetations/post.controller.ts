@@ -7,19 +7,18 @@ import { HttpResponse } from "@/constants/response.constant";
 import { uploadToCloudinary } from "@/utils/cloudinary.util";
 
 export class PostController implements IPostController {
-    constructor(@inject(PostService) private postService: PostService) { }
+    constructor(@inject(PostService) private _postService: PostService) { }
 
     async addPost(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const post = req.body;
-            const { userId } = req.params;
 
             let imageUrl = '';
             if (req.file) {
                 imageUrl = await uploadToCloudinary(req.file.buffer);
             }
 
-            const blog = await this.postService.addPost({ ...post, image: imageUrl }, userId);
+            const blog = await this._postService.addPost({ ...post, image: imageUrl });
 
             res.status(HttpStatus.CREATED).json({ message: HttpResponse.POST_ADDED, blog });
         } catch (err) {
@@ -29,7 +28,7 @@ export class PostController implements IPostController {
 
     async getPosts(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const blogs = await this.postService.getPosts();
+            const blogs = await this._postService.getPosts();
 
             res.status(HttpStatus.OK).json({ blogs });
         } catch (err) {
@@ -46,7 +45,7 @@ export class PostController implements IPostController {
                 return;
             }
 
-            const blogs = await this.postService.getPostsByUserId(user_id);
+            const blogs = await this._postService.getPostsByUserId(user_id);
 
             res.status(HttpStatus.OK).json({ blogs });
         } catch (err) {
@@ -64,7 +63,7 @@ export class PostController implements IPostController {
                 return;
             }
 
-            const updatedBlog = await this.postService.updatePost(blog_id, updateData);
+            const updatedBlog = await this._postService.updatePost(blog_id, updateData);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.POST_UPDATED, updatedBlog });
         } catch (err) {
@@ -81,7 +80,7 @@ export class PostController implements IPostController {
                 return;
             }
 
-            await this.postService.deletePost(blog_id);
+            await this._postService.deletePost(blog_id);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.POST_DELETED });
         } catch (err) {
@@ -105,7 +104,7 @@ export class PostController implements IPostController {
                 return;
             }
 
-            await this.postService.toggleLike(blog_id, userId);
+            await this._postService.toggleLike(blog_id, userId);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.LIKE_UPDATED })
         } catch (err) {
@@ -124,7 +123,7 @@ export class PostController implements IPostController {
 
             const { userId, content, username } = req.body;
 
-            const newComment = await this.postService.addComment(blog_id, userId, content, username);
+            const newComment = await this._postService.addComment(blog_id, userId, content, username);
 
             res.status(HttpStatus.CREATED).json({ message: HttpResponse.COMMENT_ADDED, comments: newComment });
         } catch (err) {
@@ -141,7 +140,7 @@ export class PostController implements IPostController {
                 return;
             }
 
-            const comment = await this.postService.getComments(blog_id);
+            const comment = await this._postService.getComments(blog_id);
 
             res.status(HttpStatus.OK).json({ comments: comment?.comments });
         } catch (err) {
@@ -162,7 +161,7 @@ export class PostController implements IPostController {
             return;
         }
 
-        await this.postService.deleteComment(blog_id, comment_id);
+        await this._postService.deleteComment(blog_id, comment_id);
 
         res.status(HttpStatus.OK).json({ message: HttpResponse.COMMENT_REMOVED });
     }
@@ -187,7 +186,7 @@ export class PostController implements IPostController {
                 return;
             }
 
-            await this.postService.toggleCommentLike(blog_id, comment_id, userId);
+            await this._postService.toggleCommentLike(blog_id, comment_id, userId);
 
             res.status(HttpStatus.OK).json(HttpResponse.LIKE_UPDATED);
         } catch (err) {

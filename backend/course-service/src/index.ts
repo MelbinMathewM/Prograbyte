@@ -17,7 +17,7 @@ validateEnv();
 
 connectDB();
 
-const PORT = env.PORT || 5006;
+const PORT = env.PORT || 5003;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(verifyApiKey as express.RequestHandler);

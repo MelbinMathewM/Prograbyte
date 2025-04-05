@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
-import { env } from "./env";
+import { env } from "./env.config";
 
 dotenv.config();
 

@@ -1,14 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { inject } from 'inversify';
-import { UserService } from "../services/UserService";
-import { IUser } from "../models/UserModel";
-import { env } from "../config/env";
-import { HttpStatus } from "../constants/status";
-import { HttpResponse } from "../constants/responseMessage";
-import stripe from "../config/stripe";
+import { UserService } from "../../services/UserService";
+import { IUser } from "../../models/UserModel";
+import { env } from "../../configs/env.config";
+import { HttpStatus } from "../../constants/status.config";
+import { HttpResponse } from "../../constants/response.constant";
+import stripe from "../../configs/stripe.config";
 import Stripe from "stripe";
+import { IUserController } from "../interfaces/IUser.controller";
 
-export class UserController {
+export class UserController implements IUserController {
   constructor(@inject(UserService) private userService: UserService) { }
 
   async registerUser(req: Request, res: Response, next: NextFunction): Promise<void> {
