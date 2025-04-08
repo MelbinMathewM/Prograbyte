@@ -2,10 +2,12 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json tsconfig.json ./
 
 RUN npm install
 
-EXPOSE 5001
+COPY . .
 
-CMD ["npm","run","start"]
+EXPOSE 5002
+
+CMD ["npm", "run", "dev"]

@@ -1,4 +1,4 @@
-import { env } from "../config/env";
+import { env } from "../configs/env.config";
 
 export function validateEnv() {
     if (!env.PORT) {
@@ -18,5 +18,8 @@ export function validateEnv() {
     }
     if (!env.API_GATEWAY_KEY) {
         throw new Error("API_GATEWAY_KEY is not found in the env");
+    }
+    if(!env.RABBITMQ_URL) {
+        throw new Error("RABBITMQ_URL is not found in the env");
     }
 }

@@ -1,4 +1,4 @@
-import { get } from "http";
+
 
 export const env = {
     get PORT() {
@@ -19,4 +19,7 @@ export const env = {
     get API_GATEWAY_KEY() {
         return process.env.API_GATEWAY_KEY;
     },
+    get RABBITMQ_URL() {
+        return process.env.RABBITMQ_URL;
+    }
 }

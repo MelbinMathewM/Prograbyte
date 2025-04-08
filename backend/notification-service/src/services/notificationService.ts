@@ -1,5 +1,5 @@
-import redisClient from "../config/redis";
-import { sendEmail } from "../utils/email";
+import redisClient from "../configs/redis";
+import { sendEmail } from "../utils/email.util";
 import { injectable } from "inversify";
 
 @injectable()

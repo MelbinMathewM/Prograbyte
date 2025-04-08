@@ -19,5 +19,8 @@ export const HttpResponse = {
     SKILL_DELETED: "Skill deleted",
     SKILL_EXIST: "Skill already exists",
     SKILL_NOT_FOUND: "Skill not found",
-    USER_ID_NOT_FOUND: "UserId not found"
+    USER_ID_NOT_FOUND: "UserId not found",
+    EMAIL_NOT_FOUND: "Email not found",
+    VERIFY_LINK_SEND: "Verification link send to your email, Please verify!",
+    EMAIL_VERIFIED: "Email verified successfully"
 }

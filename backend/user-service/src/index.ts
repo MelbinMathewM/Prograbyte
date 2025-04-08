@@ -12,10 +12,10 @@ import { errorHandler } from "./middlewares/errorMiddlewate";
 dotenv.config();
 
 import { validateEnv } from "./utils/envConfig";
-import { rabbitMQService } from "./services/RabbitMQService";
 import verifyApiKey from "./configs/api-key.config";
 import { env } from "./configs/env.config";
 import stripe from "./configs/stripe.config";
+import { initializeRabbitMQ } from "./configs/rabbitmq.config";
 validateEnv();
 
 const app = express();
@@ -88,7 +88,7 @@ app.use('/', userRouter);
 app.use(errorHandler);
 
 (async () => {
-    await rabbitMQService.connect();
+    await initializeRabbitMQ();
 })();
 
 app.listen(PORT, () => {

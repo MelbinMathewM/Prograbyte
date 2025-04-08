@@ -7,7 +7,7 @@ import { createHttpError } from '../utils/httpError';
 import { HttpStatus } from '../constants/status.config';
 import { HttpResponse } from '../constants/response.constant';
 import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '../utils/jwt';
-import { rabbitMQService } from './RabbitMQService';
+import { publishMessage } from '../utils/rabbitmq.util';
 
 @injectable()
 export class UserService {
@@ -48,7 +48,7 @@ export class UserService {
             username:newUser.username
         }
 
-        await rabbitMQService.publishMessage("user.registered.blog",userData);
+        await publishMessage("user.registered.blog",userData);
     }
 
     async registerTutor(tutor: IUser): Promise<void> {
@@ -85,7 +85,7 @@ export class UserService {
             username:newTutor.username
         }
 
-        await rabbitMQService.publishMessage("user.registered",userData);
+        await publishMessage("user.registered",userData);
     }
 
 
@@ -174,17 +174,40 @@ export class UserService {
             }
         }
 
-        if (updatedUser.email) {
-            throw createHttpError(HttpStatus.FORBIDDEN, "email cannot be edited for now")
-        }
 
         const user = await this.userRepository.updateUser(userId, updatedUser);
+
+        if(user && updatedUser.username){
+            await publishMessage("username.updated.blog",{updatedUser, userId});
+        }
+
+        if(user && updatedUser.email){
+            user.isEmailVerified = false;
+            await this.userRepository.updateUserSave(user);
+        }
 
         if (!user) {
             throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.PROFILE_UPDATE_ERROR);
         }
 
         return user;
+    }
+
+    async verifyEmailLink(email: string): Promise<void> {
+        
+        publishMessage("user.verify_email", { email });
+    }
+
+    async verifyEmail(email: string): Promise<void> {
+
+        const user = await this.userRepository.getUserByEmail(email);
+
+        if(!user){
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        }
+
+        user.isEmailVerified = true;
+        await this.userRepository.updateUserSave(user);
     }
 
     async addSkill(userId: string, skill: string): Promise<string[]> {

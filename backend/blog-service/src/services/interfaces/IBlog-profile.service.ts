@@ -5,6 +5,7 @@ import { IMessage } from "@/models/message.model";
 export interface IBlogProfileService {
     createProfile(_id: string, username: string): Promise<void>;
     getProfile(_id: string): Promise<IBlogProfile | null>;
+    updateUsername(userData: Partial<IBlogProfile>, userId: string): Promise<void>;
     getPublicProfile(username: string): Promise<IBlogProfile | null>;
     followUser(userId: string, followerId: string): Promise<void>;
     unfollowUser(userId: string, followerId: string): Promise<void>;

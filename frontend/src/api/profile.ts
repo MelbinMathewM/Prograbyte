@@ -73,6 +73,15 @@ export const getPublicProfile = async (username: string) => {
     }
 }
 
+export const verifyEmail = async (email: string) => {
+    try{
+        const response = await axiosInstance.post(`/user/verify-email-link`, { email });
+        return response.data;
+    }catch(err){
+        console.error("Error sending verification email",err);
+    }
+}
+
 export const followUser = async (userId: string, followerId: string) => {
     try{
         const response = await axiosInstance.post(`/blog/blog-profile/${userId}/follow`,{ followerId });

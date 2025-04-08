@@ -1,4 +1,4 @@
-import { IStreamController } from "@/controllers/interfaces/IStream.controller";
+import { IStreamController } from "../../controllers/interfaces/IStream.controller";
 import { Request, Response, NextFunction } from "express";
 import { exec } from "child_process";
 export class StreamController implements IStreamController {

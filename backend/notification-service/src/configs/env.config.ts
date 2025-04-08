@@ -1,3 +1,7 @@
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export const env = {
     get PORT() {
         return process.env.PORT;
@@ -11,5 +15,8 @@ export const env = {
     get API_GATEWAY_KEY() {
         return process.env.API_GATEWAY_KEY;
     },
+    get RABBITMQ_URL() {
+        return process.env.RABBITMQ_URL;
+    }
 
 }

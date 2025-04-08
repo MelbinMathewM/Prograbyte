@@ -72,7 +72,11 @@ export default function ProfilePage() {
         try {
             const response = await updateProfileInfo(user?.id as string, { [field]: value });
             toast.success(response.message);
-            setProfile((prev) => ({ ...prev, [field]: value }));
+            if(field === "email"){
+                setProfile((prev) => ({...prev, [field]: value, isEmailVerified: false}))
+            }else{
+                setProfile((prev) => ({ ...prev, [field]: value }));
+            }
         } catch (error: any) {
             if (error.response) {
                 toast.error(error.response.data.error || "Failed to update field");

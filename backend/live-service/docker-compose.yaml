@@ -1,4 +1,3 @@
-
 services:
   nginx-rtmp:
     build: .
@@ -7,24 +6,30 @@ services:
       - "8080:8080"
     restart: always
     volumes:
-      - "./hls:/tmp/hls"  # Persist HLS files
+      - "./hls:/tmp/hls"
+    networks:
+      - live-network
 
   ffmpeg:
     image: jrottenberg/ffmpeg:latest
-    # devices:
-    #   - "/dev/video0:/dev/video0"  # Access webcam
-    #   - "/dev/snd:/dev/snd"        # Access microphone
-    # command: >
-    #   -rtbufsize 50M
-    #   -f v4l2 -video_size 1280x720 -framerate 10 -i /dev/video0
-    #   -f alsa -i hw:1
-    #   -vcodec libx264 -preset ultrafast -tune zerolatency -pix_fmt yuv420p
-    #   -acodec aac -b:a 128k -ar 44100
-    #   -af "aresample=async=1:min_hard_comp=0.001:first_pts=0"
-    #   -fflags nobuffer -flags low_delay -strict experimental -g 1
-    #   -bsf:v h264_mp4toannexb -bufsize 128K -max_delay 0 -threads 2
-    #   -f flv rtmp://nginx-rtmp:1935/live/tutor123
     depends_on:
       - nginx-rtmp
     restart: always
-    privileged: true  # Allows access to hardware
+    privileged: true
+    networks:
+      - live-network
+
+  live-service:
+    build: .
+    ports:
+      - "5005:5005"
+    environment:
+      - LIVE_SERVICE="http://nginx-rtmp:5005"
+    depends_on:
+      - nginx-rtmp
+    networks:
+      - live-network
+
+networks:
+  live-network:
+    driver: bridge

@@ -12,8 +12,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build && ls -la dist
+EXPOSE 1935 5005
 
-EXPOSE 1935 5008
-
-CMD ["sh", "-c", "nginx & npm start"]
+CMD ["sh", "-c", "nginx & npm run dev"]

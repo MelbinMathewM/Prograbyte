@@ -19,7 +19,7 @@ export class CategoryController implements ICategoryController {
         } catch (err) {
           next(err)
         }
-      }
+      };
     
       async getCategories(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {

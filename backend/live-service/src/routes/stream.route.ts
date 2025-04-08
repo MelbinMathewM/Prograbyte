@@ -1,4 +1,4 @@
-import { StreamController } from "@/controllers/implementations/stream.controller";
+import { StreamController } from "../controllers/implementations/stream.controller";
 import { Router } from "express";
 
 const streamRouter = Router();

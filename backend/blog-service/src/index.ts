@@ -10,7 +10,7 @@ import verifyApiKey from "@/configs/api-key.config";
 import connectDB from "@/configs/db.config";
 import { errorHandler } from "@/middlewares/error.middleware";
 import { initializeRabbitMQ } from "@/configs/rabbitmq.config";
-import { userRegisteredConsumer } from "@/rabbitmqs/user.consumer";
+import { usernameChangeConsumer, userRegisteredConsumer } from "@/rabbitmqs/user.consumer";
 import { Server } from "socket.io";
 import { socketConfig } from "@/configs/socket.config";
 import container from "@/configs/inversify.config";
@@ -41,6 +41,7 @@ app.use(errorHandler);
 (async () => {
     await initializeRabbitMQ();
     await userRegisteredConsumer();
+    await usernameChangeConsumer();
   })();
 
 

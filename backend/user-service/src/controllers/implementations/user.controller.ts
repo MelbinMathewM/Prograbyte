@@ -109,6 +109,40 @@ export class UserController implements IUserController {
     }
   }
 
+  async verifyEmailLink(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        const { email } = req.body;
+
+        if(!email){
+          res.status(HttpStatus.NOT_FOUND).json({ error: HttpResponse.EMAIL_NOT_FOUND });
+          return;
+        }
+
+        await this.userService.verifyEmailLink(email);
+
+        res.status(HttpStatus.OK).json({ message: HttpResponse.VERIFY_LINK_SEND });
+      }catch(err){
+        next(err);
+      }
+  }
+
+  async verifyEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        const { email } = req.query;
+
+        if(!email){
+          res.status(HttpStatus.NOT_FOUND).send(`<h3>${HttpResponse.EMAIL_NOT_FOUND}</h3>`);
+          return;
+        }
+
+        await this.userService.verifyEmail(email as string);
+
+        res.redirect(`${env.FRONTEND_URL}/profile`);
+      }catch(err){
+        next(err);
+      }
+  }
+
   async addSkill(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { skill } = req.body;

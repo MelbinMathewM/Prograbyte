@@ -1,8 +1,7 @@
 import { inject, injectable } from "inversify";
 import { JwtPayload } from 'jsonwebtoken';
 import { IAuthRepository } from "../repositories/interfaces/IAuthRepository";
-import redisClient from "../config/redis";
-import { publishToQueue } from "../rabbitmq/ToNotification";
+import redisClient from "../configs/redis";
 import { createHttpError } from "../utils/httpError";
 import { HttpStatus } from "../constants/status";
 import { HttpResponse } from "../constants/responseMessage";
@@ -10,6 +9,7 @@ import { comparePassword, hashPassword } from "../utils/bcrypt";
 import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken, verifyResetToken } from "../utils/jwt";
 import { IAuth } from "../models/AuthModel";
 import { generateOtp } from "../utils/otp";
+import { publishMessage } from "../utils/rabbitmq.util";
 
 @injectable()
 export class AuthService {
@@ -67,7 +67,7 @@ export class AuthService {
 
         await redisClient.set(`otp:${email}`, otp, { EX: 90 });
 
-        publishToQueue("send_otp", {
+        publishMessage("auth.send_otp", {
             email: email,
             otp: otp
         });
@@ -99,7 +99,7 @@ export class AuthService {
 
         await redisClient.set(`resetToken:${user._id}`, resetToken, { EX: 900 });
 
-        publishToQueue("forgot_password", {
+        publishMessage("auth.forgot_password", {
             email: email,
             resetLink: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
         });

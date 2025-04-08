@@ -1,8 +1,8 @@
 import express, { Application } from "express";
 import dotenv from "dotenv";
-import streamRouter from "@/routes/stream.route";
-import logger from "@/utils/logger.util";
-import { errorHandler } from "@/middlewares/error.middleware";
+import streamRouter from "./routes/stream.route";
+import logger from "./utils/logger.util";
+import { errorHandler } from "./middlewares/error.middleware";
 
 dotenv.config();
 

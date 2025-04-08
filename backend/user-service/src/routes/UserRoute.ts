@@ -15,6 +15,8 @@ userRouter.get('/user',(req,res,next) => userController.getUser(req,res,next));
 userRouter.get('/user/:userId',(req,res,next) => userController.getUserById(req,res,next));
 userRouter.get('/profile/:userId',(req,res,next) => userController.getProfile(req,res,next));
 userRouter.patch('/profile/:userId',(req,res,next) => userController.updateProfile(req,res,next));
+userRouter.post('/verify-email-link', (req,res,next) => userController.verifyEmailLink(req,res,next));
+userRouter.get('/verify-email', (req,res,next) => userController.verifyEmail(req,res,next));
 
 userRouter.post('/skills/:userId',(req,res,next) => userController.addSkill(req,res,next));
 userRouter.patch('/skills/:userId',(req,res,next) => userController.editSkill(req,res,next));
