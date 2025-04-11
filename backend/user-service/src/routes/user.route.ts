@@ -38,5 +38,9 @@ userRouter.post(
     (req, res) => userController.createCheckoutSession(req, res)
 );
 userRouter.post("/tutor-register",(req,res,next) => userController.registerTutor(req,res,next));
+userRouter.get("/tutors", (req,res,next) => userController.getTutors(req,res,next));
+userRouter.get("/users", (req,res,next) => userController.getUsers(req,res,next));
+userRouter.patch('/tutors/:tutorId/status', (req,res,next) => userController.updateTutorStatus(req,res,next));
+userRouter.patch('/users/:userId/status', (req,res,next) => userController.updateUserStatus(req,res,next));
 
 export default userRouter;

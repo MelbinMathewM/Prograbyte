@@ -1,6 +1,6 @@
-import Dashboard from "../../components/tutors/dashboard-part";
-import TutorFooter from "../../components/tutors/footer";
-import TutorNavbar from "../../components/tutors/navbar"
+import Dashboard from "@/components/tutors/dashboard-part";
+import TutorFooter from "@/components/tutors/footer";
+import TutorNavbar from "@/components/tutors/navbar"
 
 const TutorDashboard = () => {
     return (

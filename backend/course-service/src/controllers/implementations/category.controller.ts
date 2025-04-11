@@ -15,7 +15,7 @@ export class CategoryController implements ICategoryController {
     
           const newCategory = await this._categoryService.createCategory(category);
     
-          res.status(201).json(newCategory);
+          res.status(201).json({ message: HttpResponse.CATEGORY_ADDED, newCategory });
         } catch (err) {
           next(err)
         }
@@ -36,9 +36,9 @@ export class CategoryController implements ICategoryController {
           const { id } = req.params;
           const updatedData: Partial<ICategory> = req.body;
     
-          const updatedCategory = await this._categoryService.updateCategory(id, updatedData);
+          await this._categoryService.updateCategory(id, updatedData);
     
-          res.status(200).json(updatedCategory);
+          res.status(200).json({ message: HttpResponse.CATEGORY_UPDATED });
         } catch (err) {
           next(err);
         }

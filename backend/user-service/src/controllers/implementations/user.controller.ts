@@ -1,22 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 import { inject } from 'inversify';
-import { UserService } from "../../services/UserService";
-import { IUser } from "../../models/UserModel";
+import { UserService } from "../../services/implementations/user.service";
+import { IUser } from "../../models/user.model";
 import { env } from "../../configs/env.config";
-import { HttpStatus } from "../../constants/status.config";
+import { HttpStatus } from "../../constants/status.constant";
 import { HttpResponse } from "../../constants/response.constant";
 import stripe from "../../configs/stripe.config";
 import Stripe from "stripe";
 import { IUserController } from "../interfaces/IUser.controller";
 
 export class UserController implements IUserController {
-  constructor(@inject(UserService) private userService: UserService) { }
+  constructor(@inject(UserService) private _userService: UserService) { }
 
   async registerUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const user: IUser = req.body;
 
-      await this.userService.registerUser(user);
+      await this._userService.registerUser(user);
 
       res.status(HttpStatus.CREATED).json({ message: HttpResponse.USER_REGISTERED });
     } catch (err) {
@@ -28,7 +28,7 @@ export class UserController implements IUserController {
     try {
       const tutor: IUser = req.body;
 
-      const createdTutor = await this.userService.registerTutor(tutor);
+      const createdTutor = await this._userService.registerTutor(tutor);
 
       res.status(201).json(createdTutor);
     } catch (err) {
@@ -41,7 +41,7 @@ export class UserController implements IUserController {
 
       const user = req.user as { googleId: string; email: string; name: string };
 
-      const { accessToken, refreshToken, role } = await this.userService.registerUserGAuth(user);
+      const { accessToken, refreshToken, role } = await this._userService.registerUserGAuth(user);
 
       res.cookie(`refreshToken_${role}`, refreshToken, {
         httpOnly: true,
@@ -60,11 +60,16 @@ export class UserController implements IUserController {
 
   async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const token = req.headers["authorization"]?.split(' ')[1];
+      const id = req.headers["x-id"];
 
-      const user = await this.userService.getUserByToken(token!);
+      if(!id){
+        res.status(HttpStatus.NOT_FOUND).json({ error: HttpResponse.USER_ID_NOT_FOUND });
+        return;
+      }
 
-      res.status(HttpStatus.OK).json(user);
+      const user = await this._userService.getUserByXId(id as string);
+
+      res.status(HttpStatus.OK).json({ success: true,  user });
     } catch (err) {
       next(err);
     }
@@ -74,11 +79,66 @@ export class UserController implements IUserController {
     try{
       const { userId } = req.params;
 
-      console.log(userId,'hh')
-
-      const user = await this.userService.getUserById(userId);
+      const user = await this._userService.getUserById(userId);
 
       res.status(HttpStatus.OK).json({ user });
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async getTutors(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        
+        const tutors = await this._userService.getTutors();
+
+        res.status(HttpStatus.OK).json({ tutors });
+      }catch(err){
+        next(err);
+      }
+  }
+  async getUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        
+        const users = await this._userService.getUsers();
+
+        res.status(HttpStatus.OK).json({ users });
+      }catch(err){
+        next(err);
+      }
+  }
+
+  async updateTutorStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { tutorId } = req.params;
+      const { action } = req.body;
+
+      if(!tutorId){
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.USER_ID_NOT_FOUND});
+        return;
+      }
+
+      const message = await this._userService.updateTutorStatus(tutorId, action);
+
+      res.status(HttpStatus.OK).json({ message })
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async updateUserStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { userId } = req.params;
+      const { action } = req.body;
+
+      if(!userId){
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.USER_ID_NOT_FOUND});
+        return;
+      }
+
+      const message = await this._userService.updateUserStatus(userId, action);
+
+      res.status(HttpStatus.OK).json({ message })
     }catch(err){
       next(err);
     }
@@ -88,9 +148,9 @@ export class UserController implements IUserController {
     try {
       const { userId } = req.params;
 
-      const user = await this.userService.getProfile(userId);
+      const user = await this._userService.getProfile(userId);
 
-      res.status(HttpStatus.OK).json(user);
+      res.status(HttpStatus.OK).json({ user });
     } catch (err) {
       next(err);
     }
@@ -101,7 +161,7 @@ export class UserController implements IUserController {
       const { userId } = req.params;
       const updateData = req.body;
 
-      const user = await this.userService.updateProfile(userId, updateData);
+      const user = await this._userService.updateProfile(userId, updateData);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.PROFILE_UPDATED, user });
     } catch (err) {
@@ -118,7 +178,7 @@ export class UserController implements IUserController {
           return;
         }
 
-        await this.userService.verifyEmailLink(email);
+        await this._userService.verifyEmailLink(email);
 
         res.status(HttpStatus.OK).json({ message: HttpResponse.VERIFY_LINK_SEND });
       }catch(err){
@@ -135,7 +195,7 @@ export class UserController implements IUserController {
           return;
         }
 
-        await this.userService.verifyEmail(email as string);
+        await this._userService.verifyEmail(email as string);
 
         res.redirect(`${env.FRONTEND_URL}/profile`);
       }catch(err){
@@ -148,7 +208,7 @@ export class UserController implements IUserController {
       const { skill } = req.body;
       const { userId } = req.params;
 
-      const skills = await this.userService.addSkill(userId, skill);
+      const skills = await this._userService.addSkill(userId, skill);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.SKILL_ADDED, skills })
     } catch (err) {
@@ -161,7 +221,7 @@ export class UserController implements IUserController {
       const { oldSkill, newSkill } = req.body;
       const { userId } = req.params;
 
-      const skills = await this.userService.editSkill(userId, oldSkill, newSkill);
+      const skills = await this._userService.editSkill(userId, oldSkill, newSkill);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.SKILL_EDITED, skills })
     } catch (err) {
@@ -173,7 +233,7 @@ export class UserController implements IUserController {
     try {
       const { userId, skill } = req.params;
 
-      const skills = await this.userService.deleteSkill(userId, skill);
+      const skills = await this._userService.deleteSkill(userId, skill);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.SKILL_DELETED, skills });
     } catch (err) {
@@ -246,7 +306,7 @@ export class UserController implements IUserController {
         const email = session.customer_email;
 
         if (email) {
-          await this.userService.updateToPremium(email);
+          await this._userService.updateToPremium(email);
           console.log(`✅ User ${email} upgraded to Premium`);
         }
       }

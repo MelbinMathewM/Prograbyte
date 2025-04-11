@@ -43,6 +43,7 @@ export default function ProfilePage() {
         skills: [],
         role: "",
         isEmailVerified: false,
+        isBlocked: false
     });
     const [modalOpen, setModalOpen] = useState(false);
     const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -60,11 +61,11 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
         try {
             if (!userData.id) return;
-            const res = await getProfile(userData.id);
-            setProfile(res);
-            setSkills(res.skills);
+            const response = await getProfile(userData.id);
+            setProfile(response.user);
+            setSkills(response.user.skills);
         } catch (error: any) {
-            toast.error(error.response?.data?.error || "Failed to load profile");
+            toast.error(error.error || "Failed to load profile");
         }
     };
 

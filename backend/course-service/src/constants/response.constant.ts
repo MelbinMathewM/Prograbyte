@@ -9,6 +9,8 @@ export const HttpResponse = {
     NO_TOKEN: "Token not provided",
     NO_DECODED_TOKEN: "Couldn't decode token",
     CATEGORY_EXIST: "Category already exists",
+    CATEGORY_ADDED: "Category added successfully",
+    CATEGORY_UPDATED: "Category updated successfully",
     CATEGORY_INSERT_ERROR: "Error inserting category",
     CATEGORY_FETCH_ERROR: "Couldn't fetch categories",
     CATEGORY_NOT_FOUND: "Category not found",

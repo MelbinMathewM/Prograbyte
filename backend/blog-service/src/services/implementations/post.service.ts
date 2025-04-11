@@ -67,11 +67,20 @@ export class PostService implements IPostService {
 
     async updatePostUsername(userData: Partial<IBlogProfile>, userId: string): Promise<void> {
         
-        await this._postRepository.updateMany({user_id: userId}, { $set: {username: userData.username}});
-        await this._commentRepository.updateMany({"comments.user_id": userId}, 
-            { $set: { "comments.$[elem].username": userData.username} },
-            { arrayFilters: [{"elem.user_id": userId}]}
-        )
+        await this._postRepository.updateMany(
+            { user_id: userId }, 
+            { $set: { username: userData.username } }
+        );
+        await this._commentRepository.updateMany(
+            { "comments.user_id": userId }, 
+            { $set: { "comments.$[elem].username": userData.username } },
+            { arrayFilters: [{ "elem.user_id": userId }] }
+        );
+        await this._commentRepository.updateMany(
+            { "comments.sub_comments.user_id": userId },
+            { $set: { "comments.$[].sub_comments.$[subElem].username": userData.username } },
+            { arrayFilters: [{ "subElem.user_id": userId }] }
+        );
     }
 
     async toggleLike(blog_id: string, user_id: string): Promise<void> {

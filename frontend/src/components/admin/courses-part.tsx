@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axiosInstance from "../../configs/axiosConfig";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import AdminPagination from "./pagination";
-import { Course } from "../../types/course";
+import { Course } from "@/types/course";
 import { useTheme } from "@/contexts/theme-context";
-import NoData from "../ui/no-data";
+import NoData from "@/components/ui/no-data";
 import { fetchCourses } from "@/api/course";
 
 const CoursePart = () => {
@@ -30,7 +29,7 @@ const CoursePart = () => {
                 const response = await fetchCourses({category_id: categoryId});
                 setCourses(response.courses);
             } catch (error: any) {
-                setError(error.response?.data?.error || "Failed to fetch courses");
+                setError(error?.error || "Failed to fetch courses");
             } finally {
                 setLoading(false);
             }
@@ -101,7 +100,7 @@ const CoursePart = () => {
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {paginatedCourses.map(course => (
-                            <div key={course._id} className={`shadow-md border rounded-lg p-3 ${isDark ? "bg-gray-850 border-gray-700" : "bg-white border-gray-200"}`}>
+                            <div key={course._id} className={`shadow-md border rounded-sm transition-transform transform hover:scale-105 p-3 ${isDark ? "bg-gray-850 border-gray-700" : "bg-white border-gray-200"}`}>
                                 <img src={course.poster_url} alt={course.title} className="w-full object-cover rounded-md mb-3" />
                                 <h3 className="text-lg font-semibold">{course.title}</h3>
                                 <h4 className="opacity-75">₹{course.price}</h4>
@@ -117,7 +116,7 @@ const CoursePart = () => {
                                 </p>
                                 <Link
                                     to={`/admin/categories/courses/${course._id}`}
-                                    className="inline-block w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 mt-1"
+                                    className="inline-block text-blue-500 font-semibold px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white hover:font-normal mt-1"
                                 >
                                     View Details
                                 </Link>

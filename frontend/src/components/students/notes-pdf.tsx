@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import Button from "../../components/ui/Button";
+import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
-import { PDFViewerProps } from "../../types/course";
+import { PDFViewerProps } from "@/types/course";
 
 // ✅ Dynamically Set Worker Path
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(

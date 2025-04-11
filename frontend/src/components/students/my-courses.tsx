@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ChevronRight, PlayCircle, ChevronLeft } from "lucide-react";
-import { useTheme } from "../../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 import Skeleton from "react-loading-skeleton";
 import Progress from "@/components/ui/progress";
-import { UserContext } from "../../contexts/user-context";
-import { getEnrolledCourses } from "../../api/profile";
+import { UserContext } from "@/contexts/user-context";
+import { getEnrolledCourses } from "@/api/profile";
 import "react-loading-skeleton/dist/skeleton.css";
-import { EnrolledCourses } from "../../types/course";
+import { EnrolledCourses } from "@/types/course";
 import axiosInstance from "@/configs/axiosConfig";
 import CourseRatingModal from "./course-rating-modal";
 

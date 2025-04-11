@@ -231,14 +231,14 @@ export class PostController implements IPostController {
     async addSubComment(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
             const { blog_id, comment_id } = req.params;
-            const { user_id, username, content } = req.body;
+            const { userId, username, content } = req.body;
 
             if(!blog_id || !comment_id){
                 res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.MISSING_OR_INVALID_FIELDS });
                 return;
             }
 
-            await this._postService.addSubComment(blog_id, comment_id, user_id, content, username);
+            await this._postService.addSubComment(blog_id, comment_id, userId, content, username);
 
             res.status(HttpStatus.OK).json({ message: HttpResponse.SUB_COMMENT_ADDED });
         }catch(err){

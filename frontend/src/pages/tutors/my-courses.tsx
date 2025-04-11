@@ -1,5 +1,5 @@
-import TutorMyCoursesPart from "../../components/tutors/my-courses"
-import TutorNavbar from "../../components/tutors/navbar"
+import TutorMyCoursesPart from "@/components/tutors/my-courses"
+import TutorNavbar from "@/components/tutors/navbar"
 
 const TutorMyCourses = () => {
     return (

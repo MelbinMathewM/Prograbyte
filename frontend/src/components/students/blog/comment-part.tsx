@@ -12,6 +12,7 @@ import { addComment, getComments, deleteComment, toggleCommentLike as toggleComm
 import { Comment, CommentModalProps } from "@/types/blog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { XCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CommentModal: React.FC<CommentModalProps> = ({
     isOpen,
@@ -153,7 +154,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
     const handleDeleteSubComment = async (commentId: string, subCommentId: string) => {
         try {
             await deleteSubComment(blogId, commentId, subCommentId);
-    
+
             setComments((prevComments) =>
                 prevComments.map((comment) =>
                     comment._id === commentId
@@ -164,7 +165,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
         } catch (err: any) {
             console.error("Failed to delete sub-comment:", err.response?.data?.error || err.message);
         }
-    };    
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -191,7 +192,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                             >
                                 <div className="flex justify-between items-start">
                                     <div className="flex">
-                                    {isEditing ? (
+                                        {isEditing ? (
                                             <input
                                                 type="text"
                                                 value={newEditComment}
@@ -205,89 +206,106 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                             />
                                         ) : (
                                             <p>
-                                                <span className="font-medium italic">{comment.username}:</span> {comment.content}
+                                                <Link to={`/blog/profile/${comment?.username}`} className="font-semibold text-sm hover:text-blue-400">
+                                                    @{comment?.username}:
+                                                </Link> {comment.content}
                                             </p>
                                         )}
                                     </div>
 
                                     <div className="flex items-center gap-2">
                                         {/* Like Button */}
-                                        <button
-                                            onClick={() => handleToggleCommentLike(comment._id)}
-                                            className={`flex items-center gap-1 text-sm ${isLikedByUser ? "text-pink-500" : isDark ? "text-gray-400" : "text-gray-500"}`}
-                                        >
-                                            {isLikedByUser ? <FaHeart /> : <FaRegHeart />}
-                                            <span>{comment.likes.length}</span>
-                                        </button>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button
+                                                    onClick={() => handleToggleCommentLike(comment._id)}
+                                                    className={`flex items-center gap-1 text-sm cursor-pointer ${isLikedByUser ? "text-pink-500" : isDark ? "text-gray-400" : "text-gray-500"}`}
+                                                >
+                                                    {isLikedByUser ? <FaHeart /> : <FaRegHeart />}
+                                                    <span>{comment.likes.length}</span>
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>{isLikedByUser ? "Dislike" : "Like"}</TooltipContent>
+                                        </ Tooltip>
 
-                                        <button
-                                            onClick={() => handleAddSubComment(comment._id, !isAddSubInputOpen)}
-                                            className={`flex items-center gap-1 text-sm ${isDark ? "text-gray-400" : "text-gray-500"}`}
-                                        >
-                                            <FaReply />
-                                        </button>
+                                        {/* Reply Button */}
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <button
+                                                    onClick={() => handleAddSubComment(comment._id, !isAddSubInputOpen)}
+                                                    className={`flex items-center gap-1 text-sm ${isDark ? "text-gray-500 hover:text-gray-300" : "text-gray-300 hover:text-gray-500"} cursor-pointer`}
+                                                >
+                                                    <FaReply />
+                                                </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Reply</TooltipContent>
+                                        </ Tooltip>
 
                                         {/* Delete option */}
                                         {/* Edit & Delete Buttons */}
                                         {(userId === comment.user_id || userId === blogOwnerId) && (
                                             <div className="flex items-center gap-2">
-                                                {isEditing ? (
-                                                    <>
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild>
-                                                                <button
-                                                                    onClick={() => handleEditComment(comment._id)}
-                                                                    className="text-green-500 hover:text-green-600 cursor-pointer"
-                                                                >
-                                                                    <FiSend />
-                                                                </button>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent>Save</TooltipContent>
-                                                        </Tooltip>
+                                                {userId === comment.user_id ? ( // Only comment owner can edit
+                                                    isEditing ? (
+                                                        <>
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <button
+                                                                        onClick={() => handleEditComment(comment._id)}
+                                                                        className="text-green-500 hover:text-green-600 cursor-pointer"
+                                                                    >
+                                                                        <FiSend />
+                                                                    </button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>Save</TooltipContent>
+                                                            </Tooltip>
 
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setEditingCommentId(null);
+                                                                            setNewEditComment("");
+                                                                        }}
+                                                                        className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                                                                    >
+                                                                        <XCircle size={18} />
+                                                                    </button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>Cancel</TooltipContent>
+                                                            </Tooltip>
+                                                        </>
+                                                    ) : (
                                                         <Tooltip>
                                                             <TooltipTrigger asChild>
                                                                 <button
                                                                     onClick={() => {
-                                                                        setEditingCommentId(null);
-                                                                        setNewEditComment("");
+                                                                        setEditingCommentId(comment._id);
+                                                                        setNewEditComment(comment.content);
                                                                     }}
-                                                                    className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                                                                    className="text-gray-300 hover:text-blue-500 cursor-pointer"
                                                                 >
-                                                                    <XCircle size={18} />
+                                                                    <FaEdit />
                                                                 </button>
                                                             </TooltipTrigger>
-                                                            <TooltipContent>Cancel</TooltipContent>
+                                                            <TooltipContent>Edit</TooltipContent>
                                                         </Tooltip>
-                                                    </>
-                                                ) : (
+                                                    )
+                                                ) : null}
+
+                                                {userId === blogOwnerId && ( // Only blog owner can delete
                                                     <Tooltip>
                                                         <TooltipTrigger asChild>
                                                             <button
-                                                                onClick={() => {
-                                                                    setEditingCommentId(comment._id);
-                                                                    setNewEditComment(comment.content);
-                                                                }}
-                                                                className="text-gray-300 hover:text-blue-500 cursor-pointer"
+                                                                onClick={() => handleDeleteComment(comment._id)}
+                                                                className="text-gray-300 hover:text-red-500 cursor-pointer"
                                                             >
-                                                                <FaEdit />
+                                                                <FaTrash size={14} />
                                                             </button>
                                                         </TooltipTrigger>
-                                                        <TooltipContent>Edit</TooltipContent>
+                                                        <TooltipContent>Delete</TooltipContent>
                                                     </Tooltip>
                                                 )}
-
-                                                <Tooltip>
-                                                    <TooltipTrigger asChild>
-                                                        <button
-                                                            onClick={() => handleDeleteComment(comment._id)}
-                                                            className="text-gray-300 hover:text-red-500 cursor-pointer"
-                                                        >
-                                                            <FaTrash />
-                                                        </button>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>Delete</TooltipContent>
-                                                </Tooltip>
                                             </div>
                                         )}
                                     </div>
@@ -301,27 +319,38 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                             return (
                                                 <motion.div key={subComment._id} className="flex justify-between items-start">
                                                     <div className="flex-1">
-                                                        <p><span className="font-medium italic">{subComment.username}:</span> {subComment.content}</p>
+                                                        <p><Link to={`/blog/profile/${subComment?.username}`} className="font-semibold text-sm hover:text-blue-400">
+                                                            @{subComment?.username}:
+                                                        </Link> {subComment.content}</p>
                                                     </div>
 
                                                     <div className="flex items-center gap-2">
                                                         {/* Like Sub-comment */}
-                                                        <button
-                                                            onClick={() => handleToggleSubCommentLike(comment._id, subComment._id)}
-                                                            className={`flex items-center gap-1 text-sm ${isLikedByUser ? "text-pink-500" : isDark ? "text-gray-400" : "text-gray-500"}`}
-                                                        >
-                                                            {isLikedByUser ? <FaHeart /> : <FaRegHeart />}
-                                                            <span>{subComment.likes.length}</span>
-                                                        </button>
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild>
+                                                                <button
+                                                                    onClick={() => handleToggleSubCommentLike(comment._id, subComment._id)}
+                                                                    className={`flex items-center gap-1 text-sm cursor-pointer ${isLikedByUser ? "text-pink-500" : isDark ? "text-gray-400" : "text-gray-500"}`}
+                                                                >
+                                                                    {isLikedByUser ? <FaHeart /> : <FaRegHeart />}
+                                                                    <span>{subComment.likes.length}</span>
+                                                                </button>
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>{isLikedByUser ? "Dislike" : "Like"}</TooltipContent>
+                                                        </ Tooltip>
 
                                                         {(userId === subComment.user_id || userId === blogOwnerId) && (
-                                                            <button
-                                                                onClick={() => handleDeleteSubComment(comment._id, subComment._id)}
-                                                                className="text-gray-300 hover:text-red-600 cursor-pointer"
-                                                                title="Delete Sub Comment"
-                                                            >
-                                                                <FaTrash />
-                                                            </button>
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild>
+                                                                    <button
+                                                                        onClick={() => handleDeleteSubComment(comment._id, subComment._id)}
+                                                                        className="text-gray-300 hover:text-red-600 cursor-pointer"
+                                                                    >
+                                                                        <FaTrash size={14} />
+                                                                    </button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>Delete</TooltipContent>
+                                                            </Tooltip>
                                                         )}
                                                     </div>
                                                 </motion.div>
@@ -335,7 +364,7 @@ const CommentModal: React.FC<CommentModalProps> = ({
                                     <div className="ml-5 mt-2 flex gap-1">
                                         <input
                                             type="text"
-                                            placeholder="Write a sub-comment..."
+                                            placeholder="Write reply..."
                                             className={`flex-1 bg-transparent outline-none border rounded-sm px-3 py-1 text-sm ${isDark ? 'bg-gray-800 border-gray-700 text-gray-200 hover:border-gray-400' : 'bg-gray-100 border-gray-200 text-gray-800 hover:border-gray-500'}`}
                                             value={newSubComment}
                                             onChange={(e) => setNewSubComment(e.target.value)}

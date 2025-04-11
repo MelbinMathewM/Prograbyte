@@ -1,6 +1,5 @@
 import { useState, useContext, useEffect } from "react";
 import {
-  FaUserPlus,
   FaPlus,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
@@ -13,6 +12,7 @@ import AddBlogModal from "@/components/students/blog/add-blog";
 import BlogList from "@/components/students/blog/blog-list";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import toast from "react-hot-toast";
 
 const BlogPart = () => {
   const { user } = useContext(UserContext) ?? {};
@@ -73,21 +73,24 @@ const BlogPart = () => {
 
     if (!newTitle || !newContent) return;
     setIsLoading(true);
-    debugger;
+
     const formData = new FormData();
+
     formData.append("user_id", userData?.id || "");
     formData.append("title", newTitle);
     formData.append("content", newContent);
     formData.append("username", userData?.username || "Unknown");
+
     if (newImage) formData.append("image", newImage);
-    console.log(...formData,'hh')
+    
     try {
-      await addPost(formData);
-      fetchBlogs();
+      const response = await addPost(formData);
+      toast.success(response.message);
+      setBlogs((prev) => [...prev, response.blog]);
       setIsLoading(false);
       clearModalData();
     } catch (err: any) {
-      console.error("Failed to add post:", err.response?.data?.error || err.message);
+      console.error("Failed to add post:", err?.error || err.message);
     }
   };
 

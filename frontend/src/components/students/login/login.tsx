@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaFacebook, FaGithub } from "react-icons/fa";
 import axios from "axios";
 import { AppDispatch } from "@/redux/store";
-import { setUserToken } from "../../../redux/slices/authSlice";
+import { setUserToken } from "@/redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { ChevronLeft } from "lucide-react";

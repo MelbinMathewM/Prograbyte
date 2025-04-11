@@ -13,14 +13,13 @@ import {
   Container,
   IconButton,
 } from "@mui/material";
-import dayjs from "dayjs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Delete as DeleteIcon } from "@mui/icons-material";
-import { useTheme } from "../../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 import { ChevronRight } from "lucide-react";
-import axiosInstance from "../../configs/axiosConfig";
+import axiosInstance from "@/configs/axiosConfig";
 import { toast } from "react-toastify";
-import { AddTopic } from "../../types/course";
+import { AddTopic } from "@/types/course";
 
 const AddTopicPart = () => {
   const { theme } = useTheme();

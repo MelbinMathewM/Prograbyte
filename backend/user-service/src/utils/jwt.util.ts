@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { env } from '../configs/env.config';
+import { env } from '@/configs/env.config';
 
 const ACCESS_KEY = env.JWT_ACCESS_SECRET as string;
 const REFRESH_KEY = env.JWT_REFRESH_SECRET as string;

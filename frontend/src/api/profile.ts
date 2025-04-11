@@ -2,12 +2,11 @@ import axiosInstance from "../configs/axiosConfig";
 
 export const getProfile = async (userId: string) => {
     try{
-        console.log(userId, 'userId');
         const response = await axiosInstance.get(`/user/profile/${userId}`);
         return response.data;
-    }catch(error){ 
+    }catch(error: any){ 
         console.error("Error fetching profile", error);
-        throw error;
+        throw error?.response?.data;
     }
 }
 
@@ -110,4 +109,54 @@ export const getUserData = async (userId: string) => {
         console.error("Error fetching user data", err);
         throw err;
     }
-}
+};
+
+export const getUserDataContext = async () => {
+    try{
+        const response = await axiosInstance.get(`/user/user`);
+        return response.data;
+    }catch(err: any){
+        console.error("Error fetching user context details",err);
+        throw err?.response?.data;
+    }
+};
+
+export const fetchTutors = async () => {
+    try{
+        const response = await axiosInstance.get(`/user/tutors`);
+        return response.data;
+    }catch(err: any){
+        console.error("Error fetching tutor list",err);
+        throw err?.response?.data;
+    }
+};
+
+export const changeTutorStatus = async (tutorId: string, action: string) => {
+    try{
+        const response = await axiosInstance.patch(`/user/tutors/${tutorId}/status`, { action });
+        return response.data;
+    }catch(err: any){
+        console.error("Error changing tutor status",err);
+        throw err?.response?.data;
+    }
+};
+
+export const fetchUsers = async () => {
+    try{
+        const response = await axiosInstance.get(`/user/users`);
+        return response.data;
+    }catch(err: any){
+        console.error("Error fetching user list",err);
+        throw err?.response?.data;
+    }
+};
+
+export const changeUserStatus = async (userId: string, action: string) => {
+    try{
+        const response = await axiosInstance.patch(`/user/users/${userId}/status`, { action });
+        return response.data;
+    }catch(err: any){
+        console.error("Error changing user status",err);
+        throw err?.response?.data;
+    }
+};

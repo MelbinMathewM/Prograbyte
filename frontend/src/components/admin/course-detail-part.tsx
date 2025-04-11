@@ -1,11 +1,11 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Button from "../../components/ui/Button";
-import axiosInstance from "../../configs/axiosConfig";
+import { Button } from "@/components/ui/button";
+import axiosInstance from "@/configs/axiosConfig";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Topic, Course, ApprovalStatus, Topics } from "../../types/course";
+import { Topic, Course, ApprovalStatus, Topics } from "@/types/course";
 import { useTheme } from "@/contexts/theme-context";
-import { Card } from "../ui/card";
+import { fetchCourseDetail, fetchTopicsByCourse } from "@/api/course";
 
 const CourseDetailPage = () => {
     const { courseId } = useParams();
@@ -16,14 +16,15 @@ const CourseDetailPage = () => {
     const [error, setError] = useState<string | null>(null);
     const { theme } = useTheme();
     const isDark = theme.includes("dark");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourseDetails = async () => {
             try {
-                const response = await axiosInstance.get(`course/courses/${courseId}`);
-                setCourse(response.data.course);
+                const response = await fetchCourseDetail(courseId as string);
+                setCourse(response.course);
             } catch (error: any) {
-                setError(error.response?.data.error || "Failed to fetch course details");
+                setError(error?.error || "Failed to fetch course details");
             } finally {
                 setLoading(false);
             }
@@ -35,11 +36,11 @@ const CourseDetailPage = () => {
         const fetchTopics = async () => {
             if (!courseId) return;
             try {
-                const response = await axiosInstance.get(`/course/topics/${courseId}`);
-                setMainTopic(response.data.topicList);
-                setTopics(response.data.topicList.topics);
+                const response = await fetchTopicsByCourse(courseId);
+                setMainTopic(response.topicList);
+                setTopics(response.topicList.topics);
             } catch (error: any) {
-                setError(error.response?.data.error || "Failed to fetch topics");
+                console.error(error?.error || "Failed to fetch topics");
             }
         };
         fetchTopics();
@@ -54,11 +55,12 @@ const CourseDetailPage = () => {
                 setCourse((prev) => (prev ? { ...prev, approval_status: newStatus } : null));
             }
         } catch (error: any) {
-            setError(error.response?.data.error || "Failed to update status");
+            console.error(error.response?.data.error || "Failed to update status");
         }
     };
 
     if (loading) return <p className="text-gray-400 text-center text-lg animate-pulse">Loading...</p>;
+    if(error) return <p>{error}</p>
     if (!course) return <p className="text-red-500 text-center text-lg">Course not found.</p>;
 
     return (
@@ -74,10 +76,14 @@ const CourseDetailPage = () => {
 
             {/* Course Title and Back Button */}
             <div className="flex justify-between items-center mb-6 border-gray-700 pb-4">
-                <h2 className="text-3xl font-bold text-blue-400">{course.title}</h2>
-                <Link to="/admin/categories" className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                    <ChevronLeft className="mr-2" size={18} /> Back
-                </Link>
+                <h2 className="text-3xl font-bold text-blue-500">{course.title}</h2>
+                <button
+                    onClick={() => navigate(-1)}
+                    className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-blue-400 hover:bg-blue-500 hover:text-white" : "text-blue-500 hover:bg-blue-500 hover:text-white"}`}
+                >
+                    <ChevronLeft size={16} />
+                    Back
+                </button>
             </div>
 
             {/* Course Description & Status */}

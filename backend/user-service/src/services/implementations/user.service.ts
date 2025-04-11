@@ -1,27 +1,27 @@
 import { inject, injectable } from 'inversify';
-import { IUserRepository } from '../repositories/interfaces/IUserRepository';
-import { IUser } from '../models/UserModel';
-import authClient from '../grpc/AuthServiceClient';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { createHttpError } from '../utils/httpError';
-import { HttpStatus } from '../constants/status.config';
-import { HttpResponse } from '../constants/response.constant';
-import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '../utils/jwt';
-import { publishMessage } from '../utils/rabbitmq.util';
+import { IUserRepository } from '../../repositories/interfaces/IUser.repository';
+import { IUser } from '../../models/user.model';
+import authClient from '../../grpc/auth-client.grpc';
+import { createHttpError } from '../../utils/http-error.util';
+import { HttpStatus } from '../../constants/status.constant';
+import { HttpResponse } from '../../constants/response.constant';
+import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '../../utils/jwt.util';
+import { publishMessage } from '../../utils/rabbitmq.util';
+import { IUserService } from '../interfaces/IUser.service';
 
 @injectable()
-export class UserService {
-    constructor(@inject("IUserRepository") private userRepository: IUserRepository) { }
+export class UserService implements IUserService {
+    constructor(@inject("IUserRepository") private _userRepository: IUserRepository) { }
 
     async registerUser(user: IUser): Promise<void> {
 
-        const existingUser = await this.userRepository.getUserByEmail(user.email);
+        const existingUser = await this._userRepository.findOne({email: user.email});
 
         if (existingUser) {
             throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
         }
 
-        const newUser = await this.userRepository.createUser(user);
+        const newUser = await this._userRepository.create(user);
 
         const grpcResponse = await new Promise<{ success: boolean, message: string }>(
             (resolve, reject) => {
@@ -39,7 +39,7 @@ export class UserService {
         );
 
         if (!grpcResponse.success) {
-            await this.userRepository.deleteUserById(newUser._id as string);
+            await this._userRepository.deleteById(newUser._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR)
         }
 
@@ -48,17 +48,17 @@ export class UserService {
             username:newUser.username
         }
 
-        await publishMessage("user.registered.blog",userData);
+        publishMessage("user.registered.blog",userData);
     }
 
     async registerTutor(tutor: IUser): Promise<void> {
-        const existingUser = await this.userRepository.getUserByEmail(tutor.email);
+        const existingUser = await this._userRepository.findOne({email: tutor.email});
 
         if (existingUser) {
             throw createHttpError(HttpStatus.CONFLICT, HttpResponse.TUTOR_EMAIL_EXIST_ERROR);
         }
 
-        const newTutor = await this.userRepository.createUser(tutor);
+        const newTutor = await this._userRepository.create(tutor);
 
         const grpcResponse = await new Promise<{ success: boolean, message: string }>(
             (resolve, reject) => {
@@ -76,7 +76,7 @@ export class UserService {
         );
 
         if (!grpcResponse.success) {
-            await this.userRepository.deleteUserById(newTutor._id as string);
+            await this._userRepository.deleteById(newTutor._id as string);
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.GRPC_REGISTER_ERROR);
         }
 
@@ -85,7 +85,7 @@ export class UserService {
             username:newTutor.username
         }
 
-        await publishMessage("user.registered",userData);
+        publishMessage("user.registered",userData);
     }
 
 
@@ -93,7 +93,7 @@ export class UserService {
 
         if (!userData) throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.USER_NOT_FOUND);
 
-        let user = await this.userRepository.getUserByEmail(userData.email);
+        let user = await this._userRepository.findOne({email: userData.email});
 
         let newUser;
         if (!user) {
@@ -103,7 +103,7 @@ export class UserService {
                 name: userData.name,
                 role: "student",
             };
-            newUser = await this.userRepository.createUser(newUserData as IUser);
+            newUser = await this._userRepository.create(newUserData as IUser);
         } else {
             newUser = user;
         }
@@ -117,17 +117,15 @@ export class UserService {
 
     }
 
-    async getUserByToken(token: string): Promise<Partial<IUser>> {
+    async getUserByXId(id: string): Promise<Partial<IUser>> {
 
-        if (!token) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_ACCESS_TOKEN);
-
-        const decoded = verifyAccessToken(token) as JwtPayload;
-
-        if (!decoded) throw createHttpError(HttpStatus.UNAUTHORIZED, HttpResponse.NO_DECODED_TOKEN);
-
-        const user = await this.userRepository.getUserById(decoded.id);
+        const user = await this._userRepository.findById(id);
 
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+
+        if(user.isBlocked){
+            throw createHttpError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
+        }
 
         const newUser = {
             _id: user._id,
@@ -140,7 +138,7 @@ export class UserService {
 
     async getUserById(userId: string): Promise<Partial<IUser>> {
 
-        const user = await this.userRepository.getUserById(userId);
+        const user = await this._userRepository.findById(userId);
 
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 
@@ -155,7 +153,7 @@ export class UserService {
 
     async getProfile(userId: string): Promise<IUser> {
 
-        const user = await this.userRepository.getUserById(userId);
+        const user = await this._userRepository.findById(userId);
 
         if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
@@ -167,7 +165,7 @@ export class UserService {
     async updateProfile(userId: string, updatedUser: Partial<IUser>): Promise<IUser> {
 
         if (updatedUser.username) {
-            const existingUser = await this.userRepository.findUserByUsername(updatedUser.username);
+            const existingUser = await this._userRepository.findOne({ username: updatedUser.username });
 
             if (existingUser && (existingUser._id as string).toString() !== userId) {
                 throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USERNAME_EXIST);
@@ -175,15 +173,15 @@ export class UserService {
         }
 
 
-        const user = await this.userRepository.updateUser(userId, updatedUser);
+        const user = await this._userRepository.updateById(userId, updatedUser);
 
         if(user && updatedUser.username){
-            await publishMessage("username.updated.blog",{updatedUser, userId});
+            publishMessage("username.updated.blog",{updatedUser, userId});
         }
 
         if(user && updatedUser.email){
             user.isEmailVerified = false;
-            await this.userRepository.updateUserSave(user);
+            await this._userRepository.save(user);
         }
 
         if (!user) {
@@ -200,19 +198,19 @@ export class UserService {
 
     async verifyEmail(email: string): Promise<void> {
 
-        const user = await this.userRepository.getUserByEmail(email);
+        const user = await this._userRepository.findOne({ email });
 
         if(!user){
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
 
         user.isEmailVerified = true;
-        await this.userRepository.updateUserSave(user);
+        await this._userRepository.save(user);
     }
 
     async addSkill(userId: string, skill: string): Promise<string[]> {
 
-        const user = await this.userRepository.getUserById(userId);
+        const user = await this._userRepository.findById(userId);
         if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
@@ -229,7 +227,7 @@ export class UserService {
 
     async editSkill(userId: string, oldSkill: string, newSkill: string): Promise<string[]> {
 
-        const user = await this.userRepository.getUserById(userId);
+        const user = await this._userRepository.findById(userId);
         if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
@@ -251,7 +249,7 @@ export class UserService {
 
     async deleteSkill(userId: string, skill: string): Promise<string[]> {
 
-        const user = await this.userRepository.getUserById(userId);
+        const user = await this._userRepository.findById(userId);
         if (!user) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
         }
@@ -263,15 +261,79 @@ export class UserService {
     }
 
     async updateToPremium(email: string): Promise<void> {
-        const user = await this.userRepository.getUserByEmail(email);
+        const user = await this._userRepository.findOne({ email });
 
         if (!user) {
             throw new Error("User not found");
         }
 
         user.isPremium = true;
-        await this.userRepository.updateUserSave(user);
+        await this._userRepository.save(user);
 
         console.log(`✅ User ${email} upgraded to Premium!`);
+    }
+
+    async getTutors(): Promise<IUser[]> {
+        
+        const tutors = await this._userRepository.findAll({ role: "tutor" });
+
+        return tutors;
+    }
+
+    async getUsers(): Promise<IUser[]> {
+        
+        const users = await this._userRepository.findAll({ role: "student" });
+
+        return users;
+    }
+
+    async updateTutorStatus(tutorId: string, action: string): Promise<string> {
+        
+        const tutor = await this._userRepository.findById(tutorId);
+
+        if(!tutor){
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TUTOR_NOT_FOUND);
+        }
+
+        let message: string = '';
+        if(action === "approve"){
+            tutor.isTutorVerified = true;
+            message = HttpResponse.TUTOR_APPROVED;
+
+        }else if(action === "block"){
+            tutor.isBlocked = true;
+            message = HttpResponse.TUTOR_BLOCKED;
+
+        }else if(action === "unblock"){
+            tutor.isBlocked = false;
+            message = HttpResponse.TUTOR_UNBLOCKED; 
+        }
+
+        await this._userRepository.save(tutor);
+
+        return message;
+    }
+
+    async updateUserStatus(userId: string, action: string): Promise<string> {
+        
+        const user = await this._userRepository.findById(userId);
+
+        if(!user){
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+        }
+
+        let message: string = '';
+        if(action === "block"){
+            user.isBlocked = true;
+            message = HttpResponse.USER_BLOCKED;
+
+        }else if(action === "unblock"){
+            user.isBlocked = false;
+            message = HttpResponse.USER_UNBLOCKED; 
+        }
+
+        await this._userRepository.save(user);
+
+        return message;
     }
 }

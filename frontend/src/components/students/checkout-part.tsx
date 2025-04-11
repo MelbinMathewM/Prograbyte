@@ -1,14 +1,13 @@
 import { useState, useEffect, useContext } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useTheme } from "../../contexts/theme-context";
-import axiosInstance from "../../configs/axiosConfig";
+import { useTheme } from "@/contexts/theme-context";
 import { ChevronLeft, ChevronRight, CheckCircle } from "lucide-react";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
-import { payCourse, saveEnrolledCourse } from "../../api/checkout";
-import { UserContext } from "../../contexts/user-context";
-import { Course } from "../../types/course";
+import { payCourse, saveEnrolledCourse } from "@/api/checkout";
+import { UserContext } from "@/contexts/user-context";
+import { Course } from "@/types/course";
 import { fetchCourseDetail } from "@/api/course";
 
 const CheckoutPage: React.FC = () => {

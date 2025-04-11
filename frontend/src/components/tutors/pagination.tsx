@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { useTheme } from "../../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 
 interface PaginationType {
   currentPage: number;

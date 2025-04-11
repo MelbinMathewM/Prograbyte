@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useTheme } from "../../contexts/theme-context"; // Assuming you have a custom hook for theme
+import { useTheme } from "@/contexts/theme-context"; // Assuming you have a custom hook for theme
 
 const HomePage = () => {
     const navigate = useNavigate();

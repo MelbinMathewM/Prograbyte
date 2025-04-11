@@ -1,4 +1,4 @@
-import { getRabbitMQ } from "../configs/rabbitmq.config";
+import { getRabbitMQ } from "@/configs/rabbitmq.config";
 
 export const publishMessage = (routingKey: string, message: object) => {
     const { channel, exchange } = getRabbitMQ();

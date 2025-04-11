@@ -6,12 +6,12 @@ import connectDB from "./configs/db.config";
 import passport from "passport";
 import "./configs/passport.config";
 import session from "express-session";
-import userRouter from "./routes/UserRoute";
-import { errorHandler } from "./middlewares/errorMiddlewate";
+import userRouter from "./routes/user.route";
+import { errorHandler } from "./middlewares/error.middleware";
 
 dotenv.config();
 
-import { validateEnv } from "./utils/envConfig";
+import { validateEnv } from "./utils/env-config.util";
 import verifyApiKey from "./configs/api-key.config";
 import { env } from "./configs/env.config";
 import stripe from "./configs/stripe.config";

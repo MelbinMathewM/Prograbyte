@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import { fetchToken, getSecureUrl, updateProgress } from "../../api/video";
+import { fetchToken, getSecureUrl, updateProgress } from "@/api/video";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import { VideoPlayerProps } from "../../types/user";
+import { VideoPlayerProps } from "@/types/user";
 import { debounce } from "lodash";
 
 type VideoJsPlayer = ReturnType<typeof videojs>;

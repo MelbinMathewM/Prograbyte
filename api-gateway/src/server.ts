@@ -41,12 +41,10 @@ const PORT = process.env.PORT || 5000;
 
 // Proxy routes
 app.use("/api/auth", createProxy(process.env.AUTH_SERVICE, "/api/auth"));
-app.use("/api/user", createProxy(process.env.USER_SERVICE, "/api/user"));
+app.use("/api/user",verifyToken, createProxy(process.env.USER_SERVICE, "/api/user"));
 app.use("/api/course", verifyToken, createProxy(process.env.COURSE_SERVICE, "/api/course"));
 app.use("/api/notification", createProxy(process.env.NOTIFICATION_SERVICE, "/api/notification"));
-app.use("/api/blog", createProxy(process.env.BLOG_SERVICE, "/api/blog"));
+app.use("/api/blog",verifyToken, createProxy(process.env.BLOG_SERVICE, "/api/blog"));
 app.use("/api/live", createProxy(process.env.LIVE_SERVICE, "/api/live"));
 
-
-// ✅ FIXED: Start server with `server.listen()`
 server.listen(PORT, () => console.log(`API Gateway running on port ${PORT}`));

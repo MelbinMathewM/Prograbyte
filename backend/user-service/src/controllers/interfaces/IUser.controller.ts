@@ -8,6 +8,10 @@ export interface IUserController {
     verifyEmailLink(req: Request, res: Response, next: NextFunction): Promise<void>;
     verifyEmail(req: Request, res: Response, next: NextFunction): Promise<void>;
     getUserById(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getTutors(req: Request, res: Response, next: NextFunction): Promise<void>;
+    getUsers(req: Request, res: Response, next: NextFunction): Promise<void>;
+    updateTutorStatus(req: Request, res: Response, next: NextFunction): Promise<void>;
+    updateUserStatus(req: Request, res: Response, next: NextFunction): Promise<void>;
     getProfile(req: Request, res: Response, next: NextFunction): Promise<void>;
     updateProfile(req: Request, res: Response, next: NextFunction): Promise<void>;
     addSkill(req: Request, res: Response, next: NextFunction): Promise<void>;

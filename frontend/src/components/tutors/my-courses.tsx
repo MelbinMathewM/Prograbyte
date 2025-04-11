@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import { TutorContext } from "../../contexts/tutor-context";
-import { fetchCoursesByTutor } from "../../api/course";
+import { TutorContext } from "@/contexts/tutor-context";
+import { fetchCoursesByTutor } from "@/api/course";
 import Pagination from "./pagination";
-import { useTheme } from "../../contexts/theme-context";
-import { Course } from "../../types/course";
+import { useTheme } from "@/contexts/theme-context";
+import { Course } from "@/types/course";
 
 const TutorMyCoursesPart = () => {
     const [courses, setCourses] = useState<Course[]>([]);

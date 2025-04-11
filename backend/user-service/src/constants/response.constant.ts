@@ -22,5 +22,11 @@ export const HttpResponse = {
     USER_ID_NOT_FOUND: "UserId not found",
     EMAIL_NOT_FOUND: "Email not found",
     VERIFY_LINK_SEND: "Verification link send to your email, Please verify!",
-    EMAIL_VERIFIED: "Email verified successfully"
+    EMAIL_VERIFIED: "Email verified successfully",
+    TUTOR_APPROVED: "Tutor approved successfully",
+    TUTOR_BLOCKED: "Tutor blocked successfully",
+    TUTOR_UNBLOCKED: "Tutor unblocked successfully",
+    TUTOR_NOT_FOUND: "Tutor not found",
+    USER_BLOCKED: "User blocked successfully",
+    USER_UNBLOCKED: "User unblocked successfully",
 }

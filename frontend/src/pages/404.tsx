@@ -1,6 +1,6 @@
 import { ChevronLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 
 const NotFound = () => {
     const navigate = useNavigate();

@@ -10,7 +10,7 @@ export class CourseRepository extends BaseRepository<ICourse> {
 
     async getFilteredCourses(filters: object, sort: string): Promise<ICourse[]> {
         try {
-            let query = Course.find(filters);
+            let query = Course.find(filters).populate("category_id", "name _id");
     
             switch (sort) {
                 case "price-low":

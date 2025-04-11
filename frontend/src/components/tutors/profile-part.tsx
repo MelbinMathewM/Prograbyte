@@ -1,16 +1,16 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Award, BookOpen, ChevronLeft, ChevronRight, Upload, Wallet, Users, DollarSign, Edit2 } from "lucide-react";
-import { useTheme } from "../../contexts/theme-context";
+import { Award, BookOpen, ChevronLeft, ChevronRight, Upload, Wallet, Users, DollarSign } from "lucide-react";
+import { useTheme } from "@/contexts/theme-context";
 import { Link, useNavigate } from "react-router-dom";
-import { getProfile, updateProfileInfo } from "../../api/profile";
-import { TutorContext } from "../../contexts/tutor-context";
+import { getProfile, updateProfileInfo } from "@/api/profile";
+import { TutorContext } from "@/contexts/tutor-context";
 import toast from "react-hot-toast";
 import default_image from "/default-user.avif";
-import CropImageModal from "../ui/crop-image-modal";
+import CropImageModal from "@/components/ui/crop-image-modal";
 import TutorDetails from "./profile-tutor-details";
-import { getCroppedImage } from "../../libs/imageCropper";
+import { getCroppedImage } from "@/libs/imageCropper";
 import SkillPart from "./profile-skill";
-import { Profile, CroppedArea } from "../../types/user";
+import { Profile, CroppedArea } from "@/types/user";
 
 export default function TutorProfilePart() {
     const { theme } = useTheme();
@@ -26,7 +26,9 @@ export default function TutorProfilePart() {
         bio: "",
         skills: [],
         role: "tutor",
-        isEmailVerified: false
+        isEmailVerified: false,
+        isTutorVerified: false,
+        isBlocked: false
     });
     const [modalOpen, setModalOpen] = useState(false);
     const [imageSrc, setImageSrc] = useState<string | null>(null);

@@ -1,10 +1,10 @@
 import { createContext, ReactNode, useLayoutEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout as reduxLogout } from "../redux/slices/authSlice";
+import { logout as reduxLogout } from "@/redux/slices/authSlice";
 import Cookies from "js-cookie";
-import axiosInstance from "../configs/axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { User, UserContextType } from "@/types/user";
+import { getUserDataContext } from "@/api/profile";
 
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -31,10 +31,9 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchStudent = async () => {
       try {
-        const res = await axiosInstance.get("/user/user");
-        console.log('uehfgef')
-        if (res.status === 200) {
-          setUser({ id: res.data._id,email: res.data.email, username: res.data.username });
+        const res = await getUserDataContext();
+        if (res.success) {
+          setUser({ id: res.user._id,email: res.user.email, username: res.user.username });
         } else {
           logout();
         }
