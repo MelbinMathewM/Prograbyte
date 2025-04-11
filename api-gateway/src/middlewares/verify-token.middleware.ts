@@ -36,6 +36,12 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
     }
 
     req.user = decoded;
+    
+    if (typeof decoded === "object" && decoded !== null) {
+      console.log('hii');
+      req.headers["x-id"] = decoded.id as string;
+      req.headers["x-role"] = decoded.role as string;
+    }
     next();
   });
 };

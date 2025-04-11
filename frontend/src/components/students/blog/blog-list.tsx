@@ -64,7 +64,7 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
                                 className="w-12 h-12 rounded-full object-cover"
                             />
                             <div>
-                                <Link to={`/blog/profile/${blog?.username}`} className="font-semibold hover:text-blue-500">
+                                <Link to={`/blog/profile/${blog?.username}`} className="font-semibold text-sm hover:text-blue-500">
                                     @{blog?.username}
                                 </Link>
 

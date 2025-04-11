@@ -7,6 +7,9 @@ import AdminProfile from "@/pages/admin/profile";
 import CourseDetail from "@/pages/admin/course-detail";
 import ProtectedRoute from "@/routes/protectedRoutes";
 import VideoPageAdmin from "@/pages/admin/video";
+import TutorPage from "@/pages/admin/tutor";
+import TutorDetail from "@/pages/admin/tutor-detail";
+import UserPage from "@/pages/admin/user";
 
 const AdminRoutes = () => {
     return (
@@ -18,6 +21,9 @@ const AdminRoutes = () => {
                 <Route path="/admin/categories/courses/:courseId" element={<CourseDetail />} />
                 <Route path="/admin/categories/courses/:courseName/topics/:topicsId/video/:topicId" element={<VideoPageAdmin />} />
                 <Route path="/admin/profile" element={<AdminProfile />} />
+                <Route path="/admin/tutors" element={ <TutorPage /> } />
+                <Route path="/admin/tutors/:id" element={ <TutorDetail /> } />
+                <Route path='/admin/users' element={ <UserPage /> } />
             </Route>
         </Route>    
     );

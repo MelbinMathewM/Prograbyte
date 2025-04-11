@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
-import Button from "../../components/ui/Button";
-import { Card, CardContent } from "../../components/ui/card";
-import axiosInstance from "../../configs/axiosConfig";
-import { UserContext } from "../../contexts/user-context";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import axiosInstance from "@/configs/axiosConfig";
+import { UserContext } from "@/contexts/user-context";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 

@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, CheckCircle2, Pencil, ShieldAlert } from "lucide-react";
 import { UserDetailsProps } from "@/types/user";
+import toast from "react-hot-toast";
+import { verifyEmail } from "@/api/profile";
 
 const UserDetails: React.FC<UserDetailsProps> = ({ profile, isDark, updateProfile }) => {
     const [editingField, setEditingField] = useState<string | null>(null);
@@ -25,8 +27,13 @@ const UserDetails: React.FC<UserDetailsProps> = ({ profile, isDark, updateProfil
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [editingField]);
 
-    const handleEmailVerification = () => {
-        console.log("Trigger email verification");
+    const handleEmailVerification = async () => {
+        try{
+            const response = await verifyEmail(profile.email);
+            toast.success(response.message);
+        }catch(err: any){
+            toast.error(err.response.data.error);
+        }
     };
 
     return (

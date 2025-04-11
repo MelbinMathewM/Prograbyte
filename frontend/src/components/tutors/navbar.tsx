@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, User, Sun, Moon } from "lucide-react";
-import { useTheme } from "../../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 import { motion } from "framer-motion";
 
 const TutorNavbar = () => {
@@ -100,20 +100,20 @@ function ThemeToggle() {
     return (
       <button
         onClick={toggleDarkMode}
-        className={`relative flex items-center w-16 h-8 rounded-full p-1 transition-all ${isDark ? "bg-gray-600" : "bg-gray-300"}`}
+        className={`relative flex items-center w-10 h-6 rounded-full p-1 transition-all border ${isDark ? "bg-gray-800 border-gray-700" : "bg-gray-100"}`}
       >
         {/* Icons */}
-        <div className={`absolute left-2 ${isDark ? "text-yellow-400" : "text-gray-700"}`}>
-          <Sun size={18} />
+        <div className={`absolute left-1 ${isDark ? "text-yellow-400" : "text-gray-700"}`}>
+          <Sun size={14} />
         </div>
-        <div className={`absolute right-2 ${isDark ? "text-white" : "text-gray-900"}`}>
-          <Moon size={18} />
+        <div className={`absolute right-1 ${isDark ? "text-white" : "text-gray-900"}`}>
+          <Moon size={14} />
         </div>
 
         {/* Animated Toggle Slider */}
         <motion.div
-          className={`absolute w-6 h-6 rounded-full shadow-md transition-all ${isDark ? "bg-gray-800" : "bg-white"}`}
-          animate={{ x: isDark ? 32 : 0 }}
+          className={`absolute w-4 h-4 rounded-full shadow-md transition-all border ${isDark ? "bg-gray-700 border-gray-600 " : "bg-white"}`}
+          animate={{ x: isDark ? 14 : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         />
       </button>

@@ -48,9 +48,8 @@ export class LiveController implements ILiveController{
                 return;
             }
 
-            await this._liveService.changeLiveStatus(schedule_id, status);
-
-            console.log('hii')
+            
+            console.log('hii1')
 
             if (status.status === "live") {
                 console.log('huu');
@@ -61,17 +60,46 @@ export class LiveController implements ILiveController{
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        "authorization": `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 });
+
+                console.log(liveStreamResponse.data);
     
                 if (!liveStreamResponse.data.success) {
                     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Failed to start live stream" });
                     return;
                 }
+
+                await this._liveService.changeLiveStatus(schedule_id, status);
+                
+                res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED, streamUrl: liveStreamResponse.data.hlsUrl });
+            } else if (status.status === "completed") {
+                const token = req.headers["authorization"]?.split(' ')[1];
     
-                res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED, streamUrl: liveStreamResponse.data.url });
+                const liveStreamResponse = await axios.post(
+                    "http://localhost:5000/api/live/stream/stop-stream",
+                    { schedule_id },
+                    {
+                        headers: {
+                            "authorization": `Bearer ${token}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+    
+                console.log(liveStreamResponse.data);
+    
+                if (!liveStreamResponse.data.success) {
+                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Failed to stop live stream" });
+                    return;
+                }
+    
+                // Update the live schedule status in the database
+                await this._liveService.changeLiveStatus(schedule_id, status);
+    
+                res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED });
             } else {
                 res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED });
             }

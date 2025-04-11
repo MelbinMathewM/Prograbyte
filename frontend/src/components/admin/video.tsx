@@ -1,10 +1,10 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import axiosInstance from "../../configs/axiosConfig";
-import { useTheme } from "../../contexts/theme-context";
+import axiosInstance from "@/configs/axiosConfig";
+import { useTheme } from "@/contexts/theme-context";
 import VideoPlayer from "./video-player";
-import { Topic } from "../../types/course";
+import { Topic } from "@/types/course";
 import { AdminContext } from "@/contexts/admin-context";
 const VideoPart = () => {
     const { courseName, topicId, topicsId } = useParams();

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronRight, SlidersHorizontal } from "lucide-react";
-import { useTheme } from "../../contexts/theme-context";
-import { Category, Course } from "../../types/course";
+import { useTheme } from "@/contexts/theme-context";
+import { Category, Course } from "@/types/course";
 import { fetchCategories, fetchCourses } from "@/api/course";
 import FilterSidebar from "./course-sidebar";
 

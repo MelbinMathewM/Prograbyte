@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useLayoutEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout as reduxLogout } from "../redux/slices/authSlice";
+import { logout as reduxLogout } from "@/redux/slices/authSlice";
 import Cookies from "js-cookie";
-import axiosInstance from "../configs/axiosConfig";
 import { useNavigate } from "react-router-dom";
+import { getUserDataContext } from "@/api/profile";
 
 interface Admin {
   id: string;
@@ -41,9 +41,9 @@ const AdminProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchAdmin = async () => {
       try {
-        const res = await axiosInstance.get("/user/user");
-        if (res.status === 200) {
-          setAdmin({ id: res.data._id, name: res.data.name, email: res.data.email });
+        const res = await getUserDataContext();
+        if (res.success) {
+          setAdmin({ id: res.user._id, name: res.user.name, email: res.user.email });
         } else {
           logout();
         }

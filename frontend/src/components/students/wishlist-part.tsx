@@ -1,12 +1,12 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState, useContext } from "react";
-import { FaTrash, FaSearch, FaSort } from "react-icons/fa";
+import { FaTrash, FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "../../contexts/theme-context";
-import { getWishlist, removeFromWishlist } from "../../api/wishlist";
-import { UserContext } from "../../contexts/user-context";
+import { useTheme } from "@/contexts/theme-context";
+import { getWishlist, removeFromWishlist } from "@/api/wishlist";
+import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
-import { Wishlist, WishlistItem } from "../../types/user";
+import { Wishlist } from "@/types/user";
 
 const WishlistPage = () => {
     const [wishlist, setWishlist] = useState<Wishlist | null>(null);

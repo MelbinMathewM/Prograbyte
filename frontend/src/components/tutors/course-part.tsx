@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronRight, Star } from "lucide-react";
 import Pagination from "./pagination";
-import axiosInstance from "../../configs/axiosConfig";
-import { TutorContext } from "../../contexts/tutor-context";
-import { useTheme } from "../../contexts/theme-context";
-import { Course } from "../../types/course";
+import axiosInstance from "@/configs/axiosConfig";
+import { TutorContext } from "@/contexts/tutor-context";
+import { useTheme } from "@/contexts/theme-context";
+import { Course } from "@/types/course";
 
 const CoursePart = () => {
     const [courses, setCourses] = useState<Course[]>([]);

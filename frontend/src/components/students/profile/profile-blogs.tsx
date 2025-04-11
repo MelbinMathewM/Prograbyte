@@ -90,7 +90,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
             <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
 
             {paginatedBlogs.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
                     {paginatedBlogs.map((blog) => (
                         <div 
                         key={blog._id} 
@@ -156,7 +156,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
                     <button
                         disabled={currentPage === 1}
                         onClick={() => setCurrentPage((prev) => prev - 1)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow 
+                        className={`flex items-center gap-2 px-4 py-2 rounded-sm shadow 
                         ${isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-gray-700"} 
                         disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
@@ -170,7 +170,7 @@ export default function ProfileBlogsSection({ userId, isDark }: ProfileBlogsSect
                     <button
                         disabled={currentPage === totalPages}
                         onClick={() => setCurrentPage((prev) => prev + 1)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow 
+                        className={`flex items-center gap-2 px-4 py-2 rounded-sm shadow 
                         ${isDark ? "bg-gray-700 text-white" : "bg-gray-300 text-gray-700"} 
                         disabled:opacity-50 disabled:cursor-not-allowed`}
                     >

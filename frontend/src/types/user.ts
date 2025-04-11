@@ -21,6 +21,11 @@ export interface Profile {
     skills: string[];
     role: string;
     isEmailVerified: boolean;
+    isTutorVerified?: boolean;
+    isBlocked: boolean;
+    isPremium?: boolean;
+    createdAt?: Date | string;
+    rating?: number;
 }
 
 export interface UserDetailsProps {

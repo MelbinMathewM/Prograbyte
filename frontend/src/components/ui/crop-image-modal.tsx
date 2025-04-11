@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./dialog";
-import Button from "./Button";
+import { Button } from "@/components/ui/button";
 import Cropper from "react-easy-crop";
 import { Dispatch, SetStateAction } from "react";
 

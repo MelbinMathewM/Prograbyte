@@ -7,7 +7,7 @@ import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
 import CoursePurchaseSection from "@/components/students/course-detail/course-detail-purchasetab";
 import { fetchEnrolledCourse, fetchReviews, fetchTopicsByCourse } from "@/api/course";
-import { Course, EnrolledCourses, IRating, IReview, Topic, Topics } from "@/types/course";
+import { Course, EnrolledCourses, IReview, Topic, Topics } from "@/types/course";
 import { getUserData } from "@/api/profile";
 
 const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) => {

@@ -1,10 +1,10 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axiosInstance from "../../configs/axiosConfig";
-import { useTheme } from "../../contexts/theme-context";
+import axiosInstance from "@/configs/axiosConfig";
+import { useTheme } from "@/contexts/theme-context";
 import PDFViewer from "./notes-pdf";
-import { Topic } from "../../types/course";
+import { Topic } from "@/types/course";
 
 const ViewNotes = () => {
     const { courseName, topicsId, topicId } = useParams();

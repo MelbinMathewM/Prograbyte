@@ -29,6 +29,10 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     return await this.model.findByIdAndUpdate(id, data, { new: true });
   }
 
+  async updateMany(filter: FilterQuery<T>, data: UpdateQuery<T>, options: object = {}): Promise<void> {
+    await this.model.updateMany(filter, data, options);
+  }
+
   async delete(id: string): Promise<T | null> {
     return await this.model.findByIdAndDelete(id);
   }

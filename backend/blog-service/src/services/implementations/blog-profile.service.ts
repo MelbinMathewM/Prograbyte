@@ -32,6 +32,11 @@ export class BlogProfileService implements IBlogProfileService {
         return profile;
     }
 
+    async updateUsername(userData: Partial<IBlogProfile>, userId: string): Promise<void> {
+
+        await this._blogProfileRepository.update(userId, userData);
+    }
+
 
     async getPublicProfile(username: string): Promise<IBlogProfile | null> {
         return await this._blogProfileRepository.populateOne(

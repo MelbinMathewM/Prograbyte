@@ -1,19 +1,18 @@
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { setUserToken } from "../../redux/slices/authSlice";
+import { setUserToken } from "@/redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const LoginCallback = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const hasHandledLogin = useRef(false); // Prevent multiple executions
+  const hasHandledLogin = useRef(false);
 
   useEffect(() => {
-    if (hasHandledLogin.current) return; // Prevent multiple executions
+    if (hasHandledLogin.current) return;
     hasHandledLogin.current = true;
 
-    // Extract query parameters from the URL
     const params = new URLSearchParams(window.location.search);
     const accessToken = params.get("accessToken");
     const role = params.get("role");

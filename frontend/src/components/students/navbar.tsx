@@ -1,10 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
 import { useState } from "react";
 import { FaUserCircle, FaHeart } from "react-icons/fa";
-import { useTheme } from "../../contexts/theme-context";
+import { useTheme } from "@/contexts/theme-context";
 import { motion } from "framer-motion";
 import { Sun, Moon, Menu } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const StudentNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

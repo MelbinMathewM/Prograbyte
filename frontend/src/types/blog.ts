@@ -16,6 +16,15 @@ export interface Comment {
     user_id: string;
     username: string;
     likes: string[];
+    sub_comments: SubComment[];
+}
+
+export interface SubComment {
+    _id: string;
+    content: string;
+    user_id: string;
+    username: string;
+    likes: string[];
 }
 
 export interface CommentModalProps {

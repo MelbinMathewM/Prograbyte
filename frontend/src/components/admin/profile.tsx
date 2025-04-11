@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AdminContext } from "../../contexts/admin-context";
+import { AdminContext } from "@/contexts/admin-context";
 
 const AdminProfilePart = () => {
   const { admin, logout } = useContext(AdminContext) || {};

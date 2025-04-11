@@ -1,10 +1,9 @@
 import { Pencil, Plus, X } from "lucide-react";
 import React, { useState } from "react";
-import { Dialog } from "@headlessui/react";
-import { addSkill, deleteSkill, editSkill } from "../../api/profile";
+import { addSkill, deleteSkill, editSkill } from "@/api/profile";
 import toast from "react-hot-toast";
-import ConfirmDialog from "../ui/confirm-dialog";
-import { SkillProps } from "../../types/user";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
+import { SkillProps } from "@/types/user";
 
 const SkillPart: React.FC<SkillProps> = ({ skills, isDark, userId, setSkills }) => {
 

@@ -11,7 +11,7 @@ const LivePart = () => {
     const [loading, setLoading] = useState(true);
     const { tutor } = useContext(TutorContext) ?? {};
     const [activeTab, setActiveTab] = useState("scheduled");
-    const navigate = useNavigate(); // Navigation hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchLiveSchedules = async () => {
@@ -51,7 +51,8 @@ const LivePart = () => {
                 const streamResponse = await changeLiveSchedule(scheduleId, "live");
 
                 if(!streamResponse.ok) toast.error("Failed to start stream");
-                navigate(`/tutor/live/${roomId}`, { state: { streamUrl: response.streamUrl }});
+                console.log(streamResponse,'gg')
+                navigate(`/tutor/live/${scheduleId}`, { state: { streamUrl: streamResponse.streamUrl }});
             } else {
                 toast.error("You cannot start the live class yet.");
             }

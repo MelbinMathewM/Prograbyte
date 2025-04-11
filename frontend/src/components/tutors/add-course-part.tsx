@@ -14,20 +14,19 @@ import {
   IconButton,
   SelectChangeEvent,
 } from "@mui/material";
-import { TutorContext } from "../../contexts/tutor-context";
-import dayjs from "dayjs";
+import { TutorContext } from "@/contexts/tutor-context";
 import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../../configs/axiosConfig";
-import { useTheme } from "../../contexts/theme-context";
+import axiosInstance from "@/configs/axiosConfig";
+import { useTheme } from "@/contexts/theme-context";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import CropImageModal from "../ui/crop-image-modal";
-import { getCroppedPosterImage } from "../../libs/courseImageCropper";
-import { Category } from "../../types/course";
-import { AddCourse } from "../../types/course";
-import { CroppedArea } from "../../types/user";
+import CropImageModal from "@/components/ui/crop-image-modal";
+import { getCroppedPosterImage } from "@/libs/courseImageCropper";
+import { Category } from "@/types/course";
+import { AddCourse } from "@/types/course";
+import { CroppedArea } from "@/types/user";
 
 const AddCoursePart = () => {
   const { tutor } = useContext(TutorContext) || {};
@@ -175,7 +174,7 @@ const AddCoursePart = () => {
     e.preventDefault();
     setCourse((prev) => ({ ...prev, tutor_id: tutorId ?? "" }));
 
-    // if (!validateCourse(course)) return;
+    if (!validateCourse(course)) return;
     setIsLoading(true);
 
     try {

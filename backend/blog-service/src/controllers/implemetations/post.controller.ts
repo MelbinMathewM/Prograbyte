@@ -5,6 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { HttpStatus } from "@/constants/status.constant";
 import { HttpResponse } from "@/constants/response.constant";
 import { uploadToCloudinary } from "@/utils/cloudinary.util";
+import { IBlogProfile } from "@/models/blog-profile.model";
 
 export class PostController implements IPostController {
     constructor(@inject(PostService) private _postService: PostService) { }
@@ -34,7 +35,7 @@ export class PostController implements IPostController {
         } catch (err) {
             next(err);
         }
-    }
+    };
 
     async getPostsByUserId(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -88,6 +89,16 @@ export class PostController implements IPostController {
         }
     }
 
+    async updatePostUsername(userData: Partial<IBlogProfile>, userId: string): Promise<void> {
+        try{
+            if(userData && userId){
+                await this._postService.updatePostUsername(userData, userId);
+            }
+        }catch(err: any){
+            console.log(err.message);
+        }
+    }
+
     async toggleLike(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { blog_id } = req.params;
@@ -127,6 +138,29 @@ export class PostController implements IPostController {
 
             res.status(HttpStatus.CREATED).json({ message: HttpResponse.COMMENT_ADDED, comments: newComment });
         } catch (err) {
+            next(err);
+        }
+    }
+
+    async editComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const { blog_id, comment_id } = req.params;
+            const { content } = req.body;
+
+        if (!blog_id) {
+            res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.BLOG_ID_REQUIRED });
+            return;
+        }
+
+        if (!comment_id) {
+            res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.COMMENT_ID_REQUIRED });
+            return;
+        }
+
+        await this._postService.updateComment(blog_id, comment_id, content);
+
+        res.status(HttpStatus.OK).json({ message: HttpResponse.COMMEND_UPDATED });
+        }catch(err){
             next(err);
         }
     }
@@ -190,6 +224,60 @@ export class PostController implements IPostController {
 
             res.status(HttpStatus.OK).json(HttpResponse.LIKE_UPDATED);
         } catch (err) {
+            next(err);
+        }
+    }
+
+    async addSubComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const { blog_id, comment_id } = req.params;
+            const { userId, username, content } = req.body;
+
+            if(!blog_id || !comment_id){
+                res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.MISSING_OR_INVALID_FIELDS });
+                return;
+            }
+
+            await this._postService.addSubComment(blog_id, comment_id, userId, content, username);
+
+            res.status(HttpStatus.OK).json({ message: HttpResponse.SUB_COMMENT_ADDED });
+        }catch(err){
+            next(err);
+        }
+    }
+
+    async toggleSubCommentLike(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+
+            const { blog_id, comment_id, sub_comment_id } = req.params;
+            const { userId } = req.body;
+
+            if(!blog_id || !comment_id || !sub_comment_id){
+                res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.MISSING_OR_INVALID_FIELDS });
+                return;
+            }
+
+            await this._postService.toggleSubCommentLike(blog_id, comment_id, sub_comment_id, userId);
+
+            res.status(HttpStatus.OK).json({ message: HttpResponse.LIKE_UPDATED });
+        }catch(err){
+            next(err);
+        }
+    }
+
+    async removeSubComment(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const { blog_id, comment_id, sub_comment_id } = req.params;
+
+            if(!blog_id || !comment_id || !sub_comment_id){
+                res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.MISSING_OR_INVALID_FIELDS });
+                return;
+            }
+
+            await this._postService.deleteSubComment(blog_id, comment_id, sub_comment_id);
+
+            res.status(HttpStatus.OK).json({ message: HttpResponse.SUB_COMMENT_REMOVED });
+        }catch(err){
             next(err);
         }
     }

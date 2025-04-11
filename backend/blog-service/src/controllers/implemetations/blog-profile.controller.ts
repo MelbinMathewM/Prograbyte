@@ -1,6 +1,7 @@
 import { HttpResponse } from "@/constants/response.constant";
 import { HttpStatus } from "@/constants/status.constant";
 import { IBlogProfileController } from "@/controllers/interfaces/IBlog-profile.controller";
+import { IBlogProfile } from "@/models/blog-profile.model";
 import { BlogProfileService } from "@/services/implementations/blog-profile.service";
 import { Request, Response, NextFunction } from "express";
 import { inject } from "inversify";
@@ -22,9 +23,20 @@ export class BlogProfileController implements IBlogProfileController {
             }
             const profile = await this._blogProfileService.getProfile(user_id);
 
-            res.status(HttpStatus.OK).json({ profile });
+            res.status(HttpStatus.OK).json({ profile })
         } catch (err) {
             next(err);
+        }
+    }
+
+    async updateUsername(username: Partial<IBlogProfile>, userId: string): Promise<void> {
+        try{
+
+            if(username && userId){
+                await this._blogProfileService.updateUsername(username, userId);
+            }
+        }catch(err: any){
+            console.log(err.message);
         }
     }
 

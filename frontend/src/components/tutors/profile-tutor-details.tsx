@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, Pencil } from "lucide-react";
-import { Profile } from "../../types/user";
+import { Profile } from "@/types/user";
 
 interface UserDetailsProps {
     profile: Profile;

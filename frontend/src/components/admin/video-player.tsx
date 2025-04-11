@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
-import { fetchToken, getSecureUrl } from "../../api/video";
+import { fetchToken, getSecureUrl } from "@/api/video";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import { VideoPlayerProps } from "../../types/user";
+import { VideoPlayerProps } from "@/types/user";
 
 type VideoJsPlayer = ReturnType<typeof videojs>;
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark, userId, courseId, topicId }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark }) => {
     const [token, setToken] = useState<string | null>(null);
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -68,8 +68,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ publicId, isDark, userId, cou
                 },
             ],
         });
-
-        const player = playerRef.current;
 
         return () => {
             if (playerRef.current) {

@@ -7,7 +7,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({
+export const Button: React.FC<ButtonProps> = ({
   children,
   className,
   variant = "default",
@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    "px-4 py-2 rounded-md font-semibold transition duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed";
+    "px-4 py-2 rounded-sm font-semibold transition duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantStyles = {
     default: "bg-blue-600 text-white hover:bg-blue-800 cursor-pointer",
@@ -36,5 +36,3 @@ const Button: React.FC<ButtonProps> = ({
     </button>
   );
 };
-
-export default Button;
