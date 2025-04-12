@@ -7,7 +7,6 @@ import { errorHandler } from "@/middlewares/error.middlewate";
 dotenv.config();
 
 import { validateEnv } from "@/utils/env-config.util";
-import { startRabbitMQConsumer } from "@/services/rabbitmq.service";
 import verifyApiKey from "@/configs/api-key.config";
 import { env } from "@/configs/env.config";
 import { server, app } from "@/configs/inversify.config";
@@ -24,7 +23,5 @@ app.use(verifyApiKey as express.RequestHandler);
 
 app.use('/',router);
 app.use(errorHandler);
-
-startRabbitMQConsumer();
 
 server.listen(PORT,() => logger.info(`Server started on port ${PORT}`))

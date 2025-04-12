@@ -18,7 +18,7 @@ export class StreamController implements IStreamController {
             const streamKey = `live_${schedule_id}`;
             const rtmpUrl = `rtmp://localhost:1935/stream/${streamKey}`;
             const hlsDirectory = path.resolve("C:\\Users\\User\\Coding Items\\Second-project\\backend\\live-service\\hls", streamKey);
-            const hlsUrl = `http://localhost:8080/hls/${streamKey}/index.m3u8`;
+            const hlsUrl = `http://localhost:8080/hls/${streamKey}.m3u8`;
 
             if (!fs.existsSync(hlsDirectory)) {
                 fs.mkdirSync(hlsDirectory, { recursive: true });
@@ -55,7 +55,8 @@ export class StreamController implements IStreamController {
             res.json({
                 success: true,
                 rtmpUrl,
-                hlsUrl
+                hlsUrl,
+                streamKey
             });
 
         } catch (err) {

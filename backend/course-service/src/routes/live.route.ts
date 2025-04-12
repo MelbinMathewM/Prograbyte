@@ -7,6 +7,7 @@ const liveController = container.get<LiveController>(LiveController);
 
 liveRouter.post('/',liveController.postLiveSchedule.bind(liveController));
 liveRouter.get('/', liveController.getLiveSchedule.bind(liveController));
+liveRouter.get('/:schedule_id', liveController.getScheduleById.bind(liveController));
 liveRouter.patch('/:schedule_id/status', liveController.changeLiveScheduleStatus.bind(liveController));
 liveRouter.get('/:schedule_id/check', liveController.checkLiveScheduleStatus.bind(liveController));
 

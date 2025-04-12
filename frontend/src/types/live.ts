@@ -8,8 +8,8 @@ export interface ILiveClassSchedule {
     scheduled_date: Date;
     duration: number;
     status: "scheduled" | "live" | "completed" | "canceled";
-    room_id: string;
-    meeting_link: string;
+    room_id?: string;
+    meeting_link?: string;
     attendees?: Attendees[];
 
   }

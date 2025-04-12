@@ -1,13 +1,15 @@
-import { Server } from "socket.io";
+import { Namespace, Server } from "socket.io";
 import { io as ClientIO, Socket as ClientSocket } from "socket.io-client";
 
 export class LiveGateway {
   private io: Server;
   private courseSocket: ClientSocket;
+  private nsp: Namespace;
 
   constructor(io: Server) {
     this.io = io;
-    this.courseSocket = ClientIO(process.env.COURSE_SERVICE || "http://localhost:5006", {
+    this.nsp = io.of("/live");
+    this.courseSocket = ClientIO(process.env.COURSE_SERVICE || "http://localhost:5003", {
       transports: ["websocket"],
       reconnection: true,
     });
@@ -20,19 +22,13 @@ export class LiveGateway {
       console.log("✅ Connected to Course Service via WebSocket");
     });
 
-    this.courseSocket.on("offer", (data) => {
-      console.log("📡 Offer from Course Service:", data);
-      this.io.emit("offer", data);
+    this.courseSocket.on("receive_comment", ({ roomId, comment }) => {
+      console.log("📡 comment from Course Service:", comment);
+      this.nsp.to(roomId).emit("receive_comment", comment);
     });
 
-    this.courseSocket.on("answer", (data) => {
-      console.log("✅ Answer from Course Service:", data);
-      this.io.emit("answer", data);
-    });
-
-    this.courseSocket.on("ice-candidate", (data) => {
-      console.log("🔗 ICE Candidate from Course Service:", data);
-      this.io.emit("ice-candidate", data);
+    this.courseSocket.on("update_viewer_count", ({ roomId, count }) => {
+      this.nsp.to(roomId).emit("update_viewer_count", count);
     });
 
     this.courseSocket.on("disconnect", () => {
@@ -41,27 +37,18 @@ export class LiveGateway {
   }
 
   public initialize() {
-    this.io.on("connection", (clientSocket) => {
+    this.nsp.on("connection", (clientSocket) => {
       console.log("🌍 Frontend connected to Live Streaming:", clientSocket.id);
 
-      clientSocket.on("join-room", (roomId) => {
-        console.log(`User joined live session: ${roomId}`);
-        this.courseSocket.emit("join-room", roomId);
+      clientSocket.on("join_room", (roomId) => {
+        console.log(`${clientSocket.id} joined live session: ${roomId}`);
+        clientSocket.join(roomId);
+        this.courseSocket.emit("join_room", roomId);
       });
 
-      clientSocket.on("offer", (data) => {
-        console.log("📡 Forwarding Offer to Course Service:", data);
-        this.courseSocket.emit("offer", data);
-      });
-
-      clientSocket.on("answer", (data) => {
-        console.log("✅ Forwarding Answer to Course Service:", data);
-        this.courseSocket.emit("answer", data);
-      });
-
-      clientSocket.on("ice-candidate", (data) => {
-        console.log("🔗 Forwarding ICE Candidate to Course Service:", data);
-        this.courseSocket.emit("ice-candidate", data);
+      clientSocket.on("send_comment", (data) => {
+        console.log("📡 Forwarding Comment to Course Service:", data);
+        this.courseSocket.emit("send_comment", data);
       });
 
       clientSocket.on("disconnect", () => {

@@ -11,9 +11,29 @@ export const createLiveSchedule = async (data: ILiveClassSchedule) => {
     }
 }
 
-export const getLiveSchedules = async (tutor_id: string) => {
+export const getScheduleById = async (schedule_id: string) => {
+    try{
+        const response = await axiosInstance.get(`/course/live/${schedule_id}`);
+        return response.data;
+    }catch(err: any){
+        console.error("Error fetching schedule", err);
+        throw err.response.data;
+    }
+}
+
+export const getLiveSchedulesByTutor = async (tutor_id: string) => {
     try{
         const response = await axiosInstance.get(`/course/live`,{ params: {tutor_id} });
+        return response.data;
+    }catch(err){
+        console.error("Error fetching live schedules",err);
+        throw err;
+    }
+}
+
+export const getLiveSchedulesByCourse = async (course_id: string) => {
+    try{
+        const response = await axiosInstance.get(`/course/live`,{ params: {course_id} });
         return response.data;
     }catch(err){
         console.error("Error fetching live schedules",err);

@@ -24,4 +24,6 @@ const AuthSchema = new Schema<IAuth>(
     }, { timestamps: true }
 );
 
-export default mongoose.model<IAuth>("Auth",AuthSchema);
+const Auth = mongoose.model<IAuth>("Auth",AuthSchema);
+
+export default Auth;

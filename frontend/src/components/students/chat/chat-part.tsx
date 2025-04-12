@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { isValid, format } from 'date-fns';
-import socket from '@/configs/socketConfig';
+import { blogSocket } from '@/configs/socketConfig';
 import { fetchConversation, fetchMutualConnections, fetchMessages } from '@/api/chat';
 import { UserContext } from '@/contexts/user-context';
 import { useTheme } from '@/contexts/theme-context';
@@ -35,14 +35,14 @@ const ChatDashboard: React.FC = () => {
 
   useEffect(() => {
     if (!loggedInUserId) return;
-    socket.emit('join', loggedInUserId);
+    blogSocket.emit('join', loggedInUserId);
 
-    socket.on('receive_message', (data: Message) => {
+    blogSocket.on('receive_message', (data: Message) => {
       setMessages((prev) => [...prev, { ...data, isOwn: data.sender === loggedInUserId }]);
     });
 
     return () => {
-      socket.off('receive_message');
+      blogSocket.off('receive_message');
     };
   }, [loggedInUserId]);
 
@@ -74,7 +74,7 @@ const ChatDashboard: React.FC = () => {
       receiver: selectedUser._id,
       content: msg,
     };
-    socket.emit('send_message', payload);
+    blogSocket.emit('send_message', payload);
   };
 
   const groupMessagesByDate = (messages: Message[]) => {

@@ -59,7 +59,7 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
                     >
                         <div className="flex items-center gap-4 mb-4">
                             <img
-                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${blog?.username || "User"}`}
+                                src={`https://ui-avatars.com/api/?name=${blog?.username || "User"}&background=random`}
                                 alt={blog?.username}
                                 className="w-12 h-12 rounded-full object-cover"
                             />
@@ -77,7 +77,7 @@ const BlogList: React.FC<BlogListProps> = ({ userId, username, isDark, blogs, se
 
                         {blog?.image && (
                             <div className="mb-4 cursor-pointer" onClick={() => setImageModal({ open: true, image: blog?.image as string, title: blog?.title, content: blog?.content })}>
-                                <img src={blog?.image} alt="Blog" className="w-full h-60 object-cover rounded-lg" />
+                                <img src={blog?.image} alt="Blog" className="w-full h-60 object-cover rounded" />
                             </div>
                         )}
 
