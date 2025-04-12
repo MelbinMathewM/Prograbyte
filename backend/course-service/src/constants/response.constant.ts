@@ -44,4 +44,6 @@ export const HttpResponse = {
     TOPIC_PROGRESS_UPDATED: "Topic progress updated",
     COMPLETION_STATUS_UPDATED: "Completion status updated",
     REVIEW_ADDED: "Review added",
+    START_STREAM_FAILED: "Failed to start live stream",
+    STOP_STREAM_FAILED: "Failed to stop live stream",
 }

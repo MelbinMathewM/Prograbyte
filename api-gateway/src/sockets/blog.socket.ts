@@ -1,13 +1,15 @@
-import { Server } from "socket.io";
+import { Namespace, Server } from "socket.io";
 import { io as ClientIO, Socket as ClientSocket } from "socket.io-client";
 
 export class BlogGateway {
   private io: Server;
   private blogSocket: ClientSocket;
+  private nsp: Namespace;
 
   constructor(io: Server) {
     this.io = io;
-    this.blogSocket = ClientIO(process.env.BLOG_SERVICE || "http://localhost:5009", {
+    this.nsp = io.of("/blog");
+    this.blogSocket = ClientIO(process.env.BLOG_SERVICE || "http://localhost:5004", {
       transports: ["websocket"],
       reconnection: true,
     });
@@ -22,7 +24,7 @@ export class BlogGateway {
 
     this.blogSocket.on("receive_message", (data) => {
       console.log("📨 Message from Blog Service:", data);
-      this.io.emit("receive_message", data);
+      this.nsp.emit("receive_message", data);
     });
 
     this.blogSocket.on("disconnect", () => {
@@ -31,23 +33,21 @@ export class BlogGateway {
   }
 
   public initialize() {
-    this.io.on("connection", (clientSocket) => {
-      console.log("🌐 Frontend connected:", clientSocket.id);
+    this.nsp.on("connection", (clientSocket) => {
+      console.log("🌐 Frontend connected to Blog Namespace:", clientSocket.id);
 
-      // Handle join event
       clientSocket.on("join", (userId: string) => {
         console.log(`Forwarding join event for user: ${userId}`);
         this.blogSocket.emit("join", userId);
       });
 
-      // Forward message sending
       clientSocket.on("send_message", (data) => {
-        console.log("Forwarding message to Blog Service:", data);
+        console.log("✉️ Forwarding message to Blog Service:", data);
         this.blogSocket.emit("send_message", data);
       });
 
       clientSocket.on("disconnect", () => {
-        console.log("🌐 Frontend disconnected:", clientSocket.id);
+        console.log("🌐 Frontend disconnected from Blog Namespace:", clientSocket.id);
       });
     });
   }

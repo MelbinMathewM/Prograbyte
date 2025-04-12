@@ -1,23 +1,24 @@
 import { inject, injectable } from "inversify";
 import { JwtPayload } from 'jsonwebtoken';
-import { IAuthRepository } from "../repositories/interfaces/IAuthRepository";
-import redisClient from "../configs/redis";
-import { createHttpError } from "../utils/httpError";
-import { HttpStatus } from "../constants/status";
-import { HttpResponse } from "../constants/responseMessage";
-import { comparePassword, hashPassword } from "../utils/bcrypt";
-import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken, verifyResetToken } from "../utils/jwt";
-import { IAuth } from "../models/AuthModel";
-import { generateOtp } from "../utils/otp";
-import { publishMessage } from "../utils/rabbitmq.util";
+import { IAuthRepository } from "../../repositories/interfaces/IAuth.repository";
+import redisClient from "../../configs/redis.config";
+import { createHttpError } from "../../utils/http-error.util";
+import { HttpStatus } from "../../constants/status.constant";
+import { HttpResponse } from "../../constants/response.constant";
+import { comparePassword, hashPassword } from "../../utils/bcrypt.util";
+import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken, verifyResetToken } from "../../utils/jwt.util";
+import { IAuth } from "../../models/auth.model";
+import { generateOtp } from "../../utils/otp.util";
+import { publishMessage } from "../../utils/rabbitmq.util";
+import { IAuthService } from "../interfaces/IAuth.service";
 
 @injectable()
-export class AuthService {
-    constructor(@inject("IAuthRepository") private authRepository: IAuthRepository) { }
+export class AuthService implements IAuthService {
+    constructor(@inject("IAuthRepository") private _authRepository: IAuthRepository) { }
 
     async loginUser(email: string, password: string): Promise<{ accessToken: string, refreshToken: string, role: string }> {
 
-        const user = await this.authRepository.getUserByEmail(email);
+        const user = await this._authRepository.findOne({email});
 
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 
@@ -52,12 +53,12 @@ export class AuthService {
 
     async createUserByGrpc(authData: IAuth): Promise<void> {
 
-        await this.authRepository.createUserByGrpc(authData);
+        await this._authRepository.create(authData);
     }
 
     async sendOtp(email: string): Promise<void> {
 
-        const existingUser = await this.authRepository.getUserByEmail(email);
+        const existingUser = await this._authRepository.findOne({email});
 
         if(existingUser){
             throw createHttpError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
@@ -91,7 +92,7 @@ export class AuthService {
 
     async forgotPassword(email: string): Promise<void> {
 
-        const user = await this.authRepository.getUserByEmail(email);
+        const user = await this._authRepository.findOne({email});
 
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 
@@ -115,7 +116,7 @@ export class AuthService {
 
         if (!decoded) throw createHttpError(HttpStatus.NO_CONTENT, HttpResponse.NO_DECODED_TOKEN);
 
-        const user = await this.authRepository.getUserByEmail(decoded.email);
+        const user = await this._authRepository.findOne({ email: decoded.email });
 
         if (!user) throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
 

@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import EditTopicModal from "./edit-topic-modal";
 import { useTheme } from "@/contexts/theme-context";
 import { CircularProgress } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -23,7 +22,6 @@ const TutorCourseDetailPart = () => {
   const [topics, setTopics] = useState<Topics | null>(null);
   const [topic, setTopic] = useState<Topic[]>([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [updatedCourse, setUpdatedCourse] = useState<Partial<Course>>({ ...course });
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +39,6 @@ const TutorCourseDetailPart = () => {
       try {
         const response = await fetchCourseDetail(id as string);
         setCourse(response.course);
-        setUpdatedCourse(response.course);
       } catch (err) {
         console.error("Error fetching course details");
       }
@@ -104,7 +101,6 @@ const TutorCourseDetailPart = () => {
     }
   
     const scheduledDateTime = new Date(`${scheduleData.date}T${scheduleData.time}`);
-    const roomId = uuidv4();
   
     const liveData = {
       course_id: course?._id as string,
@@ -115,14 +111,13 @@ const TutorCourseDetailPart = () => {
       scheduled_date: scheduledDateTime,
       duration: parseInt(scheduleData.duration, 10),
       status: "scheduled" as const,
-      room_id: roomId,
-      meeting_link: `http://localhost:5000/api/course/live/${roomId}`
     };
   
     console.log("Scheduling live for:", liveData);
     try{
       const response = await createLiveSchedule(liveData);
       setIsScheduleOpen(false);
+      toast.success(response.message);
       setScheduleData({ date: "", time: "", duration: "", description: "" });
     }catch(err: any){
       toast.error(err.response.data.error);

@@ -9,9 +9,9 @@ export const socketConfig = {
 export const SOCKET_EVENTS = {
     CONNECTION: "connection",
     DISCONNECT: "disconnect",
-    JOIN: "join",
-    SEND_MESSAGE: "send_message",
-    RECEIVE_MESSAGE: "receive_message",
+    JOIN: "join_room",
+    SEND_COMMENT: "send_comment",
+    RECEIVE_COMMENT: "receive_comment",
 
     LIVE_JOIN: "live_join",
     LIVE_OFFER: "live_offer",

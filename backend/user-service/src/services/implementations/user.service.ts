@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { IUserRepository } from '../../repositories/interfaces/IUser.repository';
 import { IUser } from '../../models/user.model';
-import authClient from '../../grpc/auth-client.grpc';
+import authClient from '../../grpcs/auth-client.grpc';
 import { createHttpError } from '../../utils/http-error.util';
 import { HttpStatus } from '../../constants/status.constant';
 import { HttpResponse } from '../../constants/response.constant';

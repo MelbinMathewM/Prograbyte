@@ -1,16 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AccordionItem from "@/components/ui/accordian-item";
 import Accordion from "@/components/ui/accordian";
 import { Link } from "react-router-dom";
 import { addToWishlist, getWishlist, removeFromWishlist } from "@/api/wishlist";
-import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
 import CoursePurchaseSection from "@/components/students/course-detail/course-detail-purchasetab";
-import { fetchEnrolledCourse, fetchReviews, fetchTopicsByCourse } from "@/api/course";
+import { fetchReviews, fetchTopicsByCourse } from "@/api/course";
 import { Course, EnrolledCourses, IReview, Topic, Topics } from "@/types/course";
 import { getUserData } from "@/api/profile";
+import { User } from "@/types/user";
 
-const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) => {
+const TabNav = ({ course, enrolledCourses, user, isDark }: { course: Course | null, enrolledCourses: EnrolledCourses | null, user: User | null ,isDark: boolean }) => {
 
     const [topicsMain, setTopicsMain] = useState<Topics | null>(null);
     const [topics, setTopics] = useState<Topic[]>([])
@@ -22,11 +22,8 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         Intermediate: false,
         Advanced: false,
     });
-    const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourses | null>(null);
     const [reviewData, setReviewData] = useState<IReview[]>([]);
     const [usernames, setUsernames] = useState<{ [key: string]: string }>({});
-
-    const { user } = useContext(UserContext) ?? {};
 
     const toggleSection = (level: string) => {
         setOpenSections(prev => ({ ...prev, [level]: !prev[level] }));
@@ -45,23 +42,6 @@ const TabNav = ({ course, isDark }: { course: Course | null, isDark: boolean }) 
         };
         fetchTopics();
     }, [course]);
-
-    useEffect(() => {
-        if (!user?.id) return;
-        const fetchEnrolled = async () => {
-            try {
-                const response = await fetchEnrolledCourse(user?.id);
-                console.log(response, 'hii');
-
-                const courseIds = response.enrolledCourses;
-
-                setEnrolledCourses(courseIds);
-            } catch (err) {
-                console.error("error fetching enrolled courses")
-            }
-        }
-        fetchEnrolled();
-    }, [user?.id])
 
     useEffect(() => {
         if (!user?.id) return;

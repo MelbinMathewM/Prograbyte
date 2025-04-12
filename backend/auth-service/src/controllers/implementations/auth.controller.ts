@@ -1,19 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import { inject } from "inversify";
-import { AuthService } from "../services/AuthService";
-import { IAuth } from "../models/AuthModel";
-import { HttpStatus } from "../constants/status";
-import { HttpResponse } from "../constants/responseMessage";
+import { AuthService } from "../../services/implementations/auth.service";
+import { HttpStatus } from "../../constants/status.constant";
+import { HttpResponse } from "../../constants/response.constant";
+import { IAuthController } from "../interfaces/IAuth.controller";
 
-export class AuthController {
-  constructor(@inject(AuthService) private authService: AuthService) { }
+export class AuthController implements IAuthController {
+  constructor(@inject(AuthService) private _authService: AuthService) { }
 
   async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
 
       const { email, password } = req.body;
 
-      const data = await this.authService.loginUser(email, password);
+      const data = await this._authService.loginUser(email, password);
 
       res.cookie(`refreshToken_${data?.role}`, data?.refreshToken, {
         httpOnly: true,
@@ -36,7 +36,7 @@ export class AuthController {
       const { role } = req.body;
       const refreshToken = req.cookies[`refreshToken_${role}`];
 
-      const accessToken = await this.authService.refreshToken(refreshToken);
+      const accessToken = await this._authService.refreshToken(refreshToken);
 
       res.status(200).json(accessToken);
     } catch (err) {
@@ -51,7 +51,7 @@ export class AuthController {
         res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.EMAIL_REQUIRED });
       }
 
-      await this.authService.sendOtp(email);
+      await this._authService.sendOtp(email);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.OTP_SEND });
     } catch (error) {
@@ -71,7 +71,7 @@ export class AuthController {
         res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.OTP_REQUIRED });
       }
 
-      await this.authService.verifyOtp(email, otp);
+      await this._authService.verifyOtp(email, otp);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.OTP_VERIFIED});
     } catch (error) {
@@ -84,7 +84,7 @@ export class AuthController {
 
       const { email } = req.body;
 
-      await this.authService.forgotPassword(email);
+      await this._authService.forgotPassword(email);
 
       res.status(200).json({ message: "Password reset email sent" });
 
@@ -97,7 +97,7 @@ export class AuthController {
     try {
       const { token, password } = req.body;
 
-      await this.authService.resetPassword(token, password);
+      await this._authService.resetPassword(token, password);
 
       res.status(200).json({ message: "Password reset successfull" });
 

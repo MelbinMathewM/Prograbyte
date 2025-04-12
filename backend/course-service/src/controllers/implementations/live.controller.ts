@@ -22,13 +22,32 @@ export class LiveController implements ILiveController{
         }
     }
 
+    async getScheduleById(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const { schedule_id } = req.params;
+
+            if(!schedule_id){
+                res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.MISSING_OR_INVALID_FIELDS });
+                return;
+            }
+
+            const schedule = await this._liveService.getSchedule(schedule_id);
+
+            res.status(HttpStatus.OK).json({ schedule });
+        }catch(err){
+            next(err);
+        }
+    }
+
     async getLiveSchedule(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
-            const { tutor_id } = req.query;
+            const { tutor_id, course_id } = req.query;
 
             let schedules;
             if(tutor_id){
                 schedules = await this._liveService.getLiveScheduleByTutorId(tutor_id as string);
+            }else if(course_id){
+                schedules = await this._liveService.getLiveScheduleByCourseId(course_id as string);
             }
 
             res.status(HttpStatus.OK).json({ liveSchedules: schedules });
@@ -41,66 +60,28 @@ export class LiveController implements ILiveController{
         try{
             const { schedule_id } = req.params;
             const status = req.body;
-            console.log(status,'j')
 
             if(!schedule_id){
                 res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.MISSING_OR_INVALID_FIELDS });
                 return;
             }
 
-            
-            console.log('hii1')
-
             if (status.status === "live") {
-                console.log('huu');
+
                 const token = req.headers["authorization"]?.split(' ')[1];
-                console.log(token);
-                const liveStreamResponse = await axios.post("http://localhost:5000/api/live/stream/start-stream", {
-                    schedule_id,
-                },
-                {
-                    headers: {
-                        "authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                console.log(liveStreamResponse.data);
-    
-                if (!liveStreamResponse.data.success) {
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Failed to start live stream" });
-                    return;
-                }
-
-                await this._liveService.changeLiveStatus(schedule_id, status);
+                const { streamUrl, streamKey } = await this._liveService.startStream(schedule_id, status, token as string);
                 
-                res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED, streamUrl: liveStreamResponse.data.hlsUrl });
+                res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED, streamUrl, streamKey });
             } else if (status.status === "completed") {
+
                 const token = req.headers["authorization"]?.split(' ')[1];
-    
-                const liveStreamResponse = await axios.post(
-                    "http://localhost:5000/api/live/stream/stop-stream",
-                    { schedule_id },
-                    {
-                        headers: {
-                            "authorization": `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
-    
-                console.log(liveStreamResponse.data);
-    
-                if (!liveStreamResponse.data.success) {
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ error: "Failed to stop live stream" });
-                    return;
-                }
-    
-                // Update the live schedule status in the database
-                await this._liveService.changeLiveStatus(schedule_id, status);
+                await this._liveService.endStream(schedule_id, status, token as string);
     
                 res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED });
             } else {
+
+                await this._liveService.changeLiveStatus(schedule_id, status);
+
                 res.status(HttpStatus.OK).json({ message: HttpResponse.STATUS_UPDATED });
             }
         }catch(err){

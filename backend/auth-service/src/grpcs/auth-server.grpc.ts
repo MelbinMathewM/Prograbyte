@@ -1,11 +1,11 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
-import Auth, { IAuth } from '../models/AuthModel';
+import Auth, { IAuth } from '../models/auth.model';
 import mongoose from 'mongoose';
-import { hashPassword } from '../utils/bcrypt';
-import { AuthService } from '../services/AuthService';
-import { AuthRepository } from '../repositories/implementations/AuthRepository';
+import { hashPassword } from '../utils/bcrypt.util';
+import { AuthService } from '../services/implementations/auth.service';
+import { AuthRepository } from '../repositories/implementations/auth.repository';
 
 const PROTO_PATH = path.join(__dirname, "../proto/auth.proto");
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);

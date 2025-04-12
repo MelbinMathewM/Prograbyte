@@ -17,6 +17,7 @@ import Blog from "@/pages/students/blog";
 import StudentLayout from "./student-layout";
 import PublicProfile from "@/pages/students/public-profile";
 import Chat from "@/pages/students/chat";
+import Live from "@/pages/students/live";
 
 const StudentRoutes = () => {
     return (
@@ -37,6 +38,7 @@ const StudentRoutes = () => {
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/profile/:username" element={ <PublicProfile /> } />
                 <Route path="/blog/chat" element={ <Chat /> } />
+                <Route path="/courses/live/:schedule_id" element={ <Live /> } />
             </Route>
         </Route>
     );

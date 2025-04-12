@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { getLiveSchedules, checkLiveStart, changeLiveSchedule } from "@/api/live";
+import { getLiveSchedulesByTutor, checkLiveStart, changeLiveSchedule } from "@/api/live";
 import { TutorContext } from "@/contexts/tutor-context";
 import { ILiveClassSchedule } from "@/types/live";
 import { ChevronRight, XCircle } from "lucide-react";
@@ -17,7 +17,7 @@ const LivePart = () => {
         const fetchLiveSchedules = async () => {
             try {
                 if (!tutor?.id) return;
-                const response = await getLiveSchedules(tutor?.id);
+                const response = await getLiveSchedulesByTutor(tutor?.id);
                 setLiveSchedules(response.liveSchedules);
             } catch (error) {
                 console.error("Error fetching live schedules:", error);
@@ -43,7 +43,7 @@ const LivePart = () => {
         }
     };
 
-    const handleStartLive = async (scheduleId: string, roomId: string) => {
+    const handleStartLive = async (scheduleId: string) => {
         try {
             const response = await checkLiveStart(scheduleId);
             if (response.canStart) {
@@ -52,7 +52,7 @@ const LivePart = () => {
 
                 if(!streamResponse.ok) toast.error("Failed to start stream");
                 console.log(streamResponse,'gg')
-                navigate(`/tutor/live/${scheduleId}`, { state: { streamUrl: streamResponse.streamUrl }});
+                navigate(`/tutor/live/${scheduleId}`, { state: { streamUrl: streamResponse.streamUrl, streamKey: streamResponse.streamKey }});
             } else {
                 toast.error("You cannot start the live class yet.");
             }
@@ -112,7 +112,7 @@ const LivePart = () => {
                                         {schedule.status === "scheduled" && (
                                             <>
                                                 <button
-                                                    onClick={() => handleStartLive(schedule._id as string, schedule.room_id as string)}
+                                                    onClick={() => handleStartLive(schedule._id as string)}
                                                     className="text-blue-600 hover:underline font-medium"
                                                 >
                                                     Start

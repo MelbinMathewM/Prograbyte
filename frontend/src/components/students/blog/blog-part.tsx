@@ -56,15 +56,15 @@ const BlogPart = () => {
 
   useEffect(() => {
     fetchBlogProfile();
-  },[userData]);
+  }, [userData]);
 
   const fetchBlogProfile = async () => {
-    if(!userData?.id) return;
-    try{
+    if (!userData?.id) return;
+    try {
       const response = await getBlogProfile(userData?.id as string);
-      console.log(response.profile,'hsiu')
+      console.log(response.profile, 'hsiu')
       setBlogProfile(response.profile);
-    }catch(err: any){
+    } catch (err: any) {
       console.error("Failed to fetch blog profile:", err.response?.data?.error || err.message);
     }
   };
@@ -82,7 +82,7 @@ const BlogPart = () => {
     formData.append("username", userData?.username || "Unknown");
 
     if (newImage) formData.append("image", newImage);
-    
+
     try {
       const response = await addPost(formData);
       toast.success(response.message);
@@ -137,12 +137,11 @@ const BlogPart = () => {
         <div className="sm:hidden mb-4 p-4 rounded-sm border shadow-md">
           <div className="flex flex-col items-center">
             <img
-              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userData?.username || "User"}`}
+              src={`https://ui-avatars.com/api/?name=${userData?.username || "User"}&background=random`}
               alt="User Avatar"
               className="w-24 h-24 rounded-full border mb-4"
             />
             <h3 className="text-lg font-semibold">{blogProfile?.username || "Alex Johnson"}</h3>
-            <p className="mt-1 text-xs text-gray-500">Full Stack Developer</p>
 
             <div className="flex justify-between w-full mt-6 text-center text-sm">
               <div>
@@ -177,12 +176,12 @@ const BlogPart = () => {
         >
           <div className="flex flex-col items-center">
             <img
-              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${userData?.username || "User"}`}
+              src={`https://ui-avatars.com/api/?name=${userData?.username || "User"}&background=random`}
               alt="User Avatar"
               className="w-24 h-24 rounded-full border mb-4"
             />
+
             <h3 className="text-lg font-semibold">{blogProfile?.username || "Alex Johnson"}</h3>
-            <p className="mt-1 text-xs text-gray-500">Full Stack Developer</p>
 
             <div className="flex justify-between w-full mt-6 text-center text-sm">
               <div>

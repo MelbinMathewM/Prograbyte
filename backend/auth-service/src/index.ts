@@ -1,21 +1,21 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
-import express from "express";
-import authRoutes from "./routes/AuthRoutes";
-import connectDB from "./configs/db";
-import startGRPCServer from "./grpc/AuthServer";
+import express, { Application } from "express";
+import authRoutes from "./routes/auth.route";
+import connectDB from "./configs/db.config";
+import startGRPCServer from "./grpcs/auth-server.grpc";
 import cookieParser from 'cookie-parser';
-import { errorHandler } from "./middlewares/errorMiddlewate";
+import { errorHandler } from "./middlewares/error.middlewate";
 
 dotenv.config();
 
-import { validateEnv } from "./utils/envConfig";
-import verifyApiKey from "./configs/apiKey";
+import { validateEnv } from "./utils/env-config.util";
+import verifyApiKey from "./configs/api-key.config";
 import helmet from "helmet";
 import { initializeRabbitMQ } from "./configs/rabbitmq.config";
 validateEnv();
 
-const app = express();
+const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
