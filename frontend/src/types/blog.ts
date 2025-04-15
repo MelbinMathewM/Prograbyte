@@ -62,8 +62,13 @@ export interface BlogProfile {
     _id: string;
     username: string;
     totalPosts: number;
-    followers: string[];
-    following: string[];
+    followers: string[] | Follower[];
+    following: string[] | Follower[];
     totalFollowers: number;
     totalFollowing: number;
+}
+
+export interface Follower {
+    _id: string;
+    username: string;
 }

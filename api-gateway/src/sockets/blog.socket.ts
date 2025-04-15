@@ -1,3 +1,4 @@
+import { SOCKET_EVENTS } from "@/configs/socket.config";
 import { Namespace, Server } from "socket.io";
 import { io as ClientIO, Socket as ClientSocket } from "socket.io-client";
 
@@ -18,35 +19,35 @@ export class BlogGateway {
   }
 
   private setupBlogServiceListeners() {
-    this.blogSocket.on("connect", () => {
-      console.log("✅ Connected to Blog Service via WebSocket");
+    this.blogSocket.on(SOCKET_EVENTS.CONNECTION, () => {
+      console.log("Connected to Blog Service via WebSocket");
     });
 
-    this.blogSocket.on("receive_message", (data) => {
-      console.log("📨 Message from Blog Service:", data);
-      this.nsp.emit("receive_message", data);
+    this.blogSocket.on(SOCKET_EVENTS.RECEIVE_MESSAGE, (data) => {
+      console.log("Message from Blog Service:", data);
+      this.nsp.emit(SOCKET_EVENTS.RECEIVE_MESSAGE, data);
     });
 
-    this.blogSocket.on("disconnect", () => {
-      console.log("❌ Disconnected from Blog Service");
+    this.blogSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
+      console.log("Disconnected from Blog Service");
     });
   }
 
   public initialize() {
-    this.nsp.on("connection", (clientSocket) => {
-      console.log("🌐 Frontend connected to Blog Namespace:", clientSocket.id);
+    this.nsp.on(SOCKET_EVENTS.CONNECTION, (clientSocket) => {
+      console.log("Frontend connected to Blog Namespace:", clientSocket.id);
 
-      clientSocket.on("join", (userId: string) => {
+      clientSocket.on(SOCKET_EVENTS.JOIN_ROOM, (userId: string) => {
         console.log(`Forwarding join event for user: ${userId}`);
-        this.blogSocket.emit("join", userId);
+        this.blogSocket.emit(SOCKET_EVENTS.JOIN_ROOM, userId);
       });
 
-      clientSocket.on("send_message", (data) => {
+      clientSocket.on(SOCKET_EVENTS.SEND_MESSAGE, (data: any) => {
         console.log("✉️ Forwarding message to Blog Service:", data);
-        this.blogSocket.emit("send_message", data);
+        this.blogSocket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
       });
 
-      clientSocket.on("disconnect", () => {
+      clientSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
         console.log("🌐 Frontend disconnected from Blog Namespace:", clientSocket.id);
       });
     });

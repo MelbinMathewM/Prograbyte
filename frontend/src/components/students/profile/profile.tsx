@@ -159,6 +159,9 @@ export default function ProfilePage() {
                     <h1 className="text-2xl font-semibold">{profile?.name}</h1>
                     <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>{profile?.username || "No Username"}</p>
                 </div>
+                {profile.isPremium && (
+                    <Crown className="text-yellow-500"/>
+                )}
             </div>
 
             {/* Crop Modal */}
@@ -198,14 +201,15 @@ export default function ProfilePage() {
                                         key={index}
                                         to={item.link}
                                         className={`p-2 flex flex-col items-center justify-center rounded-lg shadow-md transition-all 
-                                        ${isDark ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                                        ${isDark ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-100 text-gray-700 hover:bg-gray-200"} 
+                                        ${item.label === "Premium" && profile?.isPremium ? "bg-yellow-400 text-white hover:bg-yellow-500" : ""}`}
+                                        
                                     >
                                         <item.icon size={24} />
                                         <p className="mt-1 text-sm">{item.label}</p>
                                     </Link>
                                 ))}
                             </div>
-
                         </div>
 
                         {/* Skills Section */}

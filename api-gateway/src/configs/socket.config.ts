@@ -1,17 +1,16 @@
-export const socketConfig = {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"],
-      credentials: true,
-    },
-};
-
 export const SOCKET_EVENTS = {
+
     CONNECTION: "connection",
     DISCONNECT: "disconnect",
-    JOIN: "join_room",
+
+    JOIN_ROOM: "join_room",
+
+    SEND_MESSAGE: "send_message",
+    RECEIVE_MESSAGE: "receive_message",
+
     SEND_COMMENT: "send_comment",
     RECEIVE_COMMENT: "receive_comment",
+
     UPDATE_VIEWER_COUNT: "update_viewer_count",
 
     LIVE_JOIN: "live_join",

@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Hls from "hls.js";
-import { changeLiveSchedule } from "@/api/live";
+import { changeLiveSchedule, getScheduleById } from "@/api/live";
 import { ChevronLeft, Send, Users, AtSign, ChevronRight } from "lucide-react";
 import { liveSocket, SOCKET_EVENTS } from "@/configs/socketConfig";
 import { FaEye } from "react-icons/fa";
 import { useTheme } from "@/contexts/theme-context";
 import { CallEnd } from "@mui/icons-material";
+import { ILiveClassSchedule } from "@/types/live";
 
 const LiveRoom: React.FC = () => {
-    const { id } = useParams();
-    const location = useLocation();
     const navigate = useNavigate();
     const { theme } = useTheme();
     const isDark = theme === "dark-theme";
@@ -22,19 +21,32 @@ const LiveRoom: React.FC = () => {
     const [comments, setComments] = useState<{ user: string; text: string }[]>([]);
     const [newComment, setNewComment] = useState("");
     const [viewerCount, setViewerCount] = useState(0);
-
-    const streamUrl: string = location.state?.streamUrl;
-    const streamKey: string = location.state?.streamKey;
+    const [schedule, setSchedule] = useState<ILiveClassSchedule | null>(null);
+    const { schedule_id } = useParams();
 
     useEffect(() => {
-        if (!streamUrl) return;
+        if (!schedule_id) return;
+        const getSchedule = async () => {
+            try {
+                const response = await getScheduleById(schedule_id);
+                console.log(response.schedule);
+                setSchedule(response.schedule);
+            } catch (err: any) {
+                console.error(err.error);
+            }
+        }
+        getSchedule();
+    }, [schedule_id]);
+
+    useEffect(() => {
+        if (!schedule) return;
 
         if (videoRef.current) {
             if (videoRef.current.canPlayType("application/vnd.apple.mpegurl")) {
-                videoRef.current.src = streamUrl;
+                videoRef.current.src = schedule?.meeting_link as string;
             } else if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource(streamUrl);
+                hls.loadSource(schedule?.meeting_link as string);
                 hls.attachMedia(videoRef.current);
                 hlsRef.current = hls;
             }
@@ -43,7 +55,7 @@ const LiveRoom: React.FC = () => {
         return () => {
             hlsRef.current?.destroy();
         };
-    }, [streamUrl]);
+    }, [schedule]);
 
     useEffect(() => {
         const onReceiveComment = (comment: { user: string; text: string }) => {
@@ -55,10 +67,10 @@ const LiveRoom: React.FC = () => {
         };
 
         if (liveSocket.connected) {
-            liveSocket.emit(SOCKET_EVENTS.JOIN, streamKey);
+            liveSocket.emit(SOCKET_EVENTS.JOIN, schedule?.room_id);
         } else {
             liveSocket.on(SOCKET_EVENTS.CONNECT, () => {
-                liveSocket.emit(SOCKET_EVENTS.JOIN, streamKey);
+                liveSocket.emit(SOCKET_EVENTS.JOIN, schedule?.room_id);
             });
         }
 
@@ -70,7 +82,7 @@ const LiveRoom: React.FC = () => {
             liveSocket.off(SOCKET_EVENTS.VIEW_COUNT, onViewerCount);
             liveSocket.off(SOCKET_EVENTS.CONNECT);
         };
-    }, [streamKey]);
+    }, [schedule]);
 
     useEffect(() => {
         chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
@@ -82,7 +94,7 @@ const LiveRoom: React.FC = () => {
         const comment = { user: "Tutor", text: newComment };
 
         liveSocket.emit(SOCKET_EVENTS.SEND_COMMENT, {
-            roomId: streamKey,
+            roomId: schedule?.room_id,
             comment
         });
 
@@ -91,7 +103,7 @@ const LiveRoom: React.FC = () => {
 
     const endStream = async () => {
         try {
-            await changeLiveSchedule(id as string, "completed");
+            await changeLiveSchedule(schedule_id as string, "completed");
             alert("Live stream ended.");
             navigate("/tutor/live");
         } catch (error) {
@@ -149,7 +161,7 @@ const LiveRoom: React.FC = () => {
                             className={`px-4 py-2 rounded-sm font-medium shadow-md ${isDark ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-600 text-white"
                                 }`}
                         >
-                            <CallEnd className="me-2"/>End stream
+                            <CallEnd className="me-2" />End stream
                         </button>
                     </div>
 

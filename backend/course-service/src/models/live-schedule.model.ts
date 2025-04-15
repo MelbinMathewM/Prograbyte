@@ -56,7 +56,6 @@ const LiveClassSchema = new Schema<ILiveClass>({
   },
   room_id:{
     type: String,
-    required: true
   },
   meeting_link: {
     type: String,

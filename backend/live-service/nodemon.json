@@ -1,4 +1,4 @@
 {
-    "ignore": ["logs/*", "temp/*", "*.log", "ffmpeg_output/*", "node_modules/", "/tmp/hls/*", "*.ts", "*.m3u8"]
+    "ignore": ["logs/*", "hls/*", "*.ts", "*.m3u8"]
 }
   

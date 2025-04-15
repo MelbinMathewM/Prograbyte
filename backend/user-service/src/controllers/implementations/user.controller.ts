@@ -6,7 +6,6 @@ import { env } from "../../configs/env.config";
 import { HttpStatus } from "../../constants/status.constant";
 import { HttpResponse } from "../../constants/response.constant";
 import stripe from "../../configs/stripe.config";
-import Stripe from "stripe";
 import { IUserController } from "../interfaces/IUser.controller";
 
 export class UserController implements IUserController {
@@ -97,6 +96,7 @@ export class UserController implements IUserController {
         next(err);
       }
   }
+
   async getUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
       try{
         
@@ -254,7 +254,7 @@ export class UserController implements IUserController {
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "subscription",
-        customer_email: email, // Associate the session with the user
+        customer_email: email,
         line_items: [
           {
             price_data: {
@@ -282,7 +282,7 @@ export class UserController implements IUserController {
 
   async stripeWebhook(req: Request, res: Response): Promise<void> {
     try {
-      const sig = req.headers["stripe-signature"];
+      const sig = req.headers["stripe-signature"] as string;
       console.log(sig,'hhs');
       if (!sig) {
         res.status(400).send("Missing Stripe Signature");
@@ -291,15 +291,14 @@ export class UserController implements IUserController {
 
       let event;
       try {
-        const rawBody = req.body;
-        console.log(rawBody,'raw')
-        event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET as string);
+        const rawBody = req.body as Buffer;
+        event = stripe.webhooks.constructEvent(rawBody, sig, env.STRIPE_WEBHOOK_SECRET!);
       } catch (err: any) {
         console.error("⚠️  Webhook signature verification failed.", err.message);
         res.status(400).send(`Webhook Error: ${err.message}`);
         return;
       }
-
+      console.log('hii')
       // Process event
       if (event.type === "checkout.session.completed") {
         const session = event.data.object;

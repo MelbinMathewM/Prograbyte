@@ -33,7 +33,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       try {
         const res = await getUserDataContext();
         if (res.success) {
-          setUser({ id: res.user._id,email: res.user.email, username: res.user.username });
+          setUser({ id: res.user._id, email: res.user.email, username: res.user.username, isPremium: res.user.isPremium });
         } else {
           logout();
         }

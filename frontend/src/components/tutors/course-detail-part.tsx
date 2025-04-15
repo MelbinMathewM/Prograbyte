@@ -32,7 +32,7 @@ const TutorCourseDetailPart = () => {
   const [scheduleData, setScheduleData] = useState({ date: "", time: "", duration: "", description: "" });
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const isDarkMode = theme.includes("dark");
+  const isDarkMode = theme === "dark-theme";
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -239,16 +239,16 @@ const TutorCourseDetailPart = () => {
   }, {} as Record<string, Topic[]>);
 
   return (
-    <Card className={`p-6 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white'}`}>
+    <Card className={`p-6 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {/* Breadcrumb Navigation */}
-      <nav className="mb-4 text-sm flex items-center text-gray-500">
-        <Link to="/tutor/dashboard" className="hover:text-blue-500">Dashboard</Link>
+      <nav className={`mb-4 text-sm flex items-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+        <Link to="/tutor/dashboard" className="hover:text-blue-400">Dashboard</Link>
         <ChevronRight size={16} />
-        <Link to="/tutor/courses" className="hover:text-blue-500">My Courses</Link>
+        <Link to="/tutor/courses" className="hover:text-blue-400">My Courses</Link>
         <ChevronRight size={16} />
         <span>{course.title}</span>
       </nav>
-
+  
       {/* Header Section */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">{course.title}</h2>
@@ -256,14 +256,14 @@ const TutorCourseDetailPart = () => {
           <ChevronLeft className="mt-1" size={18} /> Back
         </Link>
       </div>
-
+  
       {/* Course Info */}
-      <Card className="p-4 mb-4">
-        <p className={`${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-600'}`}>{course.description}</p>
-        <p className={`font-bold pt-2 ${isDarkMode ? 'bg-gray-900text-white' : 'bg-white text-gray-600'}`}>Category: {course?.category_id?.name}</p>
-        <p className="mt-2 font-bold">Price: <span className="text-blue-600">${course.price}</span></p>
+      <Card className={`p-4 mb-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'}`}>
+        <p>{course.description}</p>
+        <p className="font-bold pt-2">Category: {course?.category_id?.name}</p>
+        <p className="mt-2 font-bold">Price: <span className="text-blue-500">${course.price}</span></p>
         <p className="mt-2">Approval Status: {course.approval_status}</p>
-
+  
         <div className="flex gap-2 mt-4">
           <Button onClick={() => setIsEditModalOpen(true)} variant="default" className="flex items-center gap-2" disabled={isLoading}>
             {isLoading ? <CircularProgress size={16} color="inherit" /> : <Pencil size={16} />}
@@ -274,9 +274,9 @@ const TutorCourseDetailPart = () => {
           </Button>
         </div>
       </Card>
-
+  
       {course.preview_video_urls && course.poster_url && (
-        <Card className="p-4 mb-4">
+        <Card className={`p-4 mb-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Poster Image */}
             <div>
@@ -287,7 +287,7 @@ const TutorCourseDetailPart = () => {
                 className="w-full rounded-lg shadow-md"
               />
             </div>
-
+  
             {/* Preview Video */}
             <div>
               <h3 className="text-lg font-semibold mb-2">Preview Video</h3>
@@ -299,25 +299,25 @@ const TutorCourseDetailPart = () => {
           </div>
         </Card>
       )}
-
+  
       {/* Topics Table */}
-      <Card className="p-4">
+      <Card className={`p-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}>
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold mb-4">Topics</h3>
+          <h3 className="text-lg font-semibold">Topics</h3>
           <Button onClick={() => navigate(`/tutor/courses/${course._id}/add-topic`)}>Add Topic</Button>
         </div>
         <Table>
-          <TableHeader>
+          <TableHeader className={` ${isDarkMode? "hover:bg-gray-950": "hover:bg-gray-200"}`}>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Level</TableHead>
-              <TableHead>Video</TableHead>
-              <TableHead>Notes</TableHead>
-              <TableHead className="items-center flex justify-center">Actions</TableHead>
+              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Title</TableHead>
+              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Level</TableHead>
+              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Video</TableHead>
+              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Notes</TableHead>
+              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} text-center font-semibold`}>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Object.entries(categorizedTopics).map(([_, topics]) => (
+            {Object.entries(categorizedTopics).map(([_, topics]) =>
               topics.map((topic) => (
                 <TableRow key={topic._id}>
                   <TableCell>{topic.title}</TableCell>
@@ -342,7 +342,7 @@ const TutorCourseDetailPart = () => {
                     </button>
                     <button className="text-red-500 flex items-center gap-1 cursor-pointer" onClick={() => {
                       setSelectedTopicId(topic._id);
-                      setIsConfirmOpen(true)
+                      setIsConfirmOpen(true);
                     }}>
                       <Trash2 size={16} /> Delete
                     </button>
@@ -352,14 +352,22 @@ const TutorCourseDetailPart = () => {
                   </TableCell>
                 </TableRow>
               ))
-            ))}
+            )}
           </TableBody>
         </Table>
       </Card>
+  
       {isEditModalOpen && (
-        <EditCourseModal open={true} course={course} categories={categories} onClose={() => setIsEditModalOpen(false)} onSave={saveCourseChanges} isDark={isDarkMode} />
+        <EditCourseModal
+          open={true}
+          course={course}
+          categories={categories}
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={saveCourseChanges}
+          isDark={isDarkMode}
+        />
       )}
-
+  
       {selectedTopic && (
         <EditTopicModal
           topic={selectedTopic}
@@ -368,18 +376,18 @@ const TutorCourseDetailPart = () => {
           isDark={isDarkMode}
         />
       )}
-
+  
       {isScheduleOpen && (
         <Dialog open={isScheduleOpen} onClose={() => setIsScheduleOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4">
-            <Dialog.Panel className="bg-white rounded-xl shadow-lg w-full max-w-md p-6 space-y-4">
+            <Dialog.Panel className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white'} rounded-xl shadow-lg w-full max-w-md p-6 space-y-4`}>
               <Dialog.Title className="text-xl font-bold">Schedule Live Class</Dialog.Title>
               <div className="space-y-3">
                 <div>
                   <label className="block text-sm font-medium">Date</label>
                   <input
                     type="date"
-                    className="w-full border rounded p-2"
+                    className={`w-full rounded p-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border'}`}
                     value={scheduleData.date}
                     onChange={(e) => setScheduleData({ ...scheduleData, date: e.target.value })}
                   />
@@ -388,7 +396,7 @@ const TutorCourseDetailPart = () => {
                   <label className="block text-sm font-medium">Time</label>
                   <input
                     type="time"
-                    className="w-full border rounded p-2"
+                    className={`w-full rounded p-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border'}`}
                     value={scheduleData.time}
                     onChange={(e) => setScheduleData({ ...scheduleData, time: e.target.value })}
                   />
@@ -397,7 +405,7 @@ const TutorCourseDetailPart = () => {
                   <label className="block text-sm font-medium">Duration (minutes)</label>
                   <input
                     type="number"
-                    className="w-full border rounded p-2"
+                    className={`w-full rounded p-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border'}`}
                     placeholder="60"
                     value={scheduleData.duration}
                     onChange={(e) => setScheduleData({ ...scheduleData, duration: e.target.value })}
@@ -406,7 +414,7 @@ const TutorCourseDetailPart = () => {
                 <div>
                   <label className="block text-sm font-medium">Description</label>
                   <textarea
-                    className="w-full border rounded p-2"
+                    className={`w-full rounded p-2 ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border'}`}
                     placeholder="Enter live class details..."
                     value={scheduleData.description}
                     onChange={(e) => setScheduleData({ ...scheduleData, description: e.target.value })}
@@ -421,7 +429,7 @@ const TutorCourseDetailPart = () => {
           </div>
         </Dialog>
       )}
-
+  
       <ConfirmDialog
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
@@ -435,8 +443,8 @@ const TutorCourseDetailPart = () => {
         cancelText="Cancel"
         isDark={isDarkMode}
       />
-    </Card >
-  );
+    </Card>
+  );  
 };
 
 export default TutorCourseDetailPart;

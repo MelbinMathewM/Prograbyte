@@ -51,8 +51,7 @@ const LivePart = () => {
                 const streamResponse = await changeLiveSchedule(scheduleId, "live");
 
                 if(!streamResponse.ok) toast.error("Failed to start stream");
-                console.log(streamResponse,'gg')
-                navigate(`/tutor/live/${scheduleId}`, { state: { streamUrl: streamResponse.streamUrl, streamKey: streamResponse.streamKey }});
+                navigate(`/tutor/live/${scheduleId}`);
             } else {
                 toast.error("You cannot start the live class yet.");
             }

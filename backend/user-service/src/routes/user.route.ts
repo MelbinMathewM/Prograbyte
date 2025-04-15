@@ -28,6 +28,10 @@ userRouter.post(
     bodyParser.json(),
     userController.createCheckoutSession.bind(userController)
 );
+userRouter.post(
+    "/stripe/webhook",
+    userController.stripeWebhook.bind(userController)
+);
 
 userRouter.post("/tutor-register", userController.registerTutor.bind(userController));
 userRouter.get("/tutors", userController.getTutors.bind(userController));
