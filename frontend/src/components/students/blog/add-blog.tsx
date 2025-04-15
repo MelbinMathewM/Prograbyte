@@ -29,6 +29,7 @@ const AddBlogModal = ({
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
     const [rawImage, setRawImage] = useState<string | null>(null);
+    const [error, setError] = useState<string>('');
 
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -60,6 +61,17 @@ const AddBlogModal = ({
         setCropModalOpen(false);
     };
 
+    const handleSubmitBlog = async () => {
+        if(!newTitle.trim()){
+            setError("Title is required");
+        }else if(!newContent.trim()){
+            setError("Content is required");
+        }else{
+            setError("");
+            handleAddBlog();
+        }
+    }
+
     return (
         <>
             {/* Add Blog Modal */}
@@ -73,7 +85,7 @@ const AddBlogModal = ({
                             Add New Blog
                         </DialogTitle>
                     </DialogHeader>
-
+                    {error && <p className="text-red-400 font-semibold text-sm pb-1">{error}</p>}
                     <div className="overflow-y-auto flex-1 space-y-4 pr-2">
                         <div>
                             <label className="block mb-1 font-medium">Title</label>
@@ -129,7 +141,7 @@ const AddBlogModal = ({
                             Cancel
                         </button>
                         <button
-                            onClick={handleAddBlog}
+                            onClick={handleSubmitBlog}
                             disabled={isLoading}
                             className={`px-4 py-2 rounded text-white flex items-center justify-center gap-2
                             ${isLoading ? 'bg-green-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600'}`}

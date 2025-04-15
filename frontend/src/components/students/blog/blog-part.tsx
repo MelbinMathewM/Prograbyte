@@ -1,7 +1,4 @@
 import { useState, useContext, useEffect } from "react";
-import {
-  FaPlus,
-} from "react-icons/fa";
 import { motion } from "framer-motion";
 import { UserContext } from "@/contexts/user-context";
 import { useTheme } from "@/contexts/theme-context";
@@ -13,6 +10,7 @@ import BlogList from "@/components/students/blog/blog-list";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import toast from "react-hot-toast";
+import { AddComment, Chat } from "@mui/icons-material";
 
 const BlogPart = () => {
   const { user } = useContext(UserContext) ?? {};
@@ -125,12 +123,22 @@ const BlogPart = () => {
           {showProfile ? "Hide Profile" : "Show Profile"}
         </button>
 
-        <button
-          onClick={() => setAddModalOpen(true)}
-          className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-bold w-full justify-center"
-        >
-          <FaPlus /> Add Blog
-        </button>
+        <div className="flex w-full gap-2">
+          <button
+            onClick={() => setAddModalOpen(true)}
+            className="cursor-pointer flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-bold justify-center w-3/4"
+          >
+            <AddComment /> Blog
+          </button>
+
+          <button
+            onClick={() => navigate('/blog/chat')}
+            className="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-md font-bold w-1/4 flex justify-center items-center"
+          >
+            <Chat />
+          </button>
+        </div>
+
       </div>
 
       {showProfile && (
@@ -198,12 +206,19 @@ const BlogPart = () => {
               </div>
             </div>
 
-            <div className="flex justify-end mt-4 w-full">
+            <div className="flex w-full gap-1 mt-2">
               <button
                 onClick={() => setAddModalOpen(true)}
-                className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg text-sm w-full justify-center"
+                className="cursor-pointer flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-sm font-bold justify-center w-3/4"
               >
-                <FaPlus /> Add Blog
+                <AddComment /> Blog
+              </button>
+
+              <button
+                onClick={() => navigate('/blog/chat')}
+                className="cursor-pointer bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-sm font-bold w-1/4 flex justify-center items-center"
+              >
+                <Chat />
               </button>
             </div>
           </div>

@@ -2,7 +2,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { getPublicProfile, getProfile, unfollowUser, followUser } from "@/api/profile";
 import default_image from "/default-user.avif";
-import { BlogProfile } from "@/types/blog";
+import { BlogProfile, Follower } from "@/types/blog";
 import { useTheme } from "@/contexts/theme-context";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Profile } from "@/types/user";
@@ -53,7 +53,13 @@ export default function PublicProfilePage() {
     useEffect(() => {
         if (blogProfile && user) {
             console.log(blogProfile.followers,'ff')
-            const following = blogProfile.followers.some((follower) => follower === user?.id);
+            const following = (blogProfile.followers as (string | Follower)[]).some((follower) => {
+                if (typeof follower === "string") {
+                  return follower === user?.id;
+                } else {
+                  return follower._id === user?.id;
+                }
+            });
             console.log(following,'j')
             setIsFollowing(following);
         }
@@ -67,10 +73,12 @@ export default function PublicProfilePage() {
             toast.success(`Following ${blogProfile?.username}`);
             setBlogProfile(prev => prev ? {
                 ...prev,
-                followers: [...prev.followers, user?.id as string]
+                followers: [
+                    ...(prev.followers as Follower[]),
+                    { _id: user?.id as string, username: user?.username as string }
+                ]
             } : prev);
-    
-            setIsFollowing(blogProfile ? [...blogProfile.followers, user?.id].includes(user?.id as string) : false);
+            setIsFollowing(true);
         } catch (err: any) {
             console.error(err.res.data.error);
         }
@@ -79,12 +87,12 @@ export default function PublicProfilePage() {
     const handleUnfollow = async () => {
         try {
             await unfollowUser(user?.id as string, blogProfile?._id as string);
-            toast.success(`Unfollowed ${blogProfile?.username}`)
+            toast.success(`Unfollowed ${blogProfile?.username}`);
             setBlogProfile(prev => prev ? {
                 ...prev,
-                followers: prev.followers.filter(f => f !== user?.id)
+                followers: (prev.followers as Follower[]).filter(f => f._id !== user?.id)
             } : prev);
-            setIsFollowing(blogProfile ? blogProfile.followers.filter(f => f !== user?.id).includes(user?.id as string) : false);
+            setIsFollowing(false);
         } catch (err) {
             console.error("Failed to unfollow user");
         }

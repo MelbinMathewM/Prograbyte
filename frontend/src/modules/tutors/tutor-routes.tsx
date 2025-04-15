@@ -22,7 +22,7 @@ const TutorRoutes = () => {
             <Route path="/tutor/profile" element={<TutorProfile />} />
             <Route path="/tutor/profile/my-courses" element={<MyCourses />} />
             <Route path="/tutor/live" element={ <Live /> } />
-            <Route path="/tutor/live/:id" element={ <Streaming /> } />
+            <Route path="/tutor/live/:schedule_id" element={ <Streaming /> } />
         </Route>
     );
 };

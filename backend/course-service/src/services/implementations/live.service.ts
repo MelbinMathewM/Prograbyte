@@ -8,6 +8,7 @@ import { HttpResponse } from "@/constants/response.constant";
 import { Server, Socket } from "socket.io";
 import { SOCKET_EVENTS } from "@/configs/socket.config";
 import axios from "axios";
+import logger from "@/utils/logger.util";
 
 injectable()
 export class LiveService implements ILiveService {
@@ -126,39 +127,36 @@ export class LiveService implements ILiveService {
         let roomViewers: Record<string, Set<string>> = {};
 
         this._io.on(SOCKET_EVENTS.CONNECTION, (socket: Socket) => {
-            console.log("📡 New socket.io Connection:", socket.id);
+            logger.info("New socket.io Connection:", socket.id);
 
-            socket.on(SOCKET_EVENTS.LIVE_JOIN, (roomId: string) => {
+            socket.on(SOCKET_EVENTS.JOIN, (roomId: string, username: string) => {
                 socket.join(roomId);
 
                 roomViewers[roomId] = roomViewers[roomId] || new Set();
-                roomViewers[roomId].add(socket.id);
+                roomViewers[roomId].add(username);
 
-                console.log(`👥 User joined live session: ${roomId}`);
+
+                logger.info(`${username} joined live session: ${roomId}`);
 
                 const count = roomViewers[roomId].size;
 
-                this._io.emit("update_viewer_count", { roomId, count });
+                this._io.emit(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, { roomId, count });
             });
 
             socket.on(SOCKET_EVENTS.SEND_COMMENT, (data: { roomId: string; comment: any }) => {
-                console.log("💬 Received comment:", { roomId: data.roomId, comment: data.comment });
+                logger.info("Received comment:", { roomId: data.roomId, comment: data.comment });
 
-                // TODO: Save to database if needed here
-                // await CommentService.save(data.comment)
-
-                // Emit to API Gateway, which will broadcast to all users in that room
                 this._io.emit(SOCKET_EVENTS.RECEIVE_COMMENT, data);
             });
 
             socket.on(SOCKET_EVENTS.DISCONNECT, () => {
-                console.log("🔴 User disconnected from WebRTC:", socket.id);
+                logger.info("User disconnected from WebRTC:", socket.id);
 
                 for (const roomId in roomViewers) {
                     if (roomViewers[roomId].has(socket.id)) {
                         roomViewers[roomId].delete(socket.id);
                         const count = roomViewers[roomId].size;
-                        this._io.to(roomId).emit("updateViewerCount", count);
+                        this._io.to(roomId).emit(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, count);
                     }
                 }
             });

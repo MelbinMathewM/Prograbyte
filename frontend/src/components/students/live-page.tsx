@@ -56,7 +56,7 @@ const LivePart = () => {
         }
 
         if (liveSocket.connected) {
-            liveSocket.emit(SOCKET_EVENTS.JOIN, schedule.room_id);
+            liveSocket.emit(SOCKET_EVENTS.JOIN, schedule.room_id, user?.username);
         } else {
             liveSocket.on(SOCKET_EVENTS.CONNECT, () => {
                 liveSocket.emit(SOCKET_EVENTS.JOIN, schedule.room_id);
@@ -70,6 +70,7 @@ const LivePart = () => {
         };
 
         const handleViewerCount = (count: number) => {
+            console.log(count,'count');
             setViewerCount(count);
         };
 
@@ -125,7 +126,7 @@ const LivePart = () => {
                         controls
                         autoPlay
                         playsInline
-                        className="w-full rounded-sm shadow-lg border border-gray-700"
+                        className={`w-full rounded-sm shadow-lg border ${ isDark? "border-gray-700": "border-gray-200"}`}
                     />
                     <div className="flex gap-2 absolute top-2 left-2 bg-black bg-opacity-60 px-3 py-1 rounded-sm text-sm text-white">
                         <FaEye className="mt-0.5"/> {viewerCount} watching

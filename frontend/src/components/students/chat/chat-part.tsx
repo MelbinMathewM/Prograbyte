@@ -35,7 +35,7 @@ const ChatDashboard: React.FC = () => {
 
   useEffect(() => {
     if (!loggedInUserId) return;
-    blogSocket.emit('join', loggedInUserId);
+    blogSocket.emit('join_room', loggedInUserId);
 
     blogSocket.on('receive_message', (data: Message) => {
       setMessages((prev) => [...prev, { ...data, isOwn: data.sender === loggedInUserId }]);

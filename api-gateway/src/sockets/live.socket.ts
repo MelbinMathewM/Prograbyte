@@ -1,3 +1,4 @@
+import { SOCKET_EVENTS } from "@/configs/socket.config";
 import { Namespace, Server } from "socket.io";
 import { io as ClientIO, Socket as ClientSocket } from "socket.io-client";
 
@@ -18,41 +19,41 @@ export class LiveGateway {
   }
 
   private setupCourseServiceListeners() {
-    this.courseSocket.on("connect", () => {
-      console.log("✅ Connected to Course Service via WebSocket");
+    this.courseSocket.on(SOCKET_EVENTS.CONNECTION, () => {
+      console.log("Connected to Course Service via WebSocket");
     });
 
-    this.courseSocket.on("receive_comment", ({ roomId, comment }) => {
-      console.log("📡 comment from Course Service:", comment);
-      this.nsp.to(roomId).emit("receive_comment", comment);
+    this.courseSocket.on(SOCKET_EVENTS.RECEIVE_COMMENT, ({ roomId, comment }) => {
+      console.log("comment from Course Service:", comment);
+      this.nsp.to(roomId).emit(SOCKET_EVENTS.RECEIVE_COMMENT, comment);
     });
 
-    this.courseSocket.on("update_viewer_count", ({ roomId, count }) => {
-      this.nsp.to(roomId).emit("update_viewer_count", count);
+    this.courseSocket.on(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, ({ roomId, count }) => {
+      this.nsp.to(roomId).emit(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, count);
     });
 
-    this.courseSocket.on("disconnect", () => {
-      console.log("❌ Disconnected from Course Service");
+    this.courseSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
+      console.log("Disconnected from Course Service");
     });
   }
 
   public initialize() {
-    this.nsp.on("connection", (clientSocket) => {
+    this.nsp.on(SOCKET_EVENTS.CONNECTION, (clientSocket) => {
       console.log("🌍 Frontend connected to Live Streaming:", clientSocket.id);
 
-      clientSocket.on("join_room", (roomId) => {
-        console.log(`${clientSocket.id} joined live session: ${roomId}`);
+      clientSocket.on(SOCKET_EVENTS.JOIN_ROOM, (roomId: string, username: string) => {
+        console.log(`${username} joined live session: ${roomId}`);
         clientSocket.join(roomId);
-        this.courseSocket.emit("join_room", roomId);
+        this.courseSocket.emit(SOCKET_EVENTS.JOIN_ROOM, roomId, username);
       });
 
-      clientSocket.on("send_comment", (data) => {
-        console.log("📡 Forwarding Comment to Course Service:", data);
-        this.courseSocket.emit("send_comment", data);
+      clientSocket.on(SOCKET_EVENTS.SEND_COMMENT, (data:{ roomId: string; comment: any }) => {
+        console.log("Forwarding Comment to Course Service:", data);
+        this.courseSocket.emit(SOCKET_EVENTS.SEND_COMMENT, data);
       });
 
-      clientSocket.on("disconnect", () => {
-        console.log("🌍 Frontend disconnected from Live Streaming:", clientSocket.id);
+      clientSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
+        console.log("Frontend disconnected from Live Streaming:", clientSocket.id);
       });
     });
   }

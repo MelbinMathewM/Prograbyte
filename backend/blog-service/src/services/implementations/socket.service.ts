@@ -22,7 +22,7 @@ export class SocketService implements ISocketService {
       console.log("User connected:", socket.id);
 
       // User joins their personal room
-      socket.on(SOCKET_EVENTS.JOIN, (userId: string) => {
+      socket.on(SOCKET_EVENTS.JOIN_ROOM, (userId: string) => {
         socket.join(userId);
         console.log(`User ${userId} joined their room`);
       });

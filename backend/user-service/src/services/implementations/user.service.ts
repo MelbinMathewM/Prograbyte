@@ -130,7 +130,8 @@ export class UserService implements IUserService {
         const newUser = {
             _id: user._id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            isPremium: user.isPremium
         }
 
         return newUser;

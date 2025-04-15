@@ -4,6 +4,8 @@ import streamRouter from "./routes/stream.route";
 import logger from "./utils/logger.util";
 import { errorHandler } from "./middlewares/error.middleware";
 import { exec } from "child_process";
+import path from "path";
+import { formatPathForDocker } from "./utils/docker.util";
 
 dotenv.config();
 
@@ -16,39 +18,56 @@ app.use('/stream', streamRouter);
 app.use(errorHandler);
 
 const startRTMPServer = () => {
-    exec("docker inspect -f '{{.State.Running}}' nginx-rtmp", (error, stdout, stderr) => {
-        if (!stderr && stdout.trim() === "true") {
-            console.log("RTMP Server is already running.");
+    exec(`docker ps -a --filter "name=^/nginx-rtmp$" --format "{{.Names}}"`, (error, stdout, stderr) => {
+        if (error || stderr) {
+            logger.error("Error checking for existing container:", error || stderr);
             return;
         }
 
-        if (!stderr && stdout.trim() === "false") {
-            console.log("Starting existing NGINX-RTMP container...");
-            exec("docker start nginx-rtmp", (err, out) => {
+        const containerExists = stdout.trim() === "nginx-rtmp";
+
+        if (containerExists) {
+            exec(`docker inspect -f "{{.State.Running}}" nginx-rtmp`, (err, runningOut) => {
                 if (err) {
-                    console.error(`Error starting RTMP server: ${err.message}`);
+                    logger.error("Error inspecting container:", err.message);
                     return;
                 }
-                console.log(`RTMP Server started: ${out}`);
+
+                if (runningOut.trim() === "true") {
+                    logger.info("RTMP Server is already running.");
+                } else {
+                    logger.info("Starting existing NGINX-RTMP container...");
+
+                    exec("docker start nginx-rtmp", (startErr, startOut) => {
+                        if (startErr) {
+                            logger.error("Error starting container:", startErr.message);
+                        } else {
+                            logger.info("RTMP Server started.");
+                        }
+                    });
+                }
             });
-            return;
-        }
+        } else {
+            logger.info("NGINX-RTMP container not found. Creating...");
 
-        console.log("NGINX-RTMP container not found. Creating...");
-        exec(
-            `docker run -d --name nginx-rtmp \
-            -p 1935:1935 \
-            -p 8080:80 \
-            -v "//c/Users/User/Coding Items/Second-project/backend/live-service/hls:/opt/data/hls" \
-            alfg/nginx-rtmp`,
-            (err, out) => {
-                if (err) {
-                    console.error(`Error creating RTMP server: ${err.message}`);
-                    return;
+            const hlsDirectory: string = path.resolve(__dirname, "../hls");
+            const hlsDockerPath: string = formatPathForDocker(hlsDirectory);
+
+            exec(
+                `docker run -d --name nginx-rtmp \
+                -p 1935:1935 \
+                -p 8080:80 \
+                -v "${hlsDockerPath}:/opt/data/hls" \
+                alfg/nginx-rtmp`,
+                (runErr, runOut) => {
+                    if (runErr) {
+                        logger.error("Error creating RTMP server:", runErr.message);
+                    } else {
+                        logger.log("RTMP Server created:", runOut);
+                    }
                 }
-                console.log(`RTMP Server created: ${out}`);
-            }
-        );
+            );
+        }
     });
 };
 
