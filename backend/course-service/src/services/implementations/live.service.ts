@@ -9,6 +9,7 @@ import { Server, Socket } from "socket.io";
 import { SOCKET_EVENTS } from "@/configs/socket.config";
 import axios from "axios";
 import logger from "@/utils/logger.util";
+import { env } from "@/configs/env.config";
 
 injectable()
 export class LiveService implements ILiveService {
@@ -71,7 +72,7 @@ export class LiveService implements ILiveService {
 
     async startStream(schedule_id: string, status: Partial<ILiveClass>, token: string): Promise<{streamUrl: string, streamKey: string}> {
 
-        const liveStreamResponse = await axios.post("http://localhost:5000/api/live/stream/start-stream", {
+        const liveStreamResponse = await axios.post(`${env.BASE_API_URL}/live/stream/start-stream`, {
             schedule_id,
         },
             {
@@ -81,7 +82,7 @@ export class LiveService implements ILiveService {
                 },
             });
 
-        console.log(liveStreamResponse.data);
+        logger.log(liveStreamResponse.data);
 
         if (!liveStreamResponse.data.success) {
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.START_STREAM_FAILED);
@@ -103,7 +104,7 @@ export class LiveService implements ILiveService {
     async endStream(schedule_id: string, status: Partial<ILiveClass>, token: string): Promise<void> {
 
         const liveStreamResponse = await axios.post(
-            "http://localhost:5000/api/live/stream/stop-stream",
+            `${env.BASE_API_URL}/live/stream/stop-stream`,
             { schedule_id },
             {
                 headers: {
@@ -112,8 +113,6 @@ export class LiveService implements ILiveService {
                 },
             }
         );
-
-        console.log(liveStreamResponse.data);
 
         if (!liveStreamResponse.data.success) {
             throw createHttpError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.STOP_STREAM_FAILED);

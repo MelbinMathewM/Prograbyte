@@ -9,6 +9,9 @@ export const env = {
     get MONGO_URI() {
         return process.env.MONGO_URI;
     },
+    get BASE_API_URL() {
+        return process.env.BASE_API_URL;
+    },
     get CLOUDINARY_CLOUD_NAME() {
         return process.env.CLOUDINARY_CLOUD_NAME;
     },

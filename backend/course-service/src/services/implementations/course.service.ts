@@ -25,6 +25,12 @@ export class CourseService implements ICourseService {
 
         const price = Number(course.price);
 
+        const existCourse = await this._courseRepository.findOne({category_id: course.category_id});
+
+        if(existCourse){
+            throw createHttpError(HttpStatus.CONFLICT, HttpResponse.COURSE_EXIST_WISHLIST);
+        }
+
         const newCourseData = {
             title: course.title,
             description: course.description,

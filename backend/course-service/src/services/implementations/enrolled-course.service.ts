@@ -93,10 +93,7 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         if (!topicProgress) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPIC_PROGRESS_NOT_FOUND);
         }
-
-        console.log(totalDuration,'kj');
         
-
         topicProgress.watchedDuration = Math.min(watchedDuration, totalDuration);
 
         const completionPercentage = (topicProgress.watchedDuration / totalDuration) * 100;

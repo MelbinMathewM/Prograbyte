@@ -3,7 +3,9 @@
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "inversify": "^7.5.0",
     "mongoose": "^8.13.2",
+    "reflect-metadata": "^0.2.2",
     "tsconfig-paths": "^4.2.0",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0"

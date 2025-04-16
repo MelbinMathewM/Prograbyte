@@ -83,7 +83,7 @@ const SkillPart: React.FC<SkillProps> = ({ skills, isDark, userId, setSkills }) 
             </div>
 
             <div className="flex flex-wrap gap-3">
-                {skills.map((skill, index) => (
+                {skills && skills.map((skill, index) => (
                     <div key={index} className="bg-gray-500 text-white px-3 py-1 rounded-full flex items-center group transition-all duration-200">
                         {editingSkill === skill ? (
                             <input

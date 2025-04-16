@@ -161,7 +161,7 @@ const StudentCourseDetailPart = () => {
                                                 <strong>Date:</strong> {dayjs(session.scheduled_date).format("DD: MM: YYYY")}
                                             </p>
 
-                                            {isPurchased ? (
+                                            {isPurchased && status === "live" ? (
                                                 <Link
                                                     to={`/courses/live/${session._id}`}
                                                     className="inline-block text-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"

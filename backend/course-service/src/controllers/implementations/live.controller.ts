@@ -4,7 +4,6 @@ import { LiveService } from "@/services/implementations/live.service";
 import { Request, Response, NextFunction } from "express";
 import { HttpStatus } from "@/constants/status.constant";
 import { HttpResponse } from "@/constants/response.constant";
-import axios from "axios";
 
 @injectable()
 export class LiveController implements ILiveController{
