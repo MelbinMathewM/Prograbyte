@@ -16,7 +16,7 @@ const PaymentSuccess = () => {
                 className="mt-6 bg-green-500 text-white hover:bg-green-600" 
                 onClick={() => navigate("/profile")}
             >
-                Go to Dashboard
+                Go to Profile
             </Button>
         </div>
     );

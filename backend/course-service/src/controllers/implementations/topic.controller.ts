@@ -20,8 +20,7 @@ export class TopicController implements ITopicController {
             }
 
             const savedTopics = await this._topicService.createTopic(req.body as ITopics);
-            console.log('topic ok');
-            res.status(201).json(savedTopics);
+            res.status(HttpStatus.CREATED).json(savedTopics);
         } catch (err) {
             next(err);
         }
@@ -38,8 +37,6 @@ export class TopicController implements ITopicController {
 
             const topic = await this._topicService.updateTopic(topicsId, topicId, req.body);
 
-            console.log(topic)
-
             res.status(HttpStatus.OK).json({ message: HttpResponse.TOPIC_UPDATED, topic })
         } catch (err) {
             next(err);
@@ -49,11 +46,10 @@ export class TopicController implements ITopicController {
     async getTopics(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { courseId } = req.params;
-            console.log(courseId,"jj")
 
             const topics = await this._topicService.getTopics(courseId);
 
-            res.status(200).json({topicList: topics});
+            res.status(HttpStatus.OK).json({topicList: topics});
         } catch (err) {
             next(err);
         }
@@ -66,7 +62,7 @@ export class TopicController implements ITopicController {
 
             const topic = await this._topicService.getTopicById(topicsId, topicId);
 
-            res.status(200).json(topic);
+            res.status(HttpStatus.OK).json(topic);
         } catch (err) {
             next(err)
         }
@@ -124,11 +120,7 @@ export class TopicController implements ITopicController {
     async proxyStream(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { token } = req.params;
-            console.log('kkx')
             const accessToken = req.headers.authorization?.replace("Bearer ", "");
-
-            console.log("Proxy Streaming Token:", token);
-            console.log("Access Token:", accessToken);
 
             if (!token) {
                 res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN);

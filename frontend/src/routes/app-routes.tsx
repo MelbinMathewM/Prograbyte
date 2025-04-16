@@ -9,14 +9,11 @@ import LoginCallback from "../pages/students/login-callback";
 import ResetPassword from "../pages/students/reset-password";
 import TutorRegister from "../pages/students/tutor-register";
 import { ThemeProvider } from "../contexts/theme-context";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import NotFound from "../pages/404";
 
 const AppRoutes = () => {
-    const { role } = useSelector((state: RootState) => state.auth);
     return (
-        <ThemeProvider role={role}>
+        <ThemeProvider>
             <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />

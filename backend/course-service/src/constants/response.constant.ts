@@ -20,6 +20,7 @@ export const HttpResponse = {
     USER_ID_REQUIRED: "User ID is required",
     COURSE_ID_REQUIRED: "Course ID is required",
     COURSE_NOT_FOUND: "Course not found",
+    COURSE_UPDATED: "Course updated successfully",
     COURSE_EXIST_WISHLIST: "Course already in wishlist",
     COURSE_ADDED_WISHLIST: "Course added to wishlist",
     WISHLIST_NOT_FOUND: "Wishlist not found",

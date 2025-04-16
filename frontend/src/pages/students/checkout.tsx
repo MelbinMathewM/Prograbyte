@@ -10,7 +10,6 @@ const Checkout = () => {
             <Elements stripe={stripePromise}>
                 <CheckoutPage />
             </Elements>
-
         </div>
     )
 }

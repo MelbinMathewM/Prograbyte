@@ -15,7 +15,7 @@ export class TopicService implements ITopicService {
 
     async createTopic(topics: ITopics): Promise<ITopics | null> {
 
-        let existTopic = await this._topicRepository.getTopicsByCourseId(topics.course_id as string);
+        let existTopic = await this._topicRepository.findOne({course_id: topics.course_id as string});
 
         let newTopics;
         if (existTopic) {
@@ -31,7 +31,7 @@ export class TopicService implements ITopicService {
 
     async getTopics(course_id: string): Promise<Partial<ITopics> | null> {
 
-        const topics = await this._topicRepository.getTopicsByCourseId(course_id);
+        const topics = await this._topicRepository.findOne({ course_id });
 
         if (!topics) return null;
 
@@ -58,7 +58,6 @@ export class TopicService implements ITopicService {
 
         const topics = await this._topicRepository.findById(topicsId);
 
-        
         if (!topics) return null;
         
         const topic = topics.topics.find((t: any) => t._id.toString() === topicId);
@@ -96,7 +95,6 @@ export class TopicService implements ITopicService {
                 if (!publicId) {
                     throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.PUBLIC_ID_NOT_FOUND);
                 }
-
                 await deleteFromCloudinary(publicId, resourceType, isAuthenticated);
             }
         }
@@ -107,7 +105,6 @@ export class TopicService implements ITopicService {
                 if (!publicId) {
                     throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.PUBLIC_ID_NOT_FOUND);
                 }
-
                 await deleteFromCloudinary(publicId, resourceType, isAuthenticated);
             }
         }

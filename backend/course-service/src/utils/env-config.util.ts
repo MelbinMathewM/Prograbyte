@@ -7,6 +7,9 @@ export function validateEnv() {
     if (!env.MONGO_URI) {
         throw new Error("MONGO_URI is not found in the env");
     }
+    if (!env.BASE_API_URL) {
+        throw new Error("BASE_API_URL is not found in the env");
+    }
     if (!env.CLOUDINARY_CLOUD_NAME) {
         throw new Error("CLOUDINARY_CLOUD_NAME is not found in the env");
     }

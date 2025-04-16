@@ -6,9 +6,11 @@ import AdminPagination from "./pagination";
 import { useTheme } from "@/contexts/theme-context";
 import { deleteCategories, editCategories, fetchCategories, postCategories } from "@/api/course";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { addCategory, deleteCategory, setCategories, setError, setLoading, updateCategory } from "@/redux/slices/categorySlice";
 
 const CategoriesPart: React.FC = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
     const [search, setSearch] = useState<string>("");
     const [sortBy, setSortBy] = useState<string>("name");
     const [filterBy, setFilterBy] = useState<string>("all");
@@ -17,10 +19,29 @@ const CategoriesPart: React.FC = () => {
     const [modalType, setModalType] = useState<'add' | 'edit' | 'delete'>("add");
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
+    const dispatch = useDispatch();
+    const { categories } = useSelector((state: RootState) => state.category);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          if (categories.length > 0) return;
+      
+          try {
+            dispatch(setLoading(true));
+            const response = await fetchCategories();
+            dispatch(setCategories(response.categories));
+          } catch (err: any) {
+            dispatch(setError(err.message || "Failed to fetch"));
+          }
+        };
+      
+        fetchData();
+      }, []);
+
     // Form State
     const [name, setName] = useState<string>("");
     const [type, setType] = useState<string>("Framework");
-    const [error, setError] = useState<string>("");
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const { theme } = useTheme();
     const isDark = theme.includes("dark");
@@ -38,22 +59,9 @@ const CategoriesPart: React.FC = () => {
         } else {
             setName("");
             setType("Framework");
-            setError("");
+            setErrorMessage("");
         }
     };
-
-    const getCategories = async () => {
-        try {
-            const response = await fetchCategories();
-            setCategories(response.categories);
-        } catch (error: any) {
-            console.error("Error fetching categories:", error.error);
-        }
-    };
-
-    useEffect(() => {
-        getCategories();
-    }, []);
 
     const filteredCategories = categories
         .filter(cat => filterBy === "all" || cat.type === filterBy)
@@ -65,20 +73,20 @@ const CategoriesPart: React.FC = () => {
 
     const handleAddCategory = async () => {
         if (!name.trim() || !type.trim()) {
-            setError("All fields are required.");
+            setErrorMessage("All fields are required.");
             return;
         }
 
         try {
             const response = await postCategories(name, type);
             toast.success(response.message);
-            setCategories((prev) => [...prev, response.newCategory]);
+            dispatch(addCategory(response.newCategory));
             setShowModal(false);
             setName("");
             setType("Framework");
-            setError("");
+            setErrorMessage("");
         } catch (error: any) {
-            setError(error.error || "Failed to update category");
+            setErrorMessage(error.error || "Failed to update category");
         }
     };
 
@@ -88,15 +96,15 @@ const CategoriesPart: React.FC = () => {
         try {
             const response = await editCategories(selectedCategory._id as string, name, type);
             toast.success(response.message);
-            setCategories((prev) =>
-                prev.map((category) =>
-                    category._id === selectedCategory._id ? { ...category, name, type } : category
-                )
-            );
+            dispatch(updateCategory({
+                _id: selectedCategory._id,
+                name,
+                type
+            }));
             setShowModal(false);
             setSelectedCategory(null);
         } catch (error: any) {
-            setError(error.error || "Failed to update category");
+            setErrorMessage(error.error || "Failed to update category");
         }
     };
 
@@ -105,15 +113,11 @@ const CategoriesPart: React.FC = () => {
         try {
             const response = await deleteCategories(selectedCategory._id as string);
             toast.success(response.message);
-            setCategories((prev) =>
-                prev.filter((category) =>
-                    category._id !== selectedCategory._id
-                )
-            );
+            dispatch(deleteCategory(selectedCategory._id as string));
             setShowModal(false);
             setSelectedCategory(null);
         } catch (error: any) {
-            setError(error.error || "Failed to update category");
+            setErrorMessage(error.error || "Failed to update category");
         }
     };
 
@@ -212,7 +216,7 @@ const CategoriesPart: React.FC = () => {
 
                         {modalType !== "delete" ? (
                             <>
-                                {error && <p className="text-red-500 font-bold text-center pb-2">{error}</p>}
+                                {errorMessage && <p className="text-red-500 font-bold text-center pb-2">{errorMessage}</p>}
                                 <input
                                     type="text"
                                     placeholder="Category Name"

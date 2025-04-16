@@ -15,7 +15,7 @@ export class CategoryController implements ICategoryController {
     
           const newCategory = await this._categoryService.createCategory(category);
     
-          res.status(201).json({ message: HttpResponse.CATEGORY_ADDED, newCategory });
+          res.status(HttpStatus.CREATED).json({ message: HttpResponse.CATEGORY_ADDED, newCategory });
         } catch (err) {
           next(err)
         }
@@ -25,7 +25,7 @@ export class CategoryController implements ICategoryController {
         try {
           const categories = await this._categoryService.getCategories();
     
-          res.status(200).json({categories});
+          res.status(HttpStatus.OK).json({categories});
         } catch (err) {
           next(err)
         }
@@ -38,7 +38,7 @@ export class CategoryController implements ICategoryController {
     
           await this._categoryService.updateCategory(id, updatedData);
     
-          res.status(200).json({ message: HttpResponse.CATEGORY_UPDATED });
+          res.status(HttpStatus.OK).json({ message: HttpResponse.CATEGORY_UPDATED });
         } catch (err) {
           next(err);
         }

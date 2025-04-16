@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { ChevronRight, IndianRupee, SlidersHorizontal, Star } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { Category, Course } from "@/types/course";
 import { fetchCategories, fetchCourses } from "@/api/course";
@@ -126,8 +126,9 @@ const CourseListPage = () => {
                             >
                                 <img src={course.poster_url} alt={course.title} className="w-full object-cover rounded-md mb-3" />
                                 <h3 className="text-xl font-semibold">{course.title}</h3>
-                                <p className="mt-2">Instructor: {course.tutor_id}</p>
-                                <p className="mt-1">Price: ${course.price}</p>
+                                <p className="mt-2">Category: {course?.category_id?.name}</p>
+                                <p className=" flex items-center mt-1 text-green-500">Price: <IndianRupee size={16} />{course.price}</p>
+                                <p className="flex items-center mt-1 gap-1">Rating: {course.rating ? course.rating : "N/A"} <Star size={16} className="mb-1 text-yellow-500"/></p>
                             </motion.div>
                         ))}
                     </div>
