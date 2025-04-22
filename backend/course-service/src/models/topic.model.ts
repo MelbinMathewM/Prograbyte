@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import { Schema, Document, Types, model } from "mongoose";
 
 export type LevelType = "Basic" | "Intermediate" | "Advanced";
 
@@ -11,7 +11,7 @@ export interface ITopic {
 }
 
 export interface ITopics extends Document {
-    course_id: string | mongoose.Types.ObjectId;
+    course_id: Types.ObjectId;
     topics: ITopic[];
 }
 
@@ -19,30 +19,21 @@ const topicSchema = new Schema<ITopic>(
     {
         title: {
             type: String,
-            required: [true, "Title is required"],
-            trim: true,
+            required: true,
         },
         level: {
             type: String,
             enum: ["Basic", "Intermediate", "Advanced"],
-            required: [true, "Level is required"],
+            required: true,
             default: "Basic",
         },
         video_url: {
             type: String,
-            required: [true, "Video URL is required"],
-            validate: {
-                validator: (url: string) => /^https?:\/\/.+/.test(url),
-                message: "Invalid video URL",
-            },
+            required: true,
         },
         notes_url: {
             type: String,
             default: "",
-            validate: {
-                validator: (url: string) => !url || /^https?:\/\/.+/.test(url),
-                message: "Invalid notes URL",
-            },
         },
     },
 );
@@ -51,17 +42,15 @@ const topicsSchema = new Schema<ITopics>(
     {
         course_id: {
             type: Schema.Types.ObjectId,
-            required: [true, "Course ID is required"],
+            required: true,
         },
         topics: {
             type: [topicSchema],
-            validate: {
-                validator: (topics: ITopic[]) => topics.length > 0,
-                message: "At least one topic is required",
-            },
         },
     },
     { timestamps: true }
 );
 
-export const Topic = mongoose.model<ITopics>("Topic", topicsSchema);
+const Topic = model<ITopics>("Topic", topicsSchema);
+
+export default Topic;

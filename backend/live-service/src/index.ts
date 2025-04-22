@@ -24,4 +24,4 @@ startRTMPServer();
 const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => {
     logger.info(`Server started on port ${PORT}`);
-})
+});

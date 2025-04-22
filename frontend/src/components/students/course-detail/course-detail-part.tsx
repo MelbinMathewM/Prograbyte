@@ -120,10 +120,10 @@ const StudentCourseDetailPart = () => {
 
                     {/* Right: Live Class Info */}
                     <div
-                        className={`rounded-2xl shadow-xl p-5 max-w-full md:max-w-[500px] w-full ${isDark ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"
+                        className={`rounded-sm shadow-xl p-5 w-full border ${isDark ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-200"
                             }`}
                     >
-                        <h3 className="text-2xl font-bold mb-4 text-blue-600">Live Class Sessions</h3>
+                        <h3 className={`text-xl font-medium mb-4 ${isDark ? "text-gray-200" : "text-gray-700"}`}>Live Class Sessions</h3>
 
                         {liveSessions?.length > 0 ? (
                             <div className="space-y-4">
@@ -145,8 +145,7 @@ const StudentCourseDetailPart = () => {
                                     return (
                                         <div
                                             key={index}
-                                            className={`p-4 rounded-xl border border-gray-300 shadow-sm ${isDark ? "bg-gray-900" : "bg-white"
-                                                }`}
+                                            className={`p-4 rounded-sm border shadow-sm ${isDark ? "bg-gray-900 border-gray-700" : "bg-white border-gray-300"}`}
                                         >
                                             <div className="flex items-center justify-between mb-2">
                                                 <h4 className="font-semibold text-lg">{session.title}</h4>

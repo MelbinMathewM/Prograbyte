@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { BaseRepository } from "../base.repository";
-import { Course, ICourse } from "../../models/course.model";
+import { BaseRepository } from "@/repositories/base.repository";
+import Course,{ ICourse } from "@/models/course.model";
 
 @injectable()
 export class CourseRepository extends BaseRepository<ICourse> {

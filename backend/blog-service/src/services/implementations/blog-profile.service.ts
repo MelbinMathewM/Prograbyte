@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IBlogProfileService } from "../interfaces/IBlog-profile.service";
 import { IBlogProfileRepository } from "@/repositories/interfaces/IBlog-profile.repository";
-import { IBlogProfile, MutualFollower } from "@/models/blog-profile.model";
+import { IBlogProfile, IMutualFollower } from "@/models/blog-profile.model";
 import { createHttpError } from "@/utils/http-error.util";
 import { HttpStatus } from "@/constants/status.constant";
 import { HttpResponse } from "@/constants/response.constant";
@@ -105,7 +105,7 @@ export class BlogProfileService implements IBlogProfileService {
         return conversation;
     }
 
-    async getMutualUsers(userId: string): Promise<MutualFollower[]> {
+    async getMutualUsers(userId: string): Promise<IMutualFollower[]> {
         const loggedUser = await this._blogProfileRepository.populateOne(
             { _id: userId },
             ['followers', 'following']

@@ -11,10 +11,10 @@ export interface ILiveClass extends Document {
     status: string;
     room_id: string;
     meeting_link: string;
-    attendees: Attendees[];
+    attendees: IAttendees[];
 }
 
-interface Attendees extends Document {
+interface IAttendees extends Document {
     student_id: Types.ObjectId;
     joined_at: Date;
 }

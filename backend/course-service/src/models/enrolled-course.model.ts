@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document } from "mongoose";
+import { Schema, Document, Types, model } from "mongoose";
 
 export interface IEnrolledCourse {
-    courseId: mongoose.Types.ObjectId;
+    courseId: Types.ObjectId;
     paymentAmount: number;
     enrolledAt: Date;
     paymentId: string;
@@ -10,13 +10,13 @@ export interface IEnrolledCourse {
 }
 
 export interface IProgress {
-    topicId: mongoose.Types.ObjectId;
+    topicId: Types.ObjectId;
     watchedDuration: number;
     isCompleted: boolean;
 }
 
 export interface IEnrolledCourses extends Document {
-    userId: mongoose.Types.ObjectId;
+    userId: Types.ObjectId;
     courses: IEnrolledCourse[];
 }
 
@@ -50,15 +50,24 @@ const enrolledCourseSchema = new Schema<IEnrolledCourses>({
             },
             progress: [
                 {
-                    topicId: { type: Schema.Types.ObjectId, ref: "Topic" },
-                    watchedDuration: { type: Number, default: 0 },
-                    isCompleted: { type: Boolean, default: false }
+                    topicId: { 
+                        type: Schema.Types.ObjectId, 
+                        ref: "Topic" 
+                    },
+                    watchedDuration: { 
+                        type: Number, 
+                        default: 0 
+                    },
+                    isCompleted: { 
+                        type: Boolean,
+                        default: false 
+                    }
                 }
             ]
         }
     ]
 }, { timestamps: true });
 
-const EnrolledCourses = mongoose.model<IEnrolledCourses>("EnrolledCourse", enrolledCourseSchema);
+const EnrolledCourses = model<IEnrolledCourses>("EnrolledCourse", enrolledCourseSchema);
 
 export default EnrolledCourses;

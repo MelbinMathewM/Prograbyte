@@ -192,7 +192,7 @@ export default function ProfilePage() {
                                 {[
                                     { label: "My Courses", icon: BookOpen, link: "/profile/my-courses" },
                                     { label: "Wishlist", icon: Heart, link: "/wishlist" },
-                                    { label: "Wallet", icon: Wallet, link: "/wallet" },
+                                    { label: "Wallet", icon: Wallet, link: "/profile/wallet" },
                                     { label: "Certificates", icon: Award, link: "/certificates" },
                                     { label: "Settings", icon: Settings, link: "/settings" },
                                     { label: "Premium", icon: Crown, link: "/profile/premium" }

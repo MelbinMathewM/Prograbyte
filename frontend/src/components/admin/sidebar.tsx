@@ -1,8 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import {
     Menu, X, LayoutDashboard, List, Users, Tag, Ticket, FileText, User,
-    Bell, Settings, Moon, Sun,
-    User2Icon
+    Bell, Settings, Moon, Sun
 } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { motion } from "framer-motion";

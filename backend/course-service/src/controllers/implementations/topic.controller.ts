@@ -19,7 +19,7 @@ export class TopicController implements ITopicController {
                 return;
             }
 
-            const savedTopics = await this._topicService.createTopic(req.body as ITopics);
+            const savedTopics = await this._topicService.createTopic(course_id, req.body as ITopics);
             res.status(HttpStatus.CREATED).json(savedTopics);
         } catch (err) {
             next(err);

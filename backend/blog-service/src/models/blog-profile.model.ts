@@ -9,7 +9,7 @@ export interface IBlogProfile extends Document {
     totalFollowing: number;
 }
 
-export interface MutualFollower {
+export interface IMutualFollower {
     _id: Types.ObjectId;
     username: string;
 }

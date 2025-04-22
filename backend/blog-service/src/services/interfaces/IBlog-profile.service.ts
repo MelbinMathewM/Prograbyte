@@ -1,4 +1,4 @@
-import { IBlogProfile, MutualFollower } from "@/models/blog-profile.model";
+import { IBlogProfile, IMutualFollower } from "@/models/blog-profile.model";
 import { IConversation } from "@/models/conversation.model";
 import { IMessage } from "@/models/message.model";
 
@@ -10,6 +10,6 @@ export interface IBlogProfileService {
     followUser(userId: string, followerId: string): Promise<void>;
     unfollowUser(userId: string, followerId: string): Promise<void>;
     getConversation(user1Id: string, user2Id: string): Promise<IConversation>;
-    getMutualUsers(userId: string): Promise<MutualFollower[]>;
+    getMutualUsers(userId: string): Promise<IMutualFollower[]>;
     getMessages(conversationId: string, limit: number): Promise<IMessage[]>;
 }

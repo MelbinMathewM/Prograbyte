@@ -8,6 +8,8 @@ import { HttpResponse } from "@/constants/response.constant";
 import { IEnrolledCourse, IEnrolledCourses, IProgress } from "@/models/enrolled-course.model";
 import { IEnrolledCourseService } from "../interfaces/IEnrollment.service";
 import { TopicService } from "./topic.service";
+import { sendKafkaMessage } from "@/utils/kafka.util";
+import { KAFKA_TOPICS } from "@/configs/kafka.config";
 
 @injectable()
 export class EnrolledCourseService implements IEnrolledCourseService {
@@ -56,6 +58,21 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         } else {
             await this._enrolledCourseRepository.createEnrolledCourse(objectIdUserId, course)
         }
+
+        // await sendKafkaMessage(KAFKA_TOPICS.COURSE_EVENTS, {
+        //     key: "course.purchased",
+        //     value: JSON.stringify({
+        //         eventType: "course.purchased",
+        //         data: {
+        //             user_id: userId,
+        //             type: "credit",
+        //             source: "course",
+        //             sourceId: courseId,
+        //             amount: paymentAmount,
+        //             description: ""
+        //         }
+        //     })
+        // })
     }
 
     async getEnrolledCourses(userId: string): Promise<IEnrolledCourses> {
