@@ -14,6 +14,14 @@ export const env = {
     },
     get API_GATEWAY_KEY() {
         return process.env.API_GATEWAY_KEY;
+    },
+    get FRONTEND_URL() {
+        return process.env.FRONTEND_URL
+    },
+    get STRIPE_WEBHOOK_SECRET() {
+        return process.env.STRIPE_WEBHOOK_SECRET
+    },
+    get RABBITMQ_URL() {
+        return process.env.RABBITMQ_URL
     }
-
 }

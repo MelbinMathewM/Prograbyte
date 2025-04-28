@@ -4,7 +4,7 @@ export interface IEnrolledCourse {
     courseId: Types.ObjectId;
     paymentAmount: number;
     enrolledAt: Date;
-    paymentId: string;
+    paymentId?: string;
     completionStatus: number;
     progress: IProgress[];
 }
@@ -41,8 +41,7 @@ const enrolledCourseSchema = new Schema<IEnrolledCourses>({
                 default: Date.now
             },
             paymentId: {
-                type: String,
-                required: true
+                type: String
             },
             completionStatus: {
                 type: Number,

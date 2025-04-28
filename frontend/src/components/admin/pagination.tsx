@@ -8,7 +8,7 @@ interface PaginationType {
 
 const AdminPagination = ({ currentPage, totalPages, setCurrentPage }: PaginationType) => {
     return (
-        <div className="flex justify-center mt-6 space-x-2">
+        <div className="flex justify-center mt-6 pt-8.5 space-x-2">
             {currentPage > 1 && (
                 <button
                     className="px-3 py-1 rounded border border-gray-400 text-gray-600 hover:bg-gray-600 hover:text-white"

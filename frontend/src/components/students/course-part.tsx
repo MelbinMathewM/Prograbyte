@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronRight, IndianRupee, SlidersHorizontal, Star } from "lucide-react";
+import { IndianRupee, SlidersHorizontal, Star } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import { Category, Course } from "@/types/course";
 import { fetchCategories, fetchCourses } from "@/api/course";
 import FilterSidebar from "./course-sidebar";
+import Breadcrumb from "./breadcrumb";
 
 const CourseListPage = () => {
     const navigate = useNavigate();
@@ -68,14 +69,16 @@ const CourseListPage = () => {
     const totalPages = Math.ceil(courses.length / coursesPerPage);
 
     return (
-        <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"} mx-auto px-6 py-1`}>
+        <div className={`min-h-screen ${isDarkMode ? "bg-gray-900 text-gray-100" : "bg-gray-100 text-gray-900"} mx-auto px-6 py-6`}>
 
-            {/* Breadcrumb */}
-            <nav className={`${isDarkMode ? "bg-gray-800 text-gray-200" : "bg-gray-200 text-gray-600"} p-6 rounded my-6 flex items-center`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronRight size={16} />
-                <span>Courses</span>
-            </nav>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                isDark={isDarkMode}
+                items={[
+                    { label: "Home", to: "/home" },
+                    { label: "Courses" },
+                ]}
+            />
 
             {/* Hero Section */}
             <header className={`py-16 text-center rounded-sm ${isDarkMode ? "bg-blue-400 text-white" : "bg-blue-400 text-white"}`}>
@@ -127,8 +130,28 @@ const CourseListPage = () => {
                                 <img src={course.poster_url} alt={course.title} className="w-full object-cover rounded-md mb-3" />
                                 <h3 className="text-xl font-semibold">{course.title}</h3>
                                 <p className="mt-2">Category: {course?.category_id?.name}</p>
-                                <p className=" flex items-center mt-1 text-green-500">Price: <IndianRupee size={16} />{course.price}</p>
-                                <p className="flex items-center mt-1 gap-1">Rating: {course.rating ? course.rating : "N/A"} <Star size={16} className="mb-1 text-yellow-500"/></p>
+                                <p className="flex items-center mt-1 text-green-500">
+                                    {course.offer ? (
+                                        <>
+                                            <span className="flex items-center text-green-500 text-xl font-semibold">
+                                                <IndianRupee size={16} />{" "}
+                                                {Math.floor((course.price - (course.price * course.offer.discount) / 100))}
+                                            </span>
+                                            <span className="line-through text-gray-400 ml-1 flex items-center">
+                                                <IndianRupee size={16} /> {course.price}
+                                            </span>
+                                            <span className="ml-2 text-xs text-yellow-600 font-medium">
+                                                ({course.offer.discount}% OFF)
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <IndianRupee size={16} className="ml-1" />
+                                            {course.price}
+                                        </>
+                                    )}
+                                </p>
+                                <p className="flex items-center mt-1 gap-1">Rating: {course.rating ? course.rating : "N/A"} <Star size={16} className="mb-1 text-yellow-500" /></p>
                             </motion.div>
                         ))}
                     </div>

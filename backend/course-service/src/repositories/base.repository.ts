@@ -1,4 +1,4 @@
-import { Model, Document, FilterQuery } from "mongoose";
+import { Model, Document, FilterQuery, UpdateQuery } from "mongoose";
 import { IBaseRepository } from "./IBase.repository";
 
 export class BaseRepository<T extends Document> implements IBaseRepository<T> {
@@ -52,6 +52,16 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
             throw new Error("Failed to update");
         }
     }
+
+    async updateOne(filter: FilterQuery<T>, updatedData: UpdateQuery<T>): Promise<T | null> {
+        try {
+            return await this.model.findOneAndUpdate(filter, updatedData, { new: true });
+        } catch (error) {
+            console.error("BaseRepository updateOne Error:", error);
+            throw new Error("Failed to update");
+        }
+    }
+    
 
     async deleteById(id: string): Promise<boolean> {
         try {

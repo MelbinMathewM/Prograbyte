@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Award, BookOpen, ChevronLeft, ChevronRight, Crown, Heart, Settings, Upload, Wallet } from "lucide-react";
+import { Award, BookOpen, Crown, Heart, Settings, Upload, Wallet } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getProfile, updateProfileInfo } from "@/api/profile";
 import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
@@ -12,6 +12,8 @@ import { getCroppedImage } from "@/libs/imageCropper";
 import SkillPart from "@/components/students/profile/profile-skill";
 import { Profile, CroppedArea } from "@/types/user";
 import ProfileBlogs from "@/components/students/profile/profile-blogs";
+import Breadcrumb from "../breadcrumb";
+import HeaderWithBack from "../header-back";
 
 
 export default function ProfilePage() {
@@ -51,7 +53,6 @@ export default function ProfilePage() {
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedArea | null>(null);
     const [skills, setSkills] = useState<string[]>([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (userData.id === undefined) return;
@@ -127,21 +128,20 @@ export default function ProfilePage() {
 
     return (
         <div className={`min-h-screen p-6 ${isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-            <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"} p-6 rounded mb-4 flex items-center`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronRight size={16} />
-                <span>Profile</span>
-            </nav>
-            <div className="flex w-full sm:mx-auto justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Profile</h2>
-                <button
-                    onClick={() => navigate(-1)}
-                    className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"}`}
-                >
-                    <ChevronLeft size={16} />
-                    Back
-                </button>
-            </div>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                isDark={isDark}
+                items={[
+                    { label: "Home", to: "/home" },
+                    { label: "Profile" },
+                ]}
+            />
+
+            {/* Title and Back Button */}
+            <HeaderWithBack 
+                title="Profile"
+                isDark={isDark}
+            />
             {/* Profile Section */}
             <div className={`shadow-md rounded-lg p-6 flex items-center space-x-6 w-full ${isDark ? "bg-gray-800" : "bg-white"}`}>
                 <div className="relative">

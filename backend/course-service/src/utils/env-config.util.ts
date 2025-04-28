@@ -28,4 +28,7 @@ export function validateEnv() {
     if (!env.TOKEN_SECRET) {
         throw new Error("TOKEN_SECRET is not found in the env");
     }
+    if (!env.RABBITMQ_URL) {
+        throw new Error("RABBITMQ_URL is not found in the env");
+    }
 }

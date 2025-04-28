@@ -12,6 +12,7 @@ export interface ICourse extends Document {
     poster_url: string;
     approval_status: ApprovalStatus;
     rating: number | null;
+    offer: Types.ObjectId | null;
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -55,7 +56,12 @@ const courseSchema = new Schema<ICourse>({
     rating: {
         type: Number,
         default: null
-    }
+    },
+    offer: {
+        type: Schema.Types.ObjectId,
+        ref: 'Offer',
+        default: null,
+    },
 }, { timestamps: true });
 
 const Course = model<ICourse>("Course", courseSchema);

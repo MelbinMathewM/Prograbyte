@@ -1,15 +1,16 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { getPublicProfile, getProfile, unfollowUser, followUser } from "@/api/profile";
 import default_image from "/default-user.avif";
 import { BlogProfile, Follower } from "@/types/blog";
 import { useTheme } from "@/contexts/theme-context";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Profile } from "@/types/user";
 import PublicProfileBlogs from "./public-profile-blogs";
 import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
 import { FaUserMinus, FaUserPlus } from "react-icons/fa";
+import Breadcrumb from "../breadcrumb";
+import HeaderWithBack from "../header-back";
 
 export default function PublicProfilePage() {
     const { theme } = useTheme();
@@ -19,7 +20,6 @@ export default function PublicProfilePage() {
     const [isFollowing, setIsFollowing] = useState(false);
     const [profile, setProfile] = useState<Profile | null>(null);
     const { user } = useContext(UserContext) ?? {};
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (username) fetchBlogProfile();
@@ -105,25 +105,21 @@ export default function PublicProfilePage() {
 
     return (
         <div className={`min-h-screen p-6 ${isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-            {/* Breadcrumb */}
-            <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"} p-6 rounded mb-4 flex items-center`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronRight size={16} />
-                <Link to="/blog" className="font-bold hover:text-blue-500">Blog</Link>
-                <ChevronRight size={16} />
-                <span>Profile</span>
-            </nav>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                isDark={isDark}
+                items={[
+                    {label: "Home", to: "/home"},
+                    { label: "Blog", to: "/blog" },
+                    { label: `Profile` }
+                ]}
+            />
 
-            {/* Header */}
-            <div className="flex w-full sm:mx-auto justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Blog Profile</h2>
-                <button
-                    onClick={() => navigate(-1)}
-                    className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"}`}
-                >
-                    <ChevronLeft size={16} /> Back
-                </button>
-            </div>
+            {/* Title and Back Button */}
+            <HeaderWithBack 
+                title="Profile"
+                isDark={isDark}
+            />
 
             {/* Profile Section */}
             <div className={`shadow-md rounded-lg p-6 flex items-center justify-between w-full ${isDark ? "bg-gray-850 border border-gray-700" : "bg-white"}`}>

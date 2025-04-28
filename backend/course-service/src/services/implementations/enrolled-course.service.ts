@@ -8,17 +8,18 @@ import { HttpResponse } from "@/constants/response.constant";
 import { IEnrolledCourse, IEnrolledCourses, IProgress } from "@/models/enrolled-course.model";
 import { IEnrolledCourseService } from "../interfaces/IEnrollment.service";
 import { TopicService } from "./topic.service";
-import { sendKafkaMessage } from "@/utils/kafka.util";
-import { KAFKA_TOPICS } from "@/configs/kafka.config";
+import { publishMessage } from "@/utils/rabbitmq.util";
+import { CourseService } from "./course.service";
 
 @injectable()
 export class EnrolledCourseService implements IEnrolledCourseService {
     constructor(
         @inject("IEnrolledCourseRepository") private _enrolledCourseRepository: IEnrolledCourseRepository,
-        @inject(TopicService) private _topicService: TopicService
-    ) { }
+        @inject(TopicService) private _topicService: TopicService,
+        @inject(CourseService) private _courseService: CourseService
+    ) { }   
 
-    async enrollCourse(courseId: string, userId: string, paymentAmount: number, paymentId: string): Promise<void> {
+    async enrollCourse(courseId: string, userId: string, paymentAmount: number, paymentId: string, couponCode?: string): Promise<void> {
 
         const objectIdUserId = convertToObjectId(userId);
         const objectIdCourseId = convertToObjectId(courseId);
@@ -31,12 +32,16 @@ export class EnrolledCourseService implements IEnrolledCourseService {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPICS_NOT_FOUND);
         }
 
+        if(couponCode){
+            await this._courseService.addUserToCouponUser(couponCode, userId);
+        }
+
         const progress: IProgress[] = (topics?.topics || []).map(topic => ({
             topicId: convertToObjectId(topic?._id as string),
             watchedDuration: 0,
             isCompleted: false
         }));
-        
+
 
         const course: IEnrolledCourse = {
             courseId: objectIdCourseId,
@@ -58,21 +63,6 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         } else {
             await this._enrolledCourseRepository.createEnrolledCourse(objectIdUserId, course)
         }
-
-        // await sendKafkaMessage(KAFKA_TOPICS.COURSE_EVENTS, {
-        //     key: "course.purchased",
-        //     value: JSON.stringify({
-        //         eventType: "course.purchased",
-        //         data: {
-        //             user_id: userId,
-        //             type: "credit",
-        //             source: "course",
-        //             sourceId: courseId,
-        //             amount: paymentAmount,
-        //             description: ""
-        //         }
-        //     })
-        // })
     }
 
     async getEnrolledCourses(userId: string): Promise<IEnrolledCourses> {
@@ -89,10 +79,10 @@ export class EnrolledCourseService implements IEnrolledCourseService {
     }
 
     async updateTopicProgress(
-        userId: string, 
-        courseId: string, 
-        topicId: string, 
-        watchedDuration: number, 
+        userId: string,
+        courseId: string,
+        topicId: string,
+        watchedDuration: number,
         totalDuration: number
     ): Promise<void> {
 
@@ -110,7 +100,7 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         if (!topicProgress) {
             throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.TOPIC_PROGRESS_NOT_FOUND);
         }
-        
+
         topicProgress.watchedDuration = Math.min(watchedDuration, totalDuration);
 
         const completionPercentage = (topicProgress.watchedDuration / totalDuration) * 100;
@@ -141,5 +131,54 @@ export class EnrolledCourseService implements IEnrolledCourseService {
         course.completionStatus = Math.round((completedTopics / totalTopics) * 100);
 
         await this._enrolledCourseRepository.save(enrolledCourse);
+    }
+
+    async cancelEnrollment(userId: string, courseId: string): Promise<void> {
+
+        const enrollment = await this._enrolledCourseRepository.findOne({ userId });
+
+        const courseData = enrollment?.courses.find(course => course.courseId.toString() === courseId);
+
+        if (!courseData) {
+            throw createHttpError(HttpStatus.NOT_FOUND, HttpResponse.ENROLLED_COURSES_NOT_FOUND);
+        }
+
+        if (courseData.completionStatus === 100) {
+            throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.COURSE_FINISHED);
+        }
+
+        const totalTopics = courseData.progress.length;
+        const completedTopics = courseData.progress.filter(p => p.isCompleted).length;
+        const watchedPercentage = totalTopics > 0 ? (completedTopics / totalTopics) * 100 : 0;
+
+        let refundAmount = 0;
+
+        if (watchedPercentage < 10) {
+            refundAmount = courseData.paymentAmount;
+        } else if (watchedPercentage < 50) {
+            refundAmount = Math.round(courseData.paymentAmount * 0.5);
+        } else if (watchedPercentage < 80) {
+            refundAmount = Math.round(courseData.paymentAmount * 0.8);
+        } else {
+            throw createHttpError(HttpStatus.BAD_REQUEST, HttpResponse.REFUND_UNAVAILABLE);
+        }
+
+        const walletData = {
+            user_id: convertToObjectId(userId),
+            type: "credit",
+            source: "course",
+            source_id: convertToObjectId(courseId),
+            amount: refundAmount,
+            description: `Refund for course cancellation`
+        }
+
+        publishMessage("course.refund.payment",{ walletData });
+
+        const objectUserId = convertToObjectId(userId);
+        await this._enrolledCourseRepository.updateOne(
+            { userId: objectUserId },
+            { $pull: { courses: { courseId: convertToObjectId(courseId) } } }
+        );
+
     }
 }

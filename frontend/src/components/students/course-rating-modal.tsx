@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
 import axiosInstance from "@/configs/axiosConfig";
+import toast from "react-hot-toast";
 
 interface CourseRatingModalProps {
     courseId: string;
@@ -19,7 +20,7 @@ const CourseRatingModal: React.FC<CourseRatingModalProps> = ({ courseId, isDark,
         setIsSubmitting(true);
         try {
             const response = await axiosInstance.post("/course/courses/rating", { userId, courseId, rating, review });
-            alert("Review submitted successfully!");
+            toast.success(response.data.message);
             setRating(0);
             setReview("");
         } catch (error) {
@@ -31,8 +32,8 @@ const CourseRatingModal: React.FC<CourseRatingModalProps> = ({ courseId, isDark,
 
     return (
         <Dialog>
-            <DialogTrigger className="text-blue-500 rounded-md hover:text-violet-500 transition">
-                Rate ⭐
+            <DialogTrigger className="text-blue-500 cursor-pointer rounded-md hover:text-violet-500 transition flex items-center gap-1">
+                <Star size={16}/> Rate
             </DialogTrigger>
             <DialogContent className={isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"}>
                 <DialogHeader>

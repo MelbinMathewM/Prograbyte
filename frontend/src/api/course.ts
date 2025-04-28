@@ -48,7 +48,17 @@ export const fetchCoursesByTutor = async (tutorId: string) => {
         console.error("Error fetching tutor courses");
         throw err.response.data;
     }
-}
+};
+
+export const refundEnrolledCourse = async (userId: string, courseId: string) => {
+    try{
+        const response = await axiosInstance.post(`/course/enroll/cancel`, { userId, courseId });
+        return response.data;
+    }catch(err: any){
+        console.error("Error refunding course",err);
+        throw err?.response?.data;
+    }
+};
 
 export const fetchReviews = async (courseId: string) => {
     try{

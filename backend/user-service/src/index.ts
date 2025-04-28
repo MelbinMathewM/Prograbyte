@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import connectDB from "./configs/db.config";
@@ -21,17 +21,9 @@ validateEnv();
 const app = express();
 const PORT = process.env.PORT || 5002;
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-    if (req.originalUrl.includes("/stripe/webhook")) {
-        console.log('hii', req.originalUrl)
-      express.raw({ type: "application/json" })(req, res, next);
-    } else {
-      express.json({ limit: "5mb" })(req, res, (err) => {
-        if (err) return next(err);
-        express.urlencoded({ limit: "5mb", extended: true })(req, res, next);
-      });
-    }
-  });
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(helmet());
 app.use(verifyApiKey as express.RequestHandler);
 

@@ -5,10 +5,12 @@ export interface IPayout extends Document {
     type: "course" | "live";
     source_id: Types.ObjectId;
     amount: number;
+    tutorShare: number;
+    adminShare: number;
     status: "pending" | "paid";
-    viewers?: number;
     createdAt: Date;
     paidAt?: Date;
+    isRefunded: boolean;
 }
 
 const payoutSchema = new Schema<IPayout>({
@@ -25,7 +27,15 @@ const payoutSchema = new Schema<IPayout>({
         type: Schema.ObjectId, 
         required: true 
     },
-    amount: { 
+    amount: {
+        type: Number,
+        required: true
+    },
+    tutorShare: {
+        type: Number,
+        required: true
+    },
+    adminShare: { 
         type: Number, 
         required: true 
     },
@@ -34,11 +44,12 @@ const payoutSchema = new Schema<IPayout>({
         enum: ["pending", "paid"], 
         default: "pending" 
     },
-    viewers: { 
-        type: Number 
-    },
     paidAt: { 
         type: Date 
+    },
+    isRefunded: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

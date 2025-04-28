@@ -8,7 +8,6 @@ const logFormat = printf(({ level, message, timestamp, stack }) => {
     : `[${timestamp}] ${level}: ${message}`;
 });
 
-// MongoDB Transport Configuration
 const mongoTransport = new MongoDB({
   db: "mongodb://localhost:27017/logs",
   collection: "course_log_entries",

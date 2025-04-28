@@ -10,7 +10,9 @@ export class CourseRepository extends BaseRepository<ICourse> {
 
     async getFilteredCourses(filters: object, sort: string): Promise<ICourse[]> {
         try {
-            let query = Course.find(filters).populate("category_id", "name _id");
+            let query = Course.find(filters)
+            .populate("category_id", "name _id")
+            .populate("offer", "title description discount expiryDate _id")
     
             switch (sort) {
                 case "price-low":
@@ -57,7 +59,10 @@ export class CourseRepository extends BaseRepository<ICourse> {
 
     async getCourseDetail(id: string): Promise<ICourse | null> {
         try {
-            return await this.model.findById(id).populate('category_id', 'name').lean();
+            return await this.model.findById(id)
+            .populate('category_id', 'name')
+            .populate("offer", "title description discount expiryDate _id")
+            .lean();
         } catch (error) {
             console.error("Error fetching course detail:", error);
             throw new Error("Failed to fetch course detail");

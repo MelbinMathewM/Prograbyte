@@ -5,7 +5,7 @@ import { injectable } from "inversify";
 
 @injectable()
 export class WalletRepository extends BaseRepository<IWallet> implements IWalletRepository {
-    constructor() { 
-        super(Wallet);
+    constructor() {
+        super(Wallet)
     }
 }

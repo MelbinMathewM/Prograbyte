@@ -23,15 +23,17 @@ export class LiveGateway {
       console.log("Connected to Course Service via WebSocket");
     });
 
+    // Forward comments from Course Service to Live Streaming namespace
     this.courseSocket.on(SOCKET_EVENTS.RECEIVE_COMMENT, ({ roomId, comment }) => {
-      console.log("comment from Course Service:", comment);
       this.nsp.to(roomId).emit(SOCKET_EVENTS.RECEIVE_COMMENT, comment);
     });
 
+    // Forward viewer count updates from Course Service
     this.courseSocket.on(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, ({ roomId, count }) => {
       this.nsp.to(roomId).emit(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, count);
     });
 
+    // Forward disconnect event from Course Service
     this.courseSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
       console.log("Disconnected from Course Service");
     });
@@ -41,17 +43,28 @@ export class LiveGateway {
     this.nsp.on(SOCKET_EVENTS.CONNECTION, (clientSocket) => {
       console.log("🌍 Frontend connected to Live Streaming:", clientSocket.id);
 
+      // Forward JOIN_ROOM event to Course Service
       clientSocket.on(SOCKET_EVENTS.JOIN_ROOM, (roomId: string, username: string) => {
-        console.log(`${username} joined live session: ${roomId}`);
         clientSocket.join(roomId);
         this.courseSocket.emit(SOCKET_EVENTS.JOIN_ROOM, roomId, username);
       });
 
-      clientSocket.on(SOCKET_EVENTS.SEND_COMMENT, (data:{ roomId: string; comment: any }) => {
-        console.log("Forwarding Comment to Course Service:", data);
+      // Forward SEND_COMMENT event to Course Service
+      clientSocket.on(SOCKET_EVENTS.SEND_COMMENT, (data: { roomId: string; comment: any }) => {
         this.courseSocket.emit(SOCKET_EVENTS.SEND_COMMENT, data);
       });
 
+      // Forward END_STREAM event to Course Service
+      clientSocket.on(SOCKET_EVENTS.END_STREAM, (roomId: string) => {
+        this.courseSocket.emit(SOCKET_EVENTS.END_STREAM, roomId);
+      });
+
+      // Forward LEAVE event to Course Service
+      clientSocket.on(SOCKET_EVENTS.LEAVE, (roomId: string) => {
+        this.courseSocket.emit(SOCKET_EVENTS.LEAVE, roomId);
+      });
+
+      // Handle disconnect from frontend (no need to do anything extra here)
       clientSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
         console.log("Frontend disconnected from Live Streaming:", clientSocket.id);
       });

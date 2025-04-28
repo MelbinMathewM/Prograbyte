@@ -12,6 +12,7 @@ import { env } from "@/configs/env.config";
 import { server, app } from "@/configs/inversify.config";
 import logger from "@/utils/logger.util";
 import { courseProducer } from "./utils/kafka.util";
+import { initializeRabbitMQ } from "@/configs/rabbitmq.config";
 
 validateEnv();
 
@@ -26,7 +27,8 @@ app.use('/',router);
 app.use(errorHandler);
 
 (async () => {
-    await courseProducer();
+    await initializeRabbitMQ();
+    // await courseProducer();
 })()
 
 server.listen(PORT,() => logger.info(`Server started on port ${PORT}`))

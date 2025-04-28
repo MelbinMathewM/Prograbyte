@@ -160,3 +160,13 @@ export const changeUserStatus = async (userId: string, action: string) => {
         throw err?.response?.data;
     }
 };
+
+export const updateToPremium = async (email: string) => {
+    try{
+        const response = await axiosInstance.post(`/payment/payments/checkout/premium`, { email });
+        return response.data;
+    }catch(err: any){
+        console.error("error updating to premium",err);
+        throw err?.response?.data;
+    }
+}

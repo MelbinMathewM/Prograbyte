@@ -6,6 +6,7 @@ import {
 import { useTheme } from "@/contexts/theme-context";
 import { motion } from "framer-motion";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { Payments } from "@mui/icons-material";
 
 const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boolean) => void }) => {
     const location = useLocation();
@@ -18,8 +19,9 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (open: boo
         { name: "Categories", path: "/admin/categories", icon: <List size={20} /> },
         { name: "Tutors", path: "/admin/tutors", icon: <FaChalkboardTeacher size={20} /> },
         { name: "Users", path: "/admin/users", icon: <Users size={20} /> },
-        { name: "Offers", path: "/offers", icon: <Tag size={20} /> },
+        { name: "Offers", path: "/admin/offers", icon: <Tag size={20} /> },
         { name: "Coupons", path: "/admin/coupons", icon: <Ticket size={20} /> },
+        { name: "Payments", path: "/admin/payments", icon: <Payments /> },
         { name: "Blog", path: "/blog", icon: <FileText size={20} /> },
         { name: "Profile", path: "/admin/profile", icon: <User size={20} /> },
     ];

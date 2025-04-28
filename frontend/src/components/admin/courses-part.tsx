@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, IndianRupee, Star } from "lucide-react";
 import AdminPagination from "./pagination";
 import { Course } from "@/types/course";
 import { useTheme } from "@/contexts/theme-context";
@@ -107,8 +107,9 @@ const CoursePart = () => {
                         {paginatedCourses.map(course => (
                             <Link
                                 to={`/admin/categories/courses/${course._id}`}
+                                key={course._id}
                                 className={`block shadow-md border rounded-sm overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg duration-300
-                              ${isDark ? "bg-gray-950 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-800"}`}
+      ${isDark ? "bg-gray-950 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-800"}`}
                             >
                                 <img
                                     src={course.poster_url}
@@ -118,14 +119,34 @@ const CoursePart = () => {
 
                                 <div className="p-4 space-y-2">
                                     <h3 className="text-lg font-semibold">{course.title}</h3>
-                                    <h4 className="text-sm opacity-80">₹{course.price}</h4>
+
+                                    {/* Price Section */}
+                                    {course.offer ? (
+                                        <div className="flex items-center gap-x-2 text-sm">
+                                            <span className="text-green-600 font-bold flex items-center gap-0">
+                                                <IndianRupee size={14} />
+                                                {Math.floor(course.price - (course.price * course.offer.discount) / 100)}
+                                            </span>
+                                            <span className="text-gray-500 line-through flex items-center gap-0">
+                                                <IndianRupee size={12} />
+                                                {course.price}
+                                            </span>
+                                            <span className="text-yellow-700 text-xs font-semibold">
+                                                ({course.offer.discount}% OFF)
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <h4 className="text-sm opacity-80 flex items-center gap-0">
+                                            <IndianRupee size={14} /> {course.price}
+                                        </h4>
+                                    )}
 
                                     <div className="flex items-center text-yellow-400 text-sm">
                                         <Star size={16} /> <span className="ml-1">{course.rating || "N/A"}</span>
                                     </div>
 
                                     <p className={`inline-block text-xs font-semibold rounded-md px-2 py-1
-                                ${course.approval_status === "Approved" ? "text-green-500 bg-green-100 dark:bg-green-900" :
+        ${course.approval_status === "Approved" ? "text-green-500 bg-green-100 dark:bg-green-900" :
                                             course.approval_status === "Pending" ? "text-yellow-500 bg-yellow-100 dark:bg-yellow-900" :
                                                 "text-red-500 bg-red-100 dark:bg-red-900"}`}>
                                         {course.approval_status}
@@ -133,6 +154,7 @@ const CoursePart = () => {
                                 </div>
                             </Link>
                         ))}
+
                     </div>
                     <AdminPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
                 </>

@@ -9,5 +9,6 @@ const enrolledCourseController = container.get<EnrolledCourseController>(Enrolle
 enrolledCourseRouter.post("/", enrolledCourseController.enrollCourse.bind(enrolledCourseController));
 enrolledCourseRouter.get("/:userId", enrolledCourseController.getEnrollCourses.bind(enrolledCourseController));
 enrolledCourseRouter.post("/:userId/update-progress", enrolledCourseController.updateTopicProgress.bind(enrolledCourseController));
+enrolledCourseRouter.post("/cancel", enrolledCourseController.cancelEnrollment.bind(enrolledCourseController));
 
 export default enrolledCourseRouter;

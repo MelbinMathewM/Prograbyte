@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Search, ChevronRight, PlayCircle, ChevronLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Search, PlayCircle } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import Skeleton from "react-loading-skeleton";
 import Progress from "@/components/ui/progress";
@@ -10,6 +10,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { EnrolledCourses } from "@/types/course";
 import axiosInstance from "@/configs/axiosConfig";
 import CourseRatingModal from "./course-rating-modal";
+import Breadcrumb from "./breadcrumb";
+import HeaderWithBack from "./header-back";
+import { FaMoneyBill } from "react-icons/fa";
+import { refundEnrolledCourse } from "@/api/course";
+import toast from "react-hot-toast";
 
 const MyCoursesPart = () => {
     const [enrolledCourses, setEnrolledCourses] = useState<EnrolledCourses | null>(null);
@@ -22,7 +27,6 @@ const MyCoursesPart = () => {
     const { theme } = useTheme();
     const isDark = theme.includes("dark");
     const { user } = useContext(UserContext) ?? {};
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!user?.id) return;
@@ -62,6 +66,16 @@ const MyCoursesPart = () => {
         fetchTutorDetails();
     }, [enrolledCourses]);
 
+    const handleRefundRequest = async (courseId: string) => {
+        try {
+            const response = await refundEnrolledCourse(user?.id as string, courseId);
+            toast.success(response.message);
+        } catch (error: any) {
+            toast.error(error.error)
+        }
+    };
+
+
     const filteredCourses = enrolledCourses?.courses?.filter(
         (course) => course.courseId?.title?.toLowerCase().includes(search.toLowerCase())
     ) ?? [];
@@ -72,32 +86,31 @@ const MyCoursesPart = () => {
 
     return (
         <div className={`min-h-screen p-6 ${isDark ? "bg-gray-900 text-white" : "bg-gray-100 text-[#414040]"}`}>
-            <nav className={`p-6 rounded mb-4 flex items-center ${isDark ? "bg-gray-700 text-white" : "bg-[#ffffff] text-gray-600"}`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronRight size={16} />
-                <span>My Courses</span>
-            </nav>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                isDark={isDark}
+                items={[
+                    { label: "Home", to: "/home" },
+                    { label: "Profile", to: "/profile" },
+                    { label: `My Courses` }
+                ]}
+            />
 
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">My Enrolled Courses</h2>
-                <div className="flex gap-3">
-                    <div className="relative">
-                        <Search className="absolute left-3 top-3 text-gray-400" size={18} />
-                        <input
-                            type="text"
-                            placeholder="Search courses..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className={`pl-10 pr-4 py-2 rounded-md ${isDark ? "border border-gray-800 hover:border-gray-600" : "bg-white shadow-sm"} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                        />
-                    </div>
-                    <button
-                        onClick={() => navigate(-1)}
-                        className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"}`}
-                    >
-                        <ChevronLeft size={16} />
-                        Back
-                    </button>
+            {/* Title and Back Button */}
+            <HeaderWithBack
+                title="My Courses"
+                isDark={isDark}
+            />
+            <div className="flex gap-3 py-6">
+                <div className="relative">
+                    <Search className="absolute left-3 top-3 text-gray-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Search courses..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className={`pl-10 pr-4 py-2 rounded-md ${isDark ? "border border-gray-800 hover:border-gray-600" : "bg-white shadow-sm"} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    />
                 </div>
             </div>
 
@@ -116,14 +129,24 @@ const MyCoursesPart = () => {
                             <p className="text-sm text-gray-500">Instructor: {tutorDetails[course.courseId.tutor_id]?.name || "Loading..."}</p>
                             <Progress value={course.completionStatus || 0} isDark={isDark} />
                             <span className="text-xs text-gray-500">{course.completionStatus}% completed</span>
-                            <div className="flex justify-between items-center mt-3">
+                            <div className="flex justify-between gap-2 items-center mt-3">
                                 <span className="text-sm font-medium text-green-500">Paid: ${course.paymentAmount}</span>
-                                {course.completionStatus === 100 && (
-                                    <div>
-                                        <CourseRatingModal courseId={course.courseId._id} isDark={isDark} userId={user?.id as string}/>
-                                    </div>
-                                )}
-                                <Link to={`/courses/${course.courseId._id}`} className="bg-blue-500 text-white px-3 py-1 rounded-md flex items-center gap-2 hover:bg-blue-600">
+
+                                {course.completionStatus > 80 ? (
+                                    <CourseRatingModal courseId={course.courseId._id} isDark={isDark} userId={user?.id as string} />
+                                ) : course.completionStatus < 80 ? (
+                                    <button
+                                        className="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm flex items-center gap-2"
+                                        onClick={() => handleRefundRequest(course.courseId._id)}
+                                    >
+                                        <FaMoneyBill />Refund
+                                    </button>
+                                ) : null}
+
+                                <Link
+                                    to={`/courses/${course.courseId._id}`}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm flex items-center gap-2"
+                                >
                                     <PlayCircle size={16} /> Details
                                 </Link>
                             </div>

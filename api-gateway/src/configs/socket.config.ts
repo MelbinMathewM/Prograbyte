@@ -12,6 +12,8 @@ export const SOCKET_EVENTS = {
     RECEIVE_COMMENT: "receive_comment",
 
     UPDATE_VIEWER_COUNT: "update_viewer_count",
+    LEAVE: "leave",
+    END_STREAM: "end_stream",
 
     LIVE_JOIN: "live_join",
     LIVE_OFFER: "live_offer",
