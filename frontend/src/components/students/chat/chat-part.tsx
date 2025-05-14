@@ -24,6 +24,7 @@ const ChatDashboard: React.FC = () => {
       if (!loggedInUserId) return;
       try {
         const response = await fetchMutualConnections(loggedInUserId);
+        console.log(response)
         setMutualFollowers(response.users);
       } catch (error) {
         console.error('Error fetching mutual connections:', error);
@@ -121,7 +122,7 @@ const ChatDashboard: React.FC = () => {
         title="Chat"
         isDark={isDark}
       />
-      <div className="flex flex-col sm:flex-row h-[80vh] rounded-xl overflow-hidden shadow-xl">
+      <div className="flex flex-col sm:flex-row h-[80vh] overflow-hidden shadow-xl">
         {/* Sidebar */}
         <div className={`w-full sm:w-1/4 ${isDark ? 'bg-gray-800' : 'bg-white'} overflow-y-auto`}>
           <h2 className="text-lg font-semibold p-4 border-b">Chats</h2>

@@ -68,7 +68,7 @@ const LivePart = () => {
         };
 
         const handleViewerCount = (count: number) => {
-            setViewerCount(count);
+            setViewerCount(count - 1);
         };
 
         liveSocket.on(SOCKET_EVENTS.RECEIVE_COMMENT, handleComment);

@@ -63,7 +63,7 @@ const LiveRoom: React.FC = () => {
         };
 
         const onViewerCount = (count: number) => {
-            setViewerCount(count);
+            setViewerCount(count - 1);
         };
 
         if (liveSocket.connected) {

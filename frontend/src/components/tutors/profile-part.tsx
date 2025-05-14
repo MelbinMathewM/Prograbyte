@@ -45,11 +45,10 @@ export default function TutorProfilePart() {
 
     const fetchProfile = async () => {
         try {
-            console.log(tutor, 'user')
             if (!tutor?.id) return;
             const res = await getProfile(tutor.id);
-            setProfile(res);
-            setSkills(res.skills);
+            setProfile(res.user);
+            setSkills(res.user.skills);
         } catch (error: any) {
             toast.error(error.response?.data?.error || "Failed to load profile");
         }

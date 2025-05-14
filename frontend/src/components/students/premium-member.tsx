@@ -5,13 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle, Crown, IndianRupee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import axiosInstance from "@/configs/axiosConfig";
 import { UserContext } from "@/contexts/user-context";
 import { useTheme } from "@/contexts/theme-context";
 import { User } from "@/types/user";
 import Breadcrumb from "./breadcrumb";
 import HeaderWithBack from "./header-back";
 import { updateToPremium } from "@/api/profile";
+import { revokePremium } from "@/api/payments";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -69,14 +69,11 @@ const PremiumPage = () => {
 
   const handleRevoke = async () => {
     try {
-      const res = await axiosInstance.patch("/user/revoke-premium");
-      if (res.status === 200) {
-        toast.info("Premium membership revoked.");
-        // setUser && setUser({ ...user, isPremium: false });
-        setIsPremium(false);
-      }
-    } catch (error) {
-      toast.error("Failed to revoke premium status.");
+      const response = await revokePremium(user?.id as string);
+      toast.success(response.message);
+      setIsPremium(false);
+    } catch (error: any) {
+      toast.error(error.error);
     }
   };
 

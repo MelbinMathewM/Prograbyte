@@ -1,18 +1,41 @@
 import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
-import { FaUserCircle, FaHeart } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaUserCircle, FaHeart, FaBell } from "react-icons/fa";
 import { useTheme } from "@/contexts/theme-context";
 import { motion } from "framer-motion";
 import { Sun, Moon, Menu } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { liveSocket, SOCKET_EVENTS } from "@/configs/socketConfig";
 
 const StudentNavbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotifications, setShowNotifications] = useState(false);
   const { theme } = useTheme();
+  const isDark = theme === "dark-theme";
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
   };
+
+  const toggleNotifications = () => {
+    setShowNotifications((prev) => !prev);
+  };
+
+  useEffect(() => {
+    liveSocket.on(SOCKET_EVENTS.LIVE_CLASS_STARTED, (data: { schedule_id: string, streamUrl: string, streamKey: string, message: string }) => {
+      console.log("Live class started:", data);
+      setNotifications((prev) => [
+        ...prev,
+        { message: data.message, streamUrl: data.streamUrl }
+      ]);
+      setShowNotifications(true);
+    });
+
+    return () => {
+      liveSocket.off(SOCKET_EVENTS.LIVE_CLASS_STARTED);
+    };
+  }, []);
 
   return (
     <nav className={`fixed top-0 left-0 w-full backdrop-blur-md z-50 shadow-md ${theme.includes("dark") ? "bg-gray-900/80 text-white" : "bg-white/70 text-gray-800"}`}>
@@ -45,8 +68,36 @@ const StudentNavbar = () => {
             </li>
           ))}
         </ul>
+
         {/* Auth Section (Desktop) */}
         <div className="flex items-center space-x-6 hidden md:flex">
+          {/* Notifications Icon */}
+          <div className="relative">
+            <button onClick={toggleNotifications} className="relative focus:outline-none">
+              <FaBell size={15} className="hover:text-blue-500 transition" />
+              {notifications.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                  {notifications.length}
+                </span>
+              )}
+            </button>
+
+            {/* Notification Dropdown */}
+            {showNotifications && (
+              <div className={`absolute right-0 mt-2 w-64 ${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-800"} rounded-lg shadow-lg overflow-hidden z-50`}>
+                {notifications.length === 0 ? (
+                  <div className="p-4 text-center text-sm">No notifications</div>
+                ) : (
+                  notifications.map((note, index) => (
+                    <div key={index} className={`p-4 border-b ${isDark ? "hover:bg-blue-900" : "hover:bg-blue-100"} cursor-pointer`}>
+                      📢 {note.message}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+
           <ThemeToggle />
 
           <TooltipProvider>
@@ -55,14 +106,8 @@ const StudentNavbar = () => {
                 <NavLink
                   to="/profile"
                   className={({ isActive }) =>
-                    `text-md transition flex items-center ${isActive
-                      ? "text-blue-600"
-                      : theme.includes("dark")
-                        ? "text-gray-300 hover:text-blue-500 hover:bg-blue-500"
-                        : "text-gray-800 hover:text-blue-500 hover:bg-blue-500"
-                    }`
-                  }
-                >
+                    `text-md transition flex items-center ${isActive ? "text-blue-600" : isDark ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
+                  }>
                   <FaUserCircle size={15} />
                 </NavLink>
               </TooltipTrigger>
@@ -71,18 +116,14 @@ const StudentNavbar = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
                 <NavLink
                   to="/wishlist"
                   className={({ isActive }) =>
-                    `text-md transition flex items-center ${isActive
-                      ? "text-red-600"
-                      : theme.includes("dark")
-                        ? "text-gray-300 hover:text-blue-500 hover:bg-blue-500"
-                        : "text-gray-800 hover:text-blue-500 hover:bg-blue-500"
-                    }`
+                    `text-md transition flex items-center ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
                   }>
                   <FaHeart size={15} />
                 </NavLink>
@@ -136,6 +177,7 @@ const StudentNavbar = () => {
 
 export default StudentNavbar;
 
+// Theme Toggle stays same
 function ThemeToggle() {
   const { theme, toggleDarkMode } = useTheme();
   const isDark = theme.includes("dark");
@@ -149,7 +191,6 @@ function ThemeToggle() {
       ) : (
         <Sun className="absolute right-2 text-yellow-500" size={14} />
       )}
-
       <motion.div
         className={`absolute w-4 h-4 ${isDark ? "bg-gray-600 border border-gray-500 shadow-md" : "bg-white"} rounded-full shadow-md`}
         animate={{ x: isDark ? 22 : 0 }}

@@ -20,5 +20,6 @@ export const SOCKET_EVENTS = {
   RECEIVE_COMMENT: "receive_comment",
   VIEW_COUNT: "update_viewer_count",
   LEAVE: "leave",
-  END_STREAM: "end_stream"
+  END_STREAM: "end_stream",
+  LIVE_CLASS_STARTED: "live_class_started"
 };
