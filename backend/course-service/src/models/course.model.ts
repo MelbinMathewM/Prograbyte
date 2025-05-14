@@ -1,17 +1,18 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import { Schema, Document, Types,  model } from "mongoose";
 
 export type ApprovalStatus = "Pending" | "Approved" | "Rejected";
 
 export interface ICourse extends Document {
     title: string;
     description: string;
-    category_id: string | ObjectId;
-    tutor_id: string | ObjectId;
+    category_id: Types.ObjectId;
+    tutor_id: Types.ObjectId;
     price: number;
     preview_video_urls: string[];
     poster_url: string;
     approval_status: ApprovalStatus;
     rating: number | null;
+    offer: Types.ObjectId | null;
 }
 
 const courseSchema = new Schema<ICourse>({
@@ -55,7 +56,14 @@ const courseSchema = new Schema<ICourse>({
     rating: {
         type: Number,
         default: null
-    }
+    },
+    offer: {
+        type: Schema.Types.ObjectId,
+        ref: 'Offer',
+        default: null,
+    },
 }, { timestamps: true });
 
-export const Course = mongoose.model("Course", courseSchema);
+const Course = model<ICourse>("Course", courseSchema);
+
+export default Course;

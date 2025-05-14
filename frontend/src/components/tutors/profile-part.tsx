@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Award, BookOpen, ChevronLeft, ChevronRight, Upload, Wallet, Users, DollarSign } from "lucide-react";
+import { Award, BookOpen, Upload, Wallet, Users, DollarSign } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getProfile, updateProfileInfo } from "@/api/profile";
 import { TutorContext } from "@/contexts/tutor-context";
 import toast from "react-hot-toast";
@@ -11,10 +11,11 @@ import TutorDetails from "./profile-tutor-details";
 import { getCroppedImage } from "@/libs/imageCropper";
 import SkillPart from "./profile-skill";
 import { Profile, CroppedArea } from "@/types/user";
+import BreadcrumbHeader from "./breadcrumb";
 
 export default function TutorProfilePart() {
     const { theme } = useTheme();
-    console.log(theme,'theme')
+    console.log(theme, 'theme')
     const isDark = theme.includes("dark");
 
     const { tutor, logout } = useContext(TutorContext) ?? {};
@@ -36,7 +37,6 @@ export default function TutorProfilePart() {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [skills, setSkills] = useState<string[]>([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!tutor?.id) return;
@@ -45,11 +45,10 @@ export default function TutorProfilePart() {
 
     const fetchProfile = async () => {
         try {
-            console.log(tutor, 'user')
             if (!tutor?.id) return;
             const res = await getProfile(tutor.id);
-            setProfile(res);
-            setSkills(res.skills);
+            setProfile(res.user);
+            setSkills(res.user.skills);
         } catch (error: any) {
             toast.error(error.response?.data?.error || "Failed to load profile");
         }
@@ -101,18 +100,14 @@ export default function TutorProfilePart() {
 
     return (
         <div className={`min-h-screen p-6 ${isDark ? "bg-[#1c1e1f] text-white" : "bg-[#f7f8f9] text-[#333]"}`}>
-            <nav className={`my-4 p-4 rounded text-sm flex items-center ${isDark ? "text-gray-300 bg-gray-700 shadow-lg" : "text-gray-600 bg-white shadow-lg"}`}>
-                <Link to="/tutor/dashboard" className="hover:text-blue-500">Dashboard</Link>
-                <ChevronRight size={16} />
-                <span>Profile</span>
-            </nav>
+            <BreadcrumbHeader
+                paths={[
+                    { label: "Dashboard", href: "/tutor/dashboard" },
+                    { label: "Profile" }
+                ]}
+                title="Profile"
+            />
 
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold">Profile</h2>
-                <button onClick={() => navigate(-1)} className="px-4 py-2 flex items-center gap-2 rounded-md font-bold bg-blue-500 text-white hover:bg-blue-600">
-                    <ChevronLeft size={16} /> Back
-                </button>
-            </div>
 
             <div className={`shadow-lg rounded-lg p-6 flex items-center space-x-6 ${isDark ? "bg-[#272928]" : "bg-[#ffffff]"}`}>
                 <div className="relative">
@@ -141,7 +136,7 @@ export default function TutorProfilePart() {
                         {[{ label: "My Courses", icon: BookOpen, link: "/tutor/profile/my-courses" },
                         { label: "My Students", icon: Users, link: "/my-students" },
                         { label: "Earnings", icon: DollarSign, link: "/earnings" },
-                        { label: "Wallet", icon: Wallet, link: "/wallet" },
+                        { label: "Wallet", icon: Wallet, link: "/tutor/profile/wallet" },
                         { label: "Certificates", icon: Award, link: "/certificates" }].map((item, index) => (
                             <Link key={index} to={item.link} className={`p-4 flex flex-col items-center rounded-lg shadow-md transition ${isDark ? "bg-[#272928] hover:bg-gray-700 text-white" : "bg-[#ffffff] hover:bg-grey-200 text-gray-700 hover:bg-gray-200"}`}>
                                 <item.icon size={28} />

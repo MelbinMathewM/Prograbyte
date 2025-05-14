@@ -11,12 +11,15 @@ export interface ILiveClass extends Document {
     status: string;
     room_id: string;
     meeting_link: string;
-    attendees: Attendees[];
+    attendees: IAttendees[];
+    viewersCount: number;
+    totalWatchMinutes: number;
+    
 }
 
-interface Attendees extends Document {
-    student_id: Types.ObjectId;
-    joined_at: Date;
+interface IAttendees extends Document {
+    student_id: string;
+    sessions: { joined_at: Date; left_at?: Date }[];
 }
 
 const LiveClassSchema = new Schema<ILiveClass>({
@@ -63,11 +66,28 @@ const LiveClassSchema = new Schema<ILiveClass>({
   attendees: [
     {
       student_id: { 
-        type: Schema.Types.ObjectId, 
-    },
-      joined_at: { type: Date },
+        type: String, 
+      },
+      sessions: [
+        {
+          joined_at: {
+            type: Date
+          },
+          left_at: {
+            type: Date
+          }
+        }
+      ]
     },
   ],
+  viewersCount: {
+    type: Number,
+    default: 0,
+  },
+  totalWatchMinutes: {
+    type: Number,
+    default: 0,
+  }
 }, { timestamps: true });
 
 const LiveClass = model<ILiveClass>("LiveClass", LiveClassSchema);

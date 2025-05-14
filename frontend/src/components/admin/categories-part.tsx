@@ -122,7 +122,7 @@ const CategoriesPart: React.FC = () => {
     };
 
     return (
-        <div className={`container-fluid py-6 px-6 ${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+        <div className={`container-fluid py-6 px-6 ${isDark ? "bg-black/99 text-white" : "bg-white text-gray-900"}`}>
             {/* Breadcrumb Navigation */}
             <nav className="text-gray-400 text-sm mb-4">
                 <Link to="/admin/dashboard" className="hover:text-blue-400">Home</Link> &gt;
@@ -134,9 +134,9 @@ const CategoriesPart: React.FC = () => {
                 <h2 className="text-2xl font-bold">Categories</h2>
                 <button
                     onClick={() => handleShowModal("add")}
-                    className="flex ml-auto items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-sm cursor-pointer"
+                    className="flex ml-auto items-center bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-sm cursor-pointer"
                 >
-                    <Plus size={20} className="mr-2" /> Category
+                    <Plus size={20} className="mr-2" /> Add
                 </button>
             </div>
 

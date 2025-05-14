@@ -13,16 +13,16 @@ import { ITopicService } from "../interfaces/ITopic.service";
 export class TopicService implements ITopicService {
     constructor(@inject("ITopicRepository") private _topicRepository: ITopicRepository) { }
 
-    async createTopic(topics: ITopics): Promise<ITopics | null> {
+    async createTopic(course_id: string,topics: ITopics): Promise<ITopics | null> {
 
-        let existTopic = await this._topicRepository.findOne({course_id: topics.course_id as string});
+        let existTopic = await this._topicRepository.findOne({course_id});
 
         let newTopics;
         if (existTopic) {
             existTopic.topics.push(...topics?.topics);
             newTopics = await this._topicRepository.save(existTopic);
         } else {
-            const objectIdCourseId = convertToObjectId(topics.course_id as string);
+            const objectIdCourseId = convertToObjectId(course_id);
             newTopics = await this._topicRepository.create({ course_id: objectIdCourseId, topics: topics.topics })
         }
 

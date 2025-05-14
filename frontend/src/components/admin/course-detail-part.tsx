@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/configs/axiosConfig";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, IndianRupee } from "lucide-react";
 import { Topic, Course, ApprovalStatus, Topics } from "@/types/course";
 import { useTheme } from "@/contexts/theme-context";
 import { fetchCourseDetail, fetchTopicsByCourse } from "@/api/course";
@@ -60,7 +60,7 @@ const CourseDetailPage = () => {
     };
 
     if (loading) return <p className="text-gray-400 text-center text-lg animate-pulse">Loading...</p>;
-    if(error) return <p>{error}</p>
+    if (error) return <p>{error}</p>
     if (!course) return <p className="text-red-500 text-center text-lg">Course not found.</p>;
 
     return (
@@ -91,7 +91,22 @@ const CourseDetailPage = () => {
             <p className={`font-semibold mt-2 ${course.approval_status === "Approved" ? "text-green-400" : course.approval_status === "Rejected" ? "text-red-400" : "text-yellow-400"}`}>
                 Status: {course?.approval_status?.toUpperCase()}
             </p>
-            <h4 className="text-xl font-semibold mt-2">₹{course.price}</h4>
+            {course.offer ? (
+                <div className="mt-2 flex items-center gap-x-2 text-xl font-semibold text-green-600">
+                    <span className="flex items-center gap-0.5">
+                        < IndianRupee size={20}/>{Math.floor(course.price - (course.price * course.offer.discount) / 100)}
+                    </span>
+                    <span className="flex items-center text-gray-400 line-through text-base font-normal">
+                        < IndianRupee size={16}/>{course.price}
+                    </span>
+                    <span className="text-yellow-600 text-sm font-medium">
+                        ({course.offer.discount}% OFF)
+                    </span>
+                </div>
+            ) : (
+                <h4 className="flex items-center text-xl font-semibold mt-2">< IndianRupee size={20}/>{course.price}</h4>
+            )}
+
 
             {/* Approval and Delete Buttons */}
             <div className="mt-6 flex gap-4">
@@ -103,27 +118,27 @@ const CourseDetailPage = () => {
 
             {/* Course Media (Poster & Video) */}
             {course.preview_video_urls && course.poster_url && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        {/* Poster Image */}
-                        <div>
-                          <h3 className="text-lg font-semibold mb-2">Poster Image</h3>
-                          <img
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {/* Poster Image */}
+                    <div>
+                        <h3 className="text-lg font-semibold mb-2">Poster Image</h3>
+                        <img
                             src={course.poster_url}
                             alt="Course Poster"
                             className="rounded-lg shadow-md"
-                          />
-                        </div>
-            
-                        {/* Preview Video */}
-                        <div>
-                          <h3 className="text-lg font-semibold mb-2">Preview Video</h3>
-                          <video className="w-full rounded-lg shadow-md" controls>
+                        />
+                    </div>
+
+                    {/* Preview Video */}
+                    <div>
+                        <h3 className="text-lg font-semibold mb-2">Preview Video</h3>
+                        <video className="w-full rounded-lg shadow-md" controls>
                             <source src={course.preview_video_urls?.[0]} type="video/mp4" />
                             Your browser does not support the video tag.
-                          </video>
-                        </div>
-                      </div>
-                  )}
+                        </video>
+                    </div>
+                </div>
+            )}
 
 
             {/* Topics Section */}

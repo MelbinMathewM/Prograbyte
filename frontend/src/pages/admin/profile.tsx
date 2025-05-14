@@ -1,4 +1,3 @@
-import FooterPart from "@/components/admin/footer";
 import AdminProfilePart from "@/components/admin/profile"
 
 const AdminProfile = () => {
@@ -6,7 +5,6 @@ const AdminProfile = () => {
         <div>
                 <div>
                     <AdminProfilePart />
-                    <FooterPart />
                 </div>
         </div>
     )

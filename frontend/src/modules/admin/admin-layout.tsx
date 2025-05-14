@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/admin/sidebar";
 import Loader from "@/components/ui/loader";
+import AdminFooter from "@/components/admin/footer";
 
 const AdminLayout = () => {
     const [isOpen, setIsOpen] = useState(window.innerWidth >= 1024);
@@ -37,6 +38,7 @@ const AdminLayout = () => {
             >
                 <Loader />
                 <Outlet />
+                <AdminFooter />
             </main>
         </div>
     );

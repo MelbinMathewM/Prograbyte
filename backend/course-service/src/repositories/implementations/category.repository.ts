@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
-import Category, { ICategory } from "../../models/category.model";
-import { BaseRepository } from "../base.repository";
-import { ICategoryRepository } from "../interfaces/ICategory.repository";
+import Category, { ICategory } from "@/models/category.model";
+import { BaseRepository } from "@/repositories/base.repository";
+import { ICategoryRepository } from "@/repositories/interfaces/ICategory.repository";
 
 @injectable()
 export class CategoryRepository extends BaseRepository<ICategory> implements ICategoryRepository{

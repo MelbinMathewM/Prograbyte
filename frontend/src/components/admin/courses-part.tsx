@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, IndianRupee, Star } from "lucide-react";
 import AdminPagination from "./pagination";
 import { Course } from "@/types/course";
 import { useTheme } from "@/contexts/theme-context";
 import NoData from "@/components/ui/no-data";
 import { fetchCourses } from "@/api/course";
+import { Input } from "../ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const CoursePart = () => {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -18,7 +20,7 @@ const CoursePart = () => {
     const coursesPerPage = 4;
     const { theme } = useTheme();
     const isDark = theme.includes("dark");
-    
+
     const { categoryName, categoryId } = useParams();
 
     useEffect(() => {
@@ -26,7 +28,7 @@ const CoursePart = () => {
             if (!categoryId) return;
             setLoading(true);
             try {
-                const response = await fetchCourses({category_id: categoryId});
+                const response = await fetchCourses({ category_id: categoryId });
                 setCourses(response.courses);
             } catch (error: any) {
                 setError(error?.error || "Failed to fetch courses");
@@ -46,11 +48,11 @@ const CoursePart = () => {
     const paginatedCourses = filteredCourses.slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage);
 
     return (
-        <div className={`p-6 min-h-screen ${isDark ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"}`}>
+        <div className={`p-6 min-h-screen ${isDark ? "bg-black/99 text-gray-200" : "bg-white text-gray-900"}`}>
             <nav className="mb-4 text-sm flex items-center">
-                <Link to="/tutor/dashboard" className="hover:text-blue-400">Dashboard</Link>
+                <Link to="/admin/dashboard" className="hover:text-blue-400">Dashboard</Link>
                 <ChevronRight size={16} />
-                <Link to="/tutor/categories" className="hover:text-blue-400">Categories</Link>
+                <Link to="/admin/categories" className="hover:text-blue-400">Categories</Link>
                 <ChevronRight size={16} />
                 <span className="opacity-75">Courses</span>
             </nav>
@@ -63,31 +65,34 @@ const CoursePart = () => {
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <input
+                <Input
                     type="text"
                     placeholder="Search courses..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`border px-4 py-1 rounded-md w-full ${isDark ? "bg-gray-850 text-white border-gray-600" : "bg-gray-100 text-gray-900"}`}
+                    className={`border ${isDark ? "border-gray-400" : "border-gray-400"}`}
                 />
-                <select
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className={`border px-4 py-2 rounded-md w-full ${isDark ? "bg-gray-850 text-white border-gray-600" : "bg-gray-100 text-gray-900"}`}
-                >
-                    <option value="price-low">Low to High</option>
-                    <option value="price-high">High to Low</option>
-                </select>
-                <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className={`border px-4 py-2 rounded-md w-full ${isDark ? "bg-gray-850 text-white border-gray-600" : "bg-gray-100 text-gray-900"}`}
-                >
-                    <option value="All">All Status</option>
-                    <option value="Approved">Approved</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Rejected">Rejected</option>
-                </select>
+                <Select onValueChange={(value) => setSortOrder(value)} defaultValue="price-low">
+                    <SelectTrigger className={isDark ? "bg-gray-850 text-white" : "bg-white text-gray-900"}>
+                        <SelectValue placeholder="Sort by price" />
+                    </SelectTrigger>
+                    <SelectContent className={isDark ? "bg-black text-white" : "bg-white text-gray-900"}>
+                        <SelectItem value="price-low">Low to High</SelectItem>
+                        <SelectItem value="price-high">High to Low</SelectItem>
+                    </SelectContent>
+                </Select>
+
+                <Select onValueChange={(value) => setStatusFilter(value)} defaultValue="All">
+                    <SelectTrigger className={isDark ? "bg-gray-850 text-white" : "bg-white text-gray-900"}>
+                        <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent className={isDark ? "bg-black text-white" : "bg-white text-gray-900"}>
+                        <SelectItem value="All">All Status</SelectItem>
+                        <SelectItem value="Approved">Approved</SelectItem>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Rejected">Rejected</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             {loading ? (
@@ -100,28 +105,56 @@ const CoursePart = () => {
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         {paginatedCourses.map(course => (
-                            <div key={course._id} className={`shadow-md border rounded-sm transition-transform transform hover:scale-105 p-3 ${isDark ? "bg-gray-850 border-gray-700" : "bg-white border-gray-200"}`}>
-                                <img src={course.poster_url} alt={course.title} className="w-full object-cover rounded-md mb-3" />
-                                <h3 className="text-lg font-semibold">{course.title}</h3>
-                                <h4 className="opacity-75">₹{course.price}</h4>
-                                <div className="flex items-center text-yellow-400 my-1">
-                                    <Star size={16} /> <span className="ml-1">{course.rating || "N/A"}</span>
+                            <Link
+                                to={`/admin/categories/courses/${course._id}`}
+                                key={course._id}
+                                className={`block shadow-md border rounded-sm overflow-hidden transition-transform transform hover:scale-105 hover:shadow-lg duration-300
+      ${isDark ? "bg-gray-950 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-800"}`}
+                            >
+                                <img
+                                    src={course.poster_url}
+                                    alt={course.title}
+                                    className="w-full p-3 rounded-sm h-40 object-cover"
+                                />
+
+                                <div className="p-4 space-y-2">
+                                    <h3 className="text-lg font-semibold">{course.title}</h3>
+
+                                    {/* Price Section */}
+                                    {course.offer ? (
+                                        <div className="flex items-center gap-x-2 text-sm">
+                                            <span className="text-green-600 font-bold flex items-center gap-0">
+                                                <IndianRupee size={14} />
+                                                {Math.floor(course.price - (course.price * course.offer.discount) / 100)}
+                                            </span>
+                                            <span className="text-gray-500 line-through flex items-center gap-0">
+                                                <IndianRupee size={12} />
+                                                {course.price}
+                                            </span>
+                                            <span className="text-yellow-700 text-xs font-semibold">
+                                                ({course.offer.discount}% OFF)
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        <h4 className="text-sm opacity-80 flex items-center gap-0">
+                                            <IndianRupee size={14} /> {course.price}
+                                        </h4>
+                                    )}
+
+                                    <div className="flex items-center text-yellow-400 text-sm">
+                                        <Star size={16} /> <span className="ml-1">{course.rating || "N/A"}</span>
+                                    </div>
+
+                                    <p className={`inline-block text-xs font-semibold rounded-md px-2 py-1
+        ${course.approval_status === "Approved" ? "text-green-500 bg-green-100 dark:bg-green-900" :
+                                            course.approval_status === "Pending" ? "text-yellow-500 bg-yellow-100 dark:bg-yellow-900" :
+                                                "text-red-500 bg-red-100 dark:bg-red-900"}`}>
+                                        {course.approval_status}
+                                    </p>
                                 </div>
-                                <p className={`px-2 text-sm font-semibold rounded-md ${
-                                    course.approval_status === "Approved" ? "text-green-600" :
-                                    course.approval_status === "Pending" ? "text-yellow-600" :
-                                    "text-red-600"
-                                }`}>
-                                    {course.approval_status}
-                                </p>
-                                <Link
-                                    to={`/admin/categories/courses/${course._id}`}
-                                    className="inline-block text-blue-500 font-semibold px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white hover:font-normal mt-1"
-                                >
-                                    View Details
-                                </Link>
-                            </div>
+                            </Link>
                         ))}
+
                     </div>
                     <AdminPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
                 </>

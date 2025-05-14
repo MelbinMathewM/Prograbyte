@@ -1,8 +1,4 @@
-FROM alfg/nginx-rtmp:latest
-
-COPY nginx.conf /etc/nginx/nginx.conf
-
-RUN apk update && apk add --no-cache nodejs npm
+FROM node:23-alpine
 
 WORKDIR /app
 
@@ -14,4 +10,4 @@ COPY . .
 
 EXPOSE 1935 5005
 
-CMD ["sh", "-c", "nginx & npm run dev"]
+CMD ["npm", "run", "dev"]

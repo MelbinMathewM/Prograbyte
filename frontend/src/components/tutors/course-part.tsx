@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight, Star } from "lucide-react";
+import { ChevronRight, IndianRupee, Star } from "lucide-react";
 import Pagination from "./pagination";
 import axiosInstance from "@/configs/axiosConfig";
 import { TutorContext } from "@/contexts/tutor-context";
@@ -98,28 +98,72 @@ const CoursePart = () => {
             ) : (
                 <>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {paginatedCourses.map(course => (
-                            <div key={course._id} className={`shadow-md rounded-lg p-3 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
-                                <img src={course.poster_url} alt={course.title} className="w-full object-cover rounded-md mb-3" />
-                                <h3 className="text-lg font-semibold">{course.title}</h3>
-                                <div className="flex items-center text-yellow-500 my-1">
-                                    <Star size={16} /> <span className="ml-1">{course.rating || "N/A"}</span>
-                                </div>
-                                <p className={`px-2 py-1 text-sm font-semibold rounded-md ${
-                                    course.approval_status === "Approved" ? "bg-green-500 text-white" :
-                                    course.approval_status === "Pending" ? "bg-yellow-500 text-white" :
-                                    "bg-red-500 text-white"
-                                }`}>
-                                    {course.approval_status}
-                                </p>
+                        {paginatedCourses.map((course) => {
+                            const isOfferApplied = course.offer;
+                            const finalPrice = isOfferApplied
+                                ? Math.floor((course.price - (course.price * course.offer.discount) / 100))
+                                : course.price;
+
+                            return (
                                 <Link
                                     to={`/tutor/courses/${course._id}`}
-                                    className="inline-block w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 mt-2"
+                                    key={course._id}
+                                    className={`rounded-xl overflow-hidden shadow-md transition-transform duration-200 hover:scale-[1.02] cursor-pointer border ${isDarkMode ? "bg-gray-850 border-gray-700" : "bg-white border-gray-300"
+                                        }`}
                                 >
-                                    View Details
+                                    <img
+                                        src={course.poster_url}
+                                        alt={course.title}
+                                        className="w-full h-40 object-cover"
+                                    />
+
+                                    <div className="p-4 space-y-2">
+                                        <h3 className={`text-base font-semibold truncate ${isDarkMode ? "text-white" : "text-gray-800"}`}>
+                                            {course.title}
+                                        </h3>
+
+                                        <div className="flex items-center text-yellow-500 text-sm">
+                                            <Star size={16} /> <span className="ml-1">{course.rating || "N/A"}</span>
+                                        </div>
+
+                                        {/* Approval Status */}
+                                        <span
+                                            className={`inline-block text-xs px-2 py-1 rounded-full font-medium ${course.approval_status === "Approved"
+                                                    ? "bg-green-100 text-green-700"
+                                                    : course.approval_status === "Pending"
+                                                        ? "bg-yellow-100 text-yellow-700"
+                                                        : "bg-red-100 text-red-700"
+                                                }`}
+                                        >
+                                            {course.approval_status}
+                                        </span>
+
+                                        {/* Price / Offer */}
+                                        <div className="mt-1 font-bold flex items-center gap-2 flex-wrap">
+                                            {isOfferApplied ? (
+                                                <>
+                                                    <span className="text-green-600 text-base flex items-center gap-0">
+                                                        <IndianRupee size={16} />
+                                                        {finalPrice}
+                                                    </span>
+                                                    <span className="text-sm text-gray-500 line-through flex items-center gap-0">
+                                                        <IndianRupee size={14} />
+                                                        {course.price}
+                                                    </span>
+                                                    <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+                                                        {course.offer.discount}% OFF
+                                                    </span>
+                                                </>
+                                            ) : (
+                                                <span className="text-blue-600 text-base flex items-center gap-1">
+                                                    <IndianRupee size={16} /> {course.price}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
                                 </Link>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     {filteredCourses.length === 0 && (

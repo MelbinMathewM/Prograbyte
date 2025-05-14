@@ -10,9 +10,10 @@ export class EnrolledCourseController implements IEnrolledCourseController {
 
   async enrollCourse(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { courseId, userId, paymentAmount, paymentId } = req.body;
 
-      await this._enrolledCourseService.enrollCourse(courseId, userId, paymentAmount, paymentId);
+      const { courseId, userId, paymentAmount, paymentId, couponCode } = req.body;
+
+      await this._enrolledCourseService.enrollCourse(courseId, userId, paymentAmount, paymentId, couponCode);
 
       res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_ENROLLED })
     } catch (err) {
@@ -54,6 +55,28 @@ export class EnrolledCourseController implements IEnrolledCourseController {
     } catch (err) {
       next(err);
     }
+  }
+
+  async cancelEnrollment(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        const { userId, courseId } = req.body;
+
+        if (!userId) {
+          res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.USER_ID_REQUIRED });
+          return;
+        }
+
+        if (!courseId) {
+          res.status(HttpStatus.BAD_REQUEST).json({ message: HttpResponse.COURSE_ID_REQUIRED });
+          return;
+        }
+
+        await this._enrolledCourseService.cancelEnrollment(userId, courseId);
+
+        res.status(HttpStatus.OK).json({ message: HttpResponse.COURSE_CANCELLED });
+      }catch(err){
+        next(err);
+      }
   }
 
 }

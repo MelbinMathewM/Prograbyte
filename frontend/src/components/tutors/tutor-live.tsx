@@ -63,7 +63,7 @@ const LiveRoom: React.FC = () => {
         };
 
         const onViewerCount = (count: number) => {
-            setViewerCount(count);
+            setViewerCount(count - 1);
         };
 
         if (liveSocket.connected) {
@@ -104,6 +104,9 @@ const LiveRoom: React.FC = () => {
     const endStream = async () => {
         try {
             await changeLiveSchedule(schedule_id as string, "completed");
+            if (schedule?.room_id) {
+                liveSocket.emit(SOCKET_EVENTS.END_STREAM, { roomId: schedule.room_id });
+            }
             alert("Live stream ended.");
             navigate("/tutor/live");
         } catch (error) {

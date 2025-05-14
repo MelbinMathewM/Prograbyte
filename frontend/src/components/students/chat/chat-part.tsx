@@ -5,8 +5,8 @@ import { fetchConversation, fetchMutualConnections, fetchMessages } from '@/api/
 import { UserContext } from '@/contexts/user-context';
 import { useTheme } from '@/contexts/theme-context';
 import { MutualFollower, Message } from '@/types/chat';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import Breadcrumb from '../breadcrumb';
+import HeaderWithBack from '../header-back';
 
 const ChatDashboard: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<MutualFollower | null>(null);
@@ -18,13 +18,13 @@ const ChatDashboard: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark-theme';
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMutualFollowers = async () => {
       if (!loggedInUserId) return;
       try {
         const response = await fetchMutualConnections(loggedInUserId);
+        console.log(response)
         setMutualFollowers(response.users);
       } catch (error) {
         console.error('Error fetching mutual connections:', error);
@@ -107,26 +107,22 @@ const ChatDashboard: React.FC = () => {
 
   return (
     <div className={`min-h-screen w-full ${isDark ? 'bg-gray-900 text-gray-200' : 'bg-gray-100 text-gray-800'} p-2 sm:p-4 space-y-4`}>
-      <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"} p-6 rounded mb-8 flex items-center`}>
-              <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-              <ChevronRight size={16} />
-              <Link to="/blog" className="font-bold hover:text-blue-500">Blog</Link>
-              <ChevronRight size={16} />
-              <span>Chat</span>
-            </nav>
-      
-            {/* Blog Header */}
-            <div className="flex w-full sm:mx-auto justify-between items-center mb-8">
-              <h2 className="text-2xl font-bold">Chat</h2>
-              <button
-                onClick={() => navigate(-1)}
-                className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"}`}
-              >
-                <ChevronLeft size={16} />
-                Back
-              </button>
-            </div>
-      <div className="flex flex-col sm:flex-row h-[80vh] rounded-xl overflow-hidden shadow-xl">
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        isDark={isDark}
+        items={[
+          { label: "Home", to: "/home" },
+          { label: "Blog", to: "/blog" },
+          { label: `Chat` }
+        ]}
+      />
+
+      {/* Title and Back Button */}
+      <HeaderWithBack
+        title="Chat"
+        isDark={isDark}
+      />
+      <div className="flex flex-col sm:flex-row h-[80vh] overflow-hidden shadow-xl">
         {/* Sidebar */}
         <div className={`w-full sm:w-1/4 ${isDark ? 'bg-gray-800' : 'bg-white'} overflow-y-auto`}>
           <h2 className="text-lg font-semibold p-4 border-b">Chats</h2>

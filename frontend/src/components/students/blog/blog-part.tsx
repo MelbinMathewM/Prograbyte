@@ -7,10 +7,11 @@ import { Blog, BlogProfile } from "@/types/blog";
 import { User } from "@/types/user";
 import AddBlogModal from "@/components/students/blog/add-blog";
 import BlogList from "@/components/students/blog/blog-list";
-import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { AddComment, Chat } from "@mui/icons-material";
+import Breadcrumb from "../breadcrumb";
+import HeaderWithBack from "../header-back";
 
 const BlogPart = () => {
   const { user } = useContext(UserContext) ?? {};
@@ -95,24 +96,20 @@ const BlogPart = () => {
   return (
     <div className={`p-8 min-h-screen ${isDark ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"} font-medium`}>
 
-      {/* Breadcrumb / Navbar */}
-      <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"} p-6 rounded mb-8 flex items-center`}>
-        <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-        <ChevronRight size={16} />
-        <span>Blog</span>
-      </nav>
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        isDark={isDark}
+        items={[
+          { label: "Home", to: "/home" },
+          { label: "Blog" },
+        ]}
+      />
 
-      {/* Blog Header */}
-      <div className="flex w-full sm:mx-auto justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold">Blog</h2>
-        <button
-          onClick={() => navigate(-1)}
-          className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"}`}
-        >
-          <ChevronLeft size={16} />
-          Back
-        </button>
-      </div>
+      {/* Title and Back Button */}
+      <HeaderWithBack
+        title="Blog"
+        isDark={isDark}
+      />
 
       {/* Toggle Profile on small screens */}
       <div className="sm:hidden mb-4 flex w-full gap-4">

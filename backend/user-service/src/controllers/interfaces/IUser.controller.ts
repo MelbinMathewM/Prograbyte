@@ -17,6 +17,5 @@ export interface IUserController {
     addSkill(req: Request, res: Response, next: NextFunction): Promise<void>;
     editSkill(req: Request, res: Response, next: NextFunction): Promise<void>;
     deleteSkill(req: Request, res: Response, next: NextFunction): Promise<void>;
-    createCheckoutSession(req: Request, res: Response): Promise<void>;
-    stripeWebhook(req: Request, res: Response): Promise<void>
+    updateToPremium(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

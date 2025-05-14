@@ -1,12 +1,13 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState, useContext } from "react";
 import { FaTrash, FaSearch } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "@/contexts/theme-context";
 import { getWishlist, removeFromWishlist } from "@/api/wishlist";
 import { UserContext } from "@/contexts/user-context";
 import toast from "react-hot-toast";
 import { Wishlist } from "@/types/user";
+import Breadcrumb from "./breadcrumb";
+import HeaderWithBack from "./header-back";
 
 const WishlistPage = () => {
     const [wishlist, setWishlist] = useState<Wishlist | null>(null);
@@ -77,24 +78,20 @@ const WishlistPage = () => {
 
     return (
         <div className={`min-h-screen p-6 ${isDark ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"}`}>
-            <nav className={`p-6 rounded mb-4 text-sm flex items-center ${isDark ? "bg-gray-800 text-gray-400" : "bg-gray-200 text-gray-500"}`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronRight size={16} />
-                <span>Wishlist</span>
-            </nav>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb
+                isDark={isDark}
+                items={[
+                    {label: "Home", to: "/home"},
+                    { label: `Wishlist` }
+                ]}
+            />
 
-            <div className="flex w-full sm:max-w-6xl sm:mx-auto justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">Wishlist</h2>
-                <button
-                    onClick={() => navigate(-1)}
-                    className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${
-                        isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"
-                    }`}
-                >
-                    <ChevronLeft size={16} />
-                    Back
-                </button>
-            </div>
+            {/* Title and Back Button */}
+            <HeaderWithBack
+                title="Wishlist"
+                isDark={isDark}
+            />
 
             {loading ? (
                 <p className="text-center text-gray-500">Loading wishlist...</p>

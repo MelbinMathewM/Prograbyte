@@ -66,6 +66,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/user-service
       - GOOGLE_CLIENT_ID=value
       - GOOGLE_CLIENT_SECRET=value
+      - KAFKA_BROKER=kafka:9092
       - BACKEND_URL=http://api-gateway:5000/api
       - JWT_ACCESS_SECRET=d45659e5d171e2ed2ba45ff0fd76eb68a8e627576e8529be335cbd192973b21cf1c34702b3ff9afab6bde6454bd05abec322741f95bf4242c8baffaf48ed2a18
       - JWT_REFRESH_SECRET=71a0ffce065819b7147f467d28a0f7cf4181e2dd7f731d763a8cde357d9978519b11f3a68e60842c7a96a9879c04cebeac4a71f50ad9fd89752da5888ca4805d
@@ -86,6 +87,7 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/course-service
       - RABBITMQ_URL=amqp://rabbitmq
+      - KAFKA_BROKER=kafka:9092
       - CLOUDINARY_CLOUD_NAME=value
       - CLOUDINARY_API_KEY=value
       - CLOUDINARY_API_SECRET=value
@@ -139,7 +141,6 @@ services:
       - "1935:1935"
       - "8080:8080"
     volumes:
-      - ./backend/live-service/nginx.conf:/etc/nginx/nginx.conf
       - ./backend/live-service/hls:/hls
     networks:
       - app-network
@@ -202,6 +203,35 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+
+    # 🚀 ZOOKEEPER (Required by Kafka)
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - app-network
+
+  # 🚀 KAFKA
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - app-network
 
   # 🚀 REDIS (For Caching and Notifications)
   redis:

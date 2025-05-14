@@ -3,9 +3,9 @@ import { inject } from "inversify";
 import { CourseService } from "@/services/implementations/course.service";
 import { ICourse } from "@/models/course.model";
 import { HttpResponse } from "@/constants/response.constant";
-import stripe from "@/configs/stripe.config";
 import { HttpStatus } from "@/constants/status.constant";
 import { ICourseController } from "@/controllers/interfaces/ICourse.controller";
+import logger from "@/utils/logger.util";
 
 export class CourseController implements ICourseController {
   constructor(@inject(CourseService) private _courseService: CourseService) { }
@@ -27,9 +27,6 @@ export class CourseController implements ICourseController {
       next(err)
     }
   }
-
-
-
 
   async changeCourseApprovalStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -71,9 +68,9 @@ export class CourseController implements ICourseController {
 
   async getCourseDetail(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { id } = req.params;
+      const { courseId } = req.params;
 
-      const course = await this._courseService.getCourseDetail(id);
+      const course = await this._courseService.getCourseDetail(courseId);
 
       res.status(HttpStatus.OK).json({ course })
     } catch (err) {
@@ -110,32 +107,6 @@ export class CourseController implements ICourseController {
     }
   }
 
-  async createPayment(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { amount, method } = req.body;
-
-    console.log(req.body);
-
-    if (method === "upi") {
-      const upiLink = `upi://pay?pa=merchant@upi&pn=Merchant&mc=1234&tid=TXN12345&tr=ORDERID${Date.now()}&am=${amount}`;
-      res.json({ upiLink });
-      return;
-    }
-
-    try {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: amount * 100,
-        currency: "inr",
-        payment_method_types: ["card"],
-      });
-
-      console.log(paymentIntent.client_secret, 'client_secret')
-
-      res.json({ clientSecret: paymentIntent.client_secret });
-    } catch (err) {
-      next(err)
-    }
-  }
-
   async addRating(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { userId, courseId, rating, review } = req.body;
@@ -160,6 +131,161 @@ export class CourseController implements ICourseController {
       const reviews = await this._courseService.getRatings(courseId);
 
       res.status(HttpStatus.OK).json({ reviews });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getCoupons(req: Request, res: Response, next: NextFunction): Promise<void> {
+    console.log('hii')
+    try {
+      const coupons = await this._courseService.getCoupons();
+
+      res.status(HttpStatus.OK).json({ coupons });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async postCoupon(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { code, discount, isLiveStream } = req.body;
+
+      const newCoupon = await this._courseService.postCoupon(code, discount, isLiveStream);
+
+      res.status(HttpStatus.CREATED).json({ coupon: newCoupon });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async applyCoupon(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try{
+      const { code, userId } = req.body;
+
+
+      const coupon = await this._courseService.applyCoupon(code, userId);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.COUPON_APPLIED, success: true, coupon})
+    }catch(err){
+      next(err);
+    }
+  }
+
+  async editCoupon(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { couponId } = req.params;
+
+      if (!couponId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.COUPON_ID_REQUIRED });
+        return;
+      }
+
+      const { updateData } = req.body;
+
+      const updatedCoupon = await this._courseService.editCoupon(couponId, updateData);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.COUPON_EDITED, coupon: updatedCoupon });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteCoupon(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { couponId } = req.params;
+
+      if (!couponId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.COUPON_ID_REQUIRED });
+        return;
+      }
+
+      await this._courseService.deleteCoupon(couponId);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.COUPON_DELETED });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getOffers(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log('hii')
+      const offers = await this._courseService.getOffers();
+
+      res.status(HttpStatus.OK).json({ offers });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async postOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { title, description, discount, expiryDate } = req.body;
+
+      const newOffer = await this._courseService.postOffer(title, description, discount, expiryDate);
+
+      res.status(HttpStatus.CREATED).json({ offer: newOffer });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async applyOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { courseId, offerId } = req.body;
+
+      await this._courseService.applyOfferToCourse(courseId, offerId);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.OFFER_APPLIED });
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  async removeOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { courseId } = req.body;
+
+      await this._courseService.removeOfferFromCourse(courseId);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.OFFER_REMOVED });
+    } catch(err) {
+      next(err);
+    }
+  }
+
+  async editOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { offerId } = req.params;
+
+      if (!offerId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.OFFER_ID_REQUIRED });
+        return;
+      }
+
+      const { updateData } = req.body;
+
+      await this._courseService.editOffer(offerId, updateData);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.OFFER_EDITED });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async deleteOffer(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { offerId } = req.params;
+
+      if (!offerId) {
+        res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.OFFER_ID_REQUIRED });
+        return;
+      }
+
+      await this._courseService.deleteOffer(offerId);
+
+      res.status(HttpStatus.OK).json({ message: HttpResponse.OFFER_DELETD });
     } catch (err) {
       next(err);
     }

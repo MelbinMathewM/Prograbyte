@@ -3,9 +3,6 @@ import passport from "passport";
 import container from "../configs/inversify.config";
 import { UserController } from "../controllers/implementations/user.controller";
 import bodyParser from "body-parser";
-import stripe from "../configs/stripe.config";
-import Stripe from "stripe";
-import express from "express";
 
 const userRouter = Router();
 const userController = container.get<UserController>(UserController);
@@ -20,18 +17,10 @@ userRouter.get('/verify-email', userController.verifyEmail.bind(userController))
 userRouter.post('/skills/:userId', userController.addSkill.bind(userController));
 userRouter.patch('/skills/:userId', userController.editSkill.bind(userController));
 userRouter.delete('/skills/:userId/:skill', userController.deleteSkill.bind(userController));
+userRouter.post("/upgrade", userController.updateToPremium.bind(userController));
+
 userRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 userRouter.get("/google/callback", passport.authenticate("google", { session: false }), userController.googleAuthCallback.bind(userController));
-
-userRouter.post(
-    "/payment/create-checkout-session",
-    bodyParser.json(),
-    userController.createCheckoutSession.bind(userController)
-);
-userRouter.post(
-    "/stripe/webhook",
-    userController.stripeWebhook.bind(userController)
-);
 
 userRouter.post("/tutor-register", userController.registerTutor.bind(userController));
 userRouter.get("/tutors", userController.getTutors.bind(userController));

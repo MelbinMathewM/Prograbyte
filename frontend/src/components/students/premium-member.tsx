@@ -1,14 +1,17 @@
 import { useContext, useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
-import { CheckCircle, ChevronLeft, ChevronRight, Crown, IndianRupee } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { CheckCircle, Crown, IndianRupee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import axiosInstance from "@/configs/axiosConfig";
 import { UserContext } from "@/contexts/user-context";
 import { useTheme } from "@/contexts/theme-context";
 import { User } from "@/types/user";
+import Breadcrumb from "./breadcrumb";
+import HeaderWithBack from "./header-back";
+import { updateToPremium } from "@/api/profile";
+import { revokePremium } from "@/api/payments";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -50,11 +53,9 @@ const PremiumPage = () => {
         return;
       }
 
-      const { data } = await axiosInstance.post("/user/payment/create-checkout-session", {
-        email: user.email,
-      });
+      const response = await updateToPremium(user?.email);
 
-      const { error } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+      const { error } = await stripe.redirectToCheckout({ sessionId: response.sessionId });
 
       if (error) {
         toast.error(error.message);
@@ -68,39 +69,32 @@ const PremiumPage = () => {
 
   const handleRevoke = async () => {
     try {
-      const res = await axiosInstance.patch("/user/revoke-premium");
-      if (res.status === 200) {
-        toast.info("Premium membership revoked.");
-        // setUser && setUser({ ...user, isPremium: false });
-        setIsPremium(false);
-      }
-    } catch (error) {
-      toast.error("Failed to revoke premium status.");
+      const response = await revokePremium(user?.id as string);
+      toast.success(response.message);
+      setIsPremium(false);
+    } catch (error: any) {
+      toast.error(error.error);
     }
   };
 
   return (
     <div className={`min-h-screen px-4 py-10 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
 
-      <nav className={`p-6 rounded mb-4 flex items-center ${isDark ? "bg-gray-800 text-gray-300" : "bg-gray-200 text-gray-500"}`}>
-        <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-        <ChevronRight size={16} />
-        <Link to="/profile" className="font-bold hover:text-blue-500">Profile</Link>
-        <ChevronRight size={16} />
-        <span>Profile</span>
-      </nav>
+      {/* Breadcrumb Navigation */}
+      <Breadcrumb
+        isDark={isDark}
+        items={[
+          { label: "Home", to: "/home" },
+          { label: "Profile", to: "/profile" },
+          { label: `Premium` }
+        ]}
+      />
 
-      <div className="flex justify-between items-center mb-4">
-        <h2 className={`text-2xl font-bold ${isDark ? "text-white" : "text-gray-800"}`}>Premium</h2>
-        <button
-          onClick={() => navigate(-1)}
-          className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-red-400 hover:bg-red-500 hover:text-white" : "text-red-500 hover:bg-red-500 hover:text-white"
-            }`}
-        >
-          <ChevronLeft size={16} />
-          Back
-        </button>
-      </div>
+      {/* Title and Back Button */}
+      <HeaderWithBack
+        title="Premium"
+        isDark={isDark}
+      />
 
       <div className="flex flex-col items-center justify-center px-6 py-10 max-w-5xl mx-auto">
         <h1 className={`text-3xl font-bold text-center mb-2 ${isDark ? "text-white" : "text-gray-900"}`}>

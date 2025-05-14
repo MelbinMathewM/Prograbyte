@@ -75,3 +75,20 @@ export interface Wishlist {
     userId: string;
     items: WishlistItem[];
 }
+
+export interface ITransaction {
+    _id: string;
+    amount: number;
+    type: "credit" | "debit";
+    source: "course" | "premium";
+    source_id?: string;
+    description: string;
+    date: Date;
+}
+
+export interface IWallet extends Document {
+    _id: string;
+    user_id: string;
+    balance: number;
+    transactions: ITransaction[];
+}

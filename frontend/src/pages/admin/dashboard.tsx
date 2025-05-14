@@ -1,5 +1,4 @@
 import DashboardPart from "@/components/admin/dashboard-part";
-import FooterPart from "@/components/admin/footer";
 
 
 const Dashboard = () => {
@@ -8,7 +7,6 @@ const Dashboard = () => {
         <>
             <div>
                 <DashboardPart />
-                <FooterPart />
             </div>
         </>
     );

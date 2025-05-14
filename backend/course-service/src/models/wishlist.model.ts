@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types, model } from "mongoose";
 
 export interface IWishlist extends Document {
-    userId: mongoose.Types.ObjectId;
-    items: mongoose.Types.ObjectId[];
+    userId: Types.ObjectId;
+    items: Types.ObjectId[];
 }
 
 const WishlistSchema = new Schema<IWishlist>({
@@ -22,6 +22,6 @@ const WishlistSchema = new Schema<IWishlist>({
     { timestamps: true }
 );
 
-const Wishlist = mongoose.model<IWishlist>("Wishlist", WishlistSchema);
+const Wishlist = model<IWishlist>("Wishlist", WishlistSchema);
 
 export default Wishlist;

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { Pencil, Trash2, ChevronRight, FileText, PlayCircle, ChevronLeft, Video } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Pencil, Trash2, FileText, PlayCircle, Video, IndianRupee, Gift } from "lucide-react";
 import axiosInstance from "@/configs/axiosConfig";
 import EditCourseModal from "./edit-course-modal";
 import { toast } from "react-toastify";
@@ -10,11 +10,14 @@ import { CircularProgress } from "@mui/material";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Course, Topics, Topic, Category } from "@/types/course";
+import { Course, Topics, Topic, Category, IOffer } from "@/types/course";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 import { Dialog } from "@headlessui/react";
 import { createLiveSchedule } from "@/api/live";
 import { fetchCourseDetail, fetchTopicsByCourse } from "@/api/course";
+import { applyOfferToCourse, fetchOffers, removeOfferFromCourse } from "@/api/offer";
+import { FaGift } from "react-icons/fa";
+import BreadcrumbHeader from "./breadcrumb";
 
 const TutorCourseDetailPart = () => {
   const { id } = useParams();
@@ -30,6 +33,9 @@ const TutorCourseDetailPart = () => {
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [selectedScheduleTopic, setSelectedScheduleTopic] = useState<Topic | null>(null);
   const [scheduleData, setScheduleData] = useState({ date: "", time: "", duration: "", description: "" });
+  const [offers, setOffers] = useState<IOffer[]>([]);
+  const [showOfferPanel, setShowOfferPanel] = useState(false);
+
   const navigate = useNavigate();
   const { theme } = useTheme();
   const isDarkMode = theme === "dark-theme";
@@ -38,6 +44,7 @@ const TutorCourseDetailPart = () => {
     const fetchCourse = async () => {
       try {
         const response = await fetchCourseDetail(id as string);
+        console.log(response.course)
         setCourse(response.course);
       } catch (err) {
         console.error("Error fetching course details");
@@ -45,6 +52,15 @@ const TutorCourseDetailPart = () => {
     };
     fetchCourse();
   }, [id]);
+
+  const refetchCourse = async () => {
+    try {
+      const response = await fetchCourseDetail(id as string);
+      setCourse(response.course);
+    } catch (err) {
+      console.error("Error fetching course details");
+    }
+  };
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -59,6 +75,18 @@ const TutorCourseDetailPart = () => {
     };
     fetchTopics();
   }, [course]);
+
+  useEffect(() => {
+    const getOffers = async () => {
+      try {
+        const response = await fetchOffers();
+        setOffers(response.offers);
+      } catch (err: any) {
+        console.log(err.error);
+      }
+    }
+    getOffers();
+  }, [])
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -99,9 +127,9 @@ const TutorCourseDetailPart = () => {
       alert("Please fill in all fields.");
       return;
     }
-  
+
     const scheduledDateTime = new Date(`${scheduleData.date}T${scheduleData.time}`);
-  
+
     const liveData = {
       course_id: course?._id as string,
       topic_id: selectedScheduleTopic?._id as string,
@@ -112,18 +140,39 @@ const TutorCourseDetailPart = () => {
       duration: parseInt(scheduleData.duration, 10),
       status: "scheduled" as const,
     };
-  
+
     console.log("Scheduling live for:", liveData);
-    try{
+    try {
       const response = await createLiveSchedule(liveData);
       setIsScheduleOpen(false);
       toast.success(response.message);
       setScheduleData({ date: "", time: "", duration: "", description: "" });
-    }catch(err: any){
+    } catch (err: any) {
       toast.error(err.response.data.error);
     }
-    
+
   };
+
+  const handleApplyOffer = async (courseId: string, offerId: string) => {
+    try {
+      const response = await applyOfferToCourse(courseId, offerId);
+      toast.success(response.message);
+      refetchCourse();
+    } catch (err: any) {
+      toast.error(err.error);
+    }
+  };
+
+  const handleRemoveOffer = async (courseId: string) => {
+    try {
+      const response = await removeOfferFromCourse(courseId);
+      toast.success(response.message);
+      refetchCourse();
+    } catch (err: any) {
+      toast.error(err.error);
+    }
+  };
+
 
   const validateCourse = (course: Partial<Course>, files: { poster?: File; video?: File }): boolean => {
     if (!course.title?.trim()) {
@@ -241,29 +290,55 @@ const TutorCourseDetailPart = () => {
   return (
     <Card className={`p-6 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {/* Breadcrumb Navigation */}
-      <nav className={`mb-4 text-sm flex items-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-        <Link to="/tutor/dashboard" className="hover:text-blue-400">Dashboard</Link>
-        <ChevronRight size={16} />
-        <Link to="/tutor/courses" className="hover:text-blue-400">My Courses</Link>
-        <ChevronRight size={16} />
-        <span>{course.title}</span>
-      </nav>
-  
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">{course.title}</h2>
-        <Link to="/tutor/courses" className="flex bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-          <ChevronLeft className="mt-1" size={18} /> Back
-        </Link>
-      </div>
-  
+      <BreadcrumbHeader
+        paths={[
+          { label: "Dashboard", href: "/tutor/dashboard" },
+          { label: "Course", href: "/tutor/courses" },
+          { label: "Course Details" }
+        ]}
+        title="Course Details"
+      />
+
+
       {/* Course Info */}
       <Card className={`p-4 mb-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-700'}`}>
         <p>{course.description}</p>
         <p className="font-bold pt-2">Category: {course?.category_id?.name}</p>
-        <p className="mt-2 font-bold">Price: <span className="text-blue-500">${course.price}</span></p>
+
+        {course.offer ? (
+          <div className="mt-2 font-bold flex flex-wrap items-center gap-x-3 gap-y-1">
+            {/* Discounted Price */}
+            <div className="flex items-center gap-0 text-green-600 text-lg font-bold">
+              <IndianRupee size={16} />
+              <span>{Math.floor((course.price - (course.price * course.offer.discount) / 100))}</span>
+            </div>
+
+            {/* Original Price */}
+            <div className="flex items-center gap-0 text-gray-500 line-through text-sm">
+              <IndianRupee size={14} />
+              <span>{course.price}</span>
+            </div>
+
+
+            {/* Discount Badge */}
+            <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded-full">
+              {course.offer.discount}% OFF
+            </span>
+
+            {/* Expiry Date */}
+            <span className="text-xs text-gray-400 font-normal">
+              Valid till {new Date(course.offer.expiryDate).toLocaleDateString()}
+            </span>
+          </div>
+        ) : (
+          <p className="mt-2 font-bold text-blue-600 text-lg flex items-center gap-0">
+            Price: &nbsp;<IndianRupee size={16} /> {course.price}
+          </p>
+        )}
+
+
         <p className="mt-2">Approval Status: {course.approval_status}</p>
-  
+
         <div className="flex gap-2 mt-4">
           <Button onClick={() => setIsEditModalOpen(true)} variant="default" className="flex items-center gap-2" disabled={isLoading}>
             {isLoading ? <CircularProgress size={16} color="inherit" /> : <Pencil size={16} />}
@@ -272,9 +347,56 @@ const TutorCourseDetailPart = () => {
           <Button onClick={deleteCourse} variant="destructive" className="flex items-center gap-2">
             <Trash2 size={16} /> Delete Course
           </Button>
+          <Button onClick={() => setShowOfferPanel(!showOfferPanel)} variant="success" className="flex items-center gap-2">
+            <FaGift /> Offers
+          </Button>
         </div>
+
+        {showOfferPanel && (
+          <div className={`mt-6 border rounded-sm p-5 shadow-sm transition-all duration-300 ${isDarkMode ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"}`}>
+            <h3 className={`flex items-center gap-2 text-xl font-bold mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>< Gift /> Available Offers</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {offers.map((offer) => {
+                const isApplied = course?.offer?._id === offer?._id;
+                return (
+                  <div
+                    key={offer._id}
+                    className={`flex flex-col justify-between p-4 rounded-sm shadow-sm border transition-all duration-200 hover:shadow-md ${isDarkMode ? "bg-gray-850 border-gray-700" : "bg-white border-gray-200"
+                      }`}
+                  >
+                    <div>
+                      <p className={`font-semibold text-lg ${isDarkMode ? "text-gray-100" : "text-gray-800"}`}>{offer.title}</p>
+                      <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>{offer.description}</p>
+                      <p className={`text-sm font-medium ${isDarkMode ? "text-green-400" : "text-green-600"}`}>{offer.discount}% OFF</p>
+                    </div>
+                    <div className="mt-4 text-right">
+                      {isApplied ? (
+                        <Button
+                          variant="destructive"
+                          className="text-sm px-4 py-2 w-full"
+                          onClick={() => handleRemoveOffer(course._id)}
+                        >
+                          Remove Offer
+                        </Button>
+                      ) : (
+                        <Button
+                          className="text-sm bg-green-600 hover:bg-green-700 text-white px-4 py-2 w-full"
+                          onClick={() => handleApplyOffer(course._id, offer._id)}
+                        >
+                          Apply Offer
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+
       </Card>
-  
+
       {course.preview_video_urls && course.poster_url && (
         <Card className={`p-4 mb-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -287,7 +409,7 @@ const TutorCourseDetailPart = () => {
                 className="w-full rounded-lg shadow-md"
               />
             </div>
-  
+
             {/* Preview Video */}
             <div>
               <h3 className="text-lg font-semibold mb-2">Preview Video</h3>
@@ -299,7 +421,7 @@ const TutorCourseDetailPart = () => {
           </div>
         </Card>
       )}
-  
+
       {/* Topics Table */}
       <Card className={`p-4 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}>
         <div className="flex justify-between items-center mb-4">
@@ -307,13 +429,13 @@ const TutorCourseDetailPart = () => {
           <Button onClick={() => navigate(`/tutor/courses/${course._id}/add-topic`)}>Add Topic</Button>
         </div>
         <Table>
-          <TableHeader className={` ${isDarkMode? "hover:bg-gray-950": "hover:bg-gray-200"}`}>
+          <TableHeader className={` ${isDarkMode ? "hover:bg-gray-950" : "hover:bg-gray-200"}`}>
             <TableRow>
-              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Title</TableHead>
-              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Level</TableHead>
-              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Video</TableHead>
-              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} font-semibold`}>Notes</TableHead>
-              <TableHead className={` ${ isDarkMode? "text-white": "text-gray-800"} text-center font-semibold`}>Actions</TableHead>
+              <TableHead className={` ${isDarkMode ? "text-white" : "text-gray-800"} font-semibold`}>Title</TableHead>
+              <TableHead className={` ${isDarkMode ? "text-white" : "text-gray-800"} font-semibold`}>Level</TableHead>
+              <TableHead className={` ${isDarkMode ? "text-white" : "text-gray-800"} font-semibold`}>Video</TableHead>
+              <TableHead className={` ${isDarkMode ? "text-white" : "text-gray-800"} font-semibold`}>Notes</TableHead>
+              <TableHead className={` ${isDarkMode ? "text-white" : "text-gray-800"} text-center font-semibold`}>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -356,7 +478,7 @@ const TutorCourseDetailPart = () => {
           </TableBody>
         </Table>
       </Card>
-  
+
       {isEditModalOpen && (
         <EditCourseModal
           open={true}
@@ -367,7 +489,7 @@ const TutorCourseDetailPart = () => {
           isDark={isDarkMode}
         />
       )}
-  
+
       {selectedTopic && (
         <EditTopicModal
           topic={selectedTopic}
@@ -376,7 +498,7 @@ const TutorCourseDetailPart = () => {
           isDark={isDarkMode}
         />
       )}
-  
+
       {isScheduleOpen && (
         <Dialog open={isScheduleOpen} onClose={() => setIsScheduleOpen(false)} className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-screen px-4">
@@ -429,7 +551,7 @@ const TutorCourseDetailPart = () => {
           </div>
         </Dialog>
       )}
-  
+
       <ConfirmDialog
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
@@ -444,7 +566,7 @@ const TutorCourseDetailPart = () => {
         isDark={isDarkMode}
       />
     </Card>
-  );  
+  );
 };
 
 export default TutorCourseDetailPart;

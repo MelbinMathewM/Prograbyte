@@ -29,6 +29,8 @@ import { EnrolledCourseRepository } from "@/repositories/implementations/enrolle
 import { WishlistRepository } from "@/repositories/implementations/wishlist.repository";
 import { LiveRepository } from "@/repositories/implementations/live.repository";
 import { RatingRepository } from "@/repositories/implementations/rating.repository";
+import { CouponRepository } from "@/repositories/implementations/coupon.repository";
+import { OfferRepository } from "@/repositories/implementations/offer.repository";
 
 // Interfaces
 import { ICategoryRepository } from "@/repositories/interfaces/ICategory.repository";
@@ -38,6 +40,8 @@ import { IEnrolledCourseRepository } from "@/repositories/interfaces/IEnrolled-c
 import { IWishlistRepository } from "@/repositories/interfaces/IWishlist.repository";
 import { ILiveRepository } from "@/repositories/interfaces/ILive.repository";
 import { IRatingRepository } from "@/repositories/interfaces/IRating.repository";
+import { ICouponRepository } from "@/repositories/interfaces/ICoupon.repository";
+import { IOfferRepository } from "@/repositories/interfaces/IOffer.repository";
 
 // Express & Socket.IO setup
 const app = express();
@@ -58,6 +62,8 @@ container.bind<IEnrolledCourseRepository>("IEnrolledCourseRepository").to(Enroll
 container.bind<IWishlistRepository>("IWishlistRepository").to(WishlistRepository);
 container.bind<ILiveRepository>("ILiveRepository").to(LiveRepository);
 container.bind<IRatingRepository>("IRatingRepository").to(RatingRepository);
+container.bind<ICouponRepository>("ICouponRepository").to(CouponRepository);
+container.bind<IOfferRepository>("IOfferRepository").to(OfferRepository);
 
 // Services Bindings
 container.bind<CategoryService>(CategoryService).toSelf();

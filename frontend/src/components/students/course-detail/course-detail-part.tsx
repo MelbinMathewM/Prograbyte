@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ChevronLeft, ChevronRight, PlayCircle } from "lucide-react";
+import { PlayCircle } from "lucide-react";
 import { useTheme } from "@/contexts/theme-context";
 import TabNav from "@/components/students/course-detail/course-detail-tabnav";
 import { Course, EnrolledCourses } from "@/types/course";
@@ -9,6 +9,8 @@ import { UserContext } from "@/contexts/user-context";
 import { User } from "@/types/user";
 import { getLiveSchedulesByCourse } from "@/api/live";
 import dayjs from "dayjs";
+import Breadcrumb from "../breadcrumb";
+import HeaderWithBack from "../header-back";
 
 const StudentCourseDetailPart = () => {
 
@@ -68,21 +70,21 @@ const StudentCourseDetailPart = () => {
     }, [course]);
     return (
         <div className={`${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"} mx-auto p-6`}>
-            <nav className={`${isDark ? "bg-gray-800 text-gray-300" : "bg-violet-50 text-gray-500"} p-6 rounded mb-4 flex items-center`}>
-                <Link to="/home" className="font-bold hover:text-blue-500">Home</Link>
-                <ChevronRight size={16} />
-                <Link to="/courses" className="font-bold hover:text-blue-500">Courses</Link>
-                <ChevronRight size={16} />
-                <span>{course?.title}</span>
-            </nav>
+            {/* Breadcrumb Navigation */}
+            <Breadcrumb 
+                isDark={isDark}
+                items={[
+                    {label: "Home", to: "/home"},
+                    { label: "Courses", to: "/courses" },
+                    { label: `${course?.title}` }
+                ]}
+            />
 
-            <div className="flex w-full justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold">{course?.title}</h2>
-                <Link to="/courses" className="flex shadow-md text-blue-500 font-bold px-4 py-2 rounded-md hover:text-white hover:bg-blue-400">
-                    <ChevronLeft className="mt-1" size={16} />
-                    Back
-                </Link>
-            </div>
+            {/* Title and Back Button */}
+            <HeaderWithBack
+                title={course?.title as string}
+                isDark={isDark}
+            />
 
             {course?.poster_url && course?.preview_video_urls && (
                 <div className="grid md:grid-cols-2 mx-auto gap-6 mt-6">
@@ -120,10 +122,10 @@ const StudentCourseDetailPart = () => {
 
                     {/* Right: Live Class Info */}
                     <div
-                        className={`rounded-2xl shadow-xl p-5 max-w-full md:max-w-[500px] w-full ${isDark ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"
+                        className={`rounded-sm shadow-xl p-5 w-full border ${isDark ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-200"
                             }`}
                     >
-                        <h3 className="text-2xl font-bold mb-4 text-blue-600">Live Class Sessions</h3>
+                        <h3 className={`text-xl font-medium mb-4 ${isDark ? "text-gray-200" : "text-gray-700"}`}>Live Class Sessions</h3>
 
                         {liveSessions?.length > 0 ? (
                             <div className="space-y-4">
@@ -145,8 +147,7 @@ const StudentCourseDetailPart = () => {
                                     return (
                                         <div
                                             key={index}
-                                            className={`p-4 rounded-xl border border-gray-300 shadow-sm ${isDark ? "bg-gray-900" : "bg-white"
-                                                }`}
+                                            className={`p-4 rounded-sm border shadow-sm ${isDark ? "bg-gray-900 border-gray-700" : "bg-white border-gray-300"}`}
                                         >
                                             <div className="flex items-center justify-between mb-2">
                                                 <h4 className="font-semibold text-lg">{session.title}</h4>

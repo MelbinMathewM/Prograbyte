@@ -14,6 +14,7 @@ import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import NoData from "../ui/no-data";
 import { SelectPortal } from "@radix-ui/react-select";
+import LoadingSkeletonCards from "../ui/loading-skeleton";
 
 const TutorDetailPart = () => {
     const [tutor, setTutor] = useState<Profile | null>(null);
@@ -23,7 +24,7 @@ const TutorDetailPart = () => {
     const [statusFilter, setStatusFilter] = useState("All");
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+
     const coursesPerPage = 6;
     const navigate = useNavigate();
     const { id } = useParams();
@@ -43,7 +44,7 @@ const TutorDetailPart = () => {
             const response = await getProfile(tutorId);
             setTutor(response.user);
         } catch (error) {
-            setError("Failed to fetch tutor details");
+            console.error("Failed to fetch tutor details");
         } finally {
             setLoading(false);
         }
@@ -55,7 +56,7 @@ const TutorDetailPart = () => {
             const response = await fetchCoursesByTutor(tutorId);
             setCourses(response.courses);
         } catch (err) {
-            setError("Failed to fetch courses");
+            console.error("Failed to fetch courses");
         } finally {
             setLoading(false);
         }
@@ -70,152 +71,134 @@ const TutorDetailPart = () => {
     const paginatedCourses = filteredCourses.slice((currentPage - 1) * coursesPerPage, currentPage * coursesPerPage);
 
     return (
-        <div className={`min-h-screen p-6 ${isDark ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
-            <div className="max-w-5xl mx-auto flex flex-col gap-6">
+        <div className={`min-h-screen p-6 ${isDark ? "bg-black/99 text-white" : "bg-gray-50 text-gray-900"}`}>
+            <div className="max-w-6xl mx-auto flex flex-col gap-8">
+                {/* Breadcrumb */}
                 <nav className="text-sm flex items-center gap-2 text-gray-500">
-                    <Link to="/admin/dashboard" className="hover:text-blue-400 transition">Dashboard</Link>
+                    <Link to="/admin/dashboard" className="hover:text-blue-500 transition font-medium">Dashboard</Link>
                     <ChevronRight size={16} />
-                    <Link to="/admin/tutors" className="hover:text-blue-400 transition">Tutors</Link>
+                    <Link to="/admin/tutors" className="hover:text-blue-500 transition font-medium">Tutors</Link>
                     <ChevronRight size={16} />
-                    <span className="text-blue-400">{tutor?.name || "Loading..."}</span>
+                    <span className="text-gray-500 font-semibold">{tutor?.name || "Loading..."}</span>
                 </nav>
 
-                <div className="flex justify-between items-center mb-6 border-gray-700 pb-4">
-                    <h2 className="text-3xl font-bold text-blue-500">Tutor Details</h2>
-                    <button
-                        onClick={() => navigate(-1)}
-                        className={`flex items-center shadow-md px-4 py-2 rounded-md font-bold transition ${isDark ? "text-blue-400 hover:bg-blue-500 hover:text-white" : "text-blue-500 hover:bg-blue-500 hover:text-white"}`}
+                {/* Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
+                    <h2 className={`text-2xl font-bold ${isDark ? "text-white" : "text-foreground"}`}>Tutor Details</h2>
+                    <Link
+                        to="/admin/tutors"
+                        className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 text-sm rounded-sm hover:bg-blue-700"
                     >
-                        <ChevronLeft size={16} />
-                        Back
-                    </button>
+                        <ChevronLeft size={16} /> Back
+                    </Link>
                 </div>
 
-                <div className="flex justify-center items-center w-full">
+                {/* Tutor Info */}
+                <div className="flex justify-center w-full">
                     {loading ? (
-                        <Loading />
+                        <LoadingSkeletonCards />
                     ) : tutor ? (
-                        <div className={`border rounded-sm p-0.5 w-full ${isDark ? "border-gray-700 bg-gray-900" : "border-gray-300 bg-gray-100"}`}>
-                            <Card className={`p-5 shadow-md rounded-sm ${isDark ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-900"}`}>
-                                <CardHeader>
-                                    <CardTitle className="text-2xl font-bold text-blue-400">{tutor.name}</CardTitle>
-                                    <p className="text-gray-400 text-sm">@{tutor.username}</p>
-                                </CardHeader>
-                                <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Email</p>
-                                        <p className="text-lg">{tutor.email}</p>
+                        <Card className={`w-full shadow-lg border rounded-sm transition-all duration-300 
+                            ${isDark ? "bg-gray-950 border-gray-700" : "bg-white border-gray-200"}`}>
+                            <CardHeader className="border-b px-6 py-4">
+                                <CardTitle className="text-2xl font-bold text-blue-400">{tutor.name}</CardTitle>
+                                <p className="text-sm text-gray-400 mt-1">@{tutor.username}</p>
+                            </CardHeader>
+                            <CardContent className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6 py-6">
+                                {[
+                                    ["Email", tutor.email],
+                                    ["Status", tutor.isTutorVerified ? "Verified" : "Not Verified", tutor.isTutorVerified ? "text-green-400" : "text-red-400"],
+                                    ["Blocked", tutor.isBlocked ? "Yes" : "No", tutor.isBlocked ? "text-red-400" : "text-green-400"],
+                                    ["Email Verified", tutor.isEmailVerified ? "Yes" : "No", tutor.isEmailVerified ? "text-green-400" : "text-red-400"],
+                                    ["Rating", tutor.rating || "N/A"],
+                                    ["Joined On", dayjs(tutor?.createdAt).format("DD MMM YYYY")],
+                                    ["Bio", tutor.bio || "No bio available"],
+                                    ["Skills", tutor.skills.length ? tutor.skills.join(", ") : "No skills added"],
+                                ].map(([label, value, color], idx) => (
+                                    <div key={idx}>
+                                        <p className="text-gray-500 text-xs uppercase tracking-wide">{label}</p>
+                                        <p className={`text-base font-medium ${color || ""} ${isDark ? "text-white" : "text-black"}`}>{value}</p>
                                     </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Status</p>
-                                        <p className={`text-lg font-semibold ${tutor.isTutorVerified ? "text-green-400" : "text-red-400"}`}>
-                                            {tutor.isTutorVerified ? "Verified" : "Not Verified"}
-                                        </p>
-                                    </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Blocked</p>
-                                        <p className={`text-lg font-semibold ${tutor.isBlocked ? "text-red-400" : "text-green-400"}`}>
-                                            {tutor.isBlocked ? "Yes" : "No"}
-                                        </p>
-                                    </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Email Verified</p>
-                                        <p className={`text-lg font-semibold ${tutor.isEmailVerified ? "text-green-400" : "text-red-400"}`}>
-                                            {tutor.isEmailVerified ? "Yes" : "No"}
-                                        </p>
-                                    </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Rating</p>
-                                        <p className="text-lg">{tutor?.rating ? tutor?.rating : "N/A"}</p>
-                                    </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Joined On</p>
-                                        <p className="text-lg">{dayjs(tutor?.createdAt).format('DD MMM YYYY')}</p>
-                                    </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Bio</p>
-                                        <p className="text-lg">{tutor.bio || "No bio available"}</p>
-                                    </div>
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-gray-500 text-sm">Skills</p>
-                                        <p className="text-lg">{tutor.skills.length > 0 ? tutor.skills.join(", ") : "No skills added"}</p>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
+                                ))}
+                            </CardContent>
+                        </Card>
                     ) : (
-                        <p className="text-center text-red-500">Tutor not found</p>
+                        <p className="text-center text-red-500 font-medium">Tutor not found</p>
                     )}
                 </div>
 
-                <h3 className="text-xl font-semibold mt-4">Courses by {tutor?.name}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input
-                        type="text"
-                        placeholder="Search courses..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="border-gray-700"
-                    />
+                {/* Courses Section */}
+                <div className="space-y-4">
+                    <h3 className={`text-2xl font-semibold ${isDark ? "text-white" : "text-black"}`}>Courses by {tutor?.name}</h3>
 
-                    <Select onValueChange={(value) => setStatusFilter(value)} defaultValue="All">
-                        <SelectTrigger className={`${isDark ? "bg-gray-800 text-white border-gray-700" : "bg-white text-gray-900"}`}>
-                            <SelectValue placeholder="Filter by status" />
-                        </SelectTrigger>
-                        <SelectPortal>
-                            <SelectContent className={`${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-                                <SelectItem value="All">All</SelectItem>
-                                <SelectItem value="Approved">Approved</SelectItem>
-                                <SelectItem value="Pending">Pending</SelectItem>
-                            </SelectContent>
-                        </SelectPortal>
-                    </Select>
+                    {/* Filter and Search */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <Input
+                            type="text"
+                            placeholder="Search courses..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={`rounded-md shadow-sm ${isDark ? "bg-gray-950 text-white border-gray-700" : "bg-white border-gray-300"}`}
+                        />
 
-                    <Select onValueChange={(value) => setSortOrder(value)} defaultValue="price-low">
-                        <SelectTrigger className={`${isDark ? "bg-gray-800 text-white border-gray-700" : "bg-white text-gray-900"}`}>
-                            <SelectValue placeholder="Sort by price" />
-                        </SelectTrigger>
-                        <SelectPortal>
-                            <SelectContent className={`${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-                                <SelectItem value="price-low">Price: Low to high</SelectItem>
-                                <SelectItem value="price-high">Price: High to low</SelectItem>
-                            </SelectContent>
-                        </SelectPortal>
-                    </Select>
+                        <Select onValueChange={setStatusFilter} defaultValue="All">
+                            <SelectTrigger className={`rounded-md shadow-sm ${isDark ? "bg-gray-950 text-white border-gray-700" : "bg-white border-gray-300"}`}>
+                                <SelectValue placeholder="Filter by status" />
+                            </SelectTrigger>
+                            <SelectPortal>
+                                <SelectContent className={`${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
+                                    <SelectItem value="All">All</SelectItem>
+                                    <SelectItem value="Approved">Approved</SelectItem>
+                                    <SelectItem value="Pending">Pending</SelectItem>
+                                </SelectContent>
+                            </SelectPortal>
+                        </Select>
+
+                        <Select onValueChange={setSortOrder} defaultValue="price-low">
+                            <SelectTrigger className={`rounded-md shadow-sm ${isDark ? "bg-gray-950 text-white border-gray-700" : "bg-white border-gray-300"}`}>
+                                <SelectValue placeholder="Sort by price" />
+                            </SelectTrigger>
+                            <SelectPortal>
+                                <SelectContent className={`${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
+                                    <SelectItem value="price-low">Price: Low to high</SelectItem>
+                                    <SelectItem value="price-high">Price: High to low</SelectItem>
+                                </SelectContent>
+                            </SelectPortal>
+                        </Select>
+                    </div>
+
+                    {/* Course Cards */}
+                    {paginatedCourses.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                            {paginatedCourses.map(course => (
+                                <Card key={course._id} className={`p-4 rounded-sm shadow-md hover:shadow-lg transition-all border
+                                    ${isDark ? "bg-gray-950 text-white border-gray-700" : "bg-white text-gray-900 border border-gray-200"}`}>
+                                    <h4 className="text-lg font-semibold">{course.title}</h4>
+                                    <p className="text-sm text-gray-400">{course.category_id?.name}</p>
+                                    <p className="text-sm mt-1">Price: <span className="font-semibold">${course.price}</span></p>
+                                    <p className="text-sm mt-1 flex items-center">
+                                        Rating: {course.rating}
+                                        <StarIcon size={16} className="ml-1 text-yellow-400" />
+                                    </p>
+                                    <Button
+                                        onClick={() => navigate(`/admin/categories/courses/${course._id}`)}
+                                        className="mt-3 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-2 rounded-md transition"
+                                    >
+                                        View Course
+                                    </Button>
+                                </Card>
+                            ))}
+                        </div>
+                    ) : (
+                        <NoData entity="courses" />
+                    )}
                 </div>
 
-
-                {paginatedCourses.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {paginatedCourses.map((course) => (
-                            <Card
-                                key={course._id}
-                                className={`p-4 border rounded-lg shadow-md ${isDark ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-black'}`}>
-                                <h4 className="text-lg font-medium">{course.title}</h4>
-                                <p className="text-sm text-gray-400">{course?.category_id?.name}</p>
-                                <p className="text-sm font-semibold mt-1">Price: ${course.price}</p>
-                                <p className="text-sm font-semibold mt-1 flex">Rating: {course.rating} <StarIcon className="mt-0.5 ms-1" size={16} /></p>
-                                <Button
-                                    onClick={() => navigate(`/admin/categories/courses/${course._id}`)}
-                                    className="mt-2 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1.5">
-                                    View Course
-                                </Button>
-                            </Card>
-                        ))}
-                    </div>
-                ) : (
-                    <NoData entity="courses" />
-                )}
                 <AdminPagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
             </div>
         </div>
     );
+
 };
 
 export default TutorDetailPart;
-
-const Loading = () => (
-    <div className="flex justify-center items-center w-full py-10">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid"></div>
-    </div>
-);

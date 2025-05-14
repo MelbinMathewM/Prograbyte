@@ -10,14 +10,34 @@ import { uploadCourse } from "@/configs/multer.config";
 const courseRouter = Router();
 const courseController = container.get<CourseController>(CourseController);
 
-// Course routes
-courseRouter.post("/", uploadCourse,attachFilesToCourse,validate(courseSchema), courseController.createCourse.bind(courseController));
-courseRouter.patch("/:courseId/status", courseController.changeCourseApprovalStatus.bind(courseController));
+// ====== COURSE ROUTES ======
 courseRouter.get("/", courseController.getCourses.bind(courseController));
-courseRouter.get("/:id", courseController.getCourseDetail.bind(courseController));
-courseRouter.put("/:courseId",uploadCourse,attachFilesToCourse,validate(editCourseSchema), courseController.editCourse.bind(courseController));
+courseRouter.get("/:courseId", courseController.getCourseDetail.bind(courseController));
+
+courseRouter.post(
+    "/",
+    uploadCourse,
+    attachFilesToCourse,
+    validate(courseSchema),
+    courseController.createCourse.bind(courseController)
+);
+
+courseRouter.put(
+    "/:courseId",
+    uploadCourse,
+    attachFilesToCourse,
+    validate(editCourseSchema),
+    courseController.editCourse.bind(courseController)
+);
+
+courseRouter.patch(
+    "/:courseId/status",
+    courseController.changeCourseApprovalStatus.bind(courseController)
+);
+
 courseRouter.delete("/:courseId", courseController.deleteCourse.bind(courseController));
-courseRouter.post("/payment/create", courseController.createPayment.bind(courseController));
+
+// ====== RATING ROUTES ======
 courseRouter.post("/rating", courseController.addRating.bind(courseController));
 courseRouter.get("/rating/:courseId", courseController.getRatings.bind(courseController));
 

@@ -27,6 +27,7 @@ export interface Course {
     poster_url: string;
     approval_status: ApprovalStatus;
     progress?: number;
+    offer: IOffer
 }
 
 export interface Category {
@@ -93,5 +94,24 @@ export interface IRating {
     reviews: IReview[];
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+export interface ICoupon {
+    _id: string;
+    code: string;
+    discount: number;
+    isLiveStream: boolean;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+export interface IOffer {
+    _id: string;
+    title: string;
+    description: string;
+    discount: number;
+    expiryDate: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
   
