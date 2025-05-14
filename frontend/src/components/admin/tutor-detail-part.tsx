@@ -10,7 +10,7 @@ import { useTheme } from "@/contexts/theme-context";
 import { ChevronLeft, ChevronRight, StarIcon } from "lucide-react";
 import dayjs from "dayjs";
 import AdminPagination from "@/components/admin/pagination";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import NoData from "../ui/no-data";
 import { SelectPortal } from "@radix-ui/react-select";

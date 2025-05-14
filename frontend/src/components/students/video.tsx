@@ -7,6 +7,7 @@ import { Topic } from "@/types/course";
 import { UserContext } from "@/contexts/user-context";
 import Breadcrumb from "./breadcrumb";
 import HeaderWithBack from "./header-back";
+
 const VideoPart = () => {
     const { courseName, topicId, topicsId } = useParams();
     const [searchParams] = useSearchParams();

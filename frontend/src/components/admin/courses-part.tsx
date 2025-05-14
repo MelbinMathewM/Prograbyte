@@ -6,7 +6,7 @@ import { Course } from "@/types/course";
 import { useTheme } from "@/contexts/theme-context";
 import NoData from "@/components/ui/no-data";
 import { fetchCourses } from "@/api/course";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const CoursePart = () => {
