@@ -1,7 +1,7 @@
 import { useTheme } from "@/contexts/theme-context";
 import { ArrowDownRight, ArrowUpRight, IndianRupee, Plus, Minus } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import Breadcrumb from "./breadcrumb";
 import HeaderWithBack from "./header-back";
 import { fetchWallet } from "@/api/checkout";

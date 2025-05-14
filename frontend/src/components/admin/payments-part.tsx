@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { getPaymentData, payTutor } from "@/api/payments";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
