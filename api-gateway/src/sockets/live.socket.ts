@@ -33,6 +33,12 @@ export class LiveGateway {
       this.nsp.to(roomId).emit(SOCKET_EVENTS.UPDATE_VIEWER_COUNT, count);
     });
 
+    this.courseSocket.on(SOCKET_EVENTS.LIVE_CLASS_STARTED, ({ schedule_id, streamUrl, streamKey, message }) => {
+      console.log(`Live class started for schedule_id: ${schedule_id}`);
+      // Notify all connected clients in the live streaming namespace
+      this.nsp.emit(SOCKET_EVENTS.LIVE_CLASS_STARTED, { schedule_id, streamUrl, streamKey, message });
+    });
+
     // Forward disconnect event from Course Service
     this.courseSocket.on(SOCKET_EVENTS.DISCONNECT, () => {
       console.log("Disconnected from Course Service");

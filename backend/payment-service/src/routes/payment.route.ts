@@ -10,4 +10,7 @@ paymentRouter.post("/checkout/premium", paymentController.createCheckoutSessionF
 paymentRouter.post("/checkout/course", paymentController.createCheckoutSessionForCourse.bind(paymentController));
 paymentRouter.get("/monthly-payments", paymentController.getMonthlyPayout.bind(paymentController));
 paymentRouter.post("/pay-tutor", paymentController.markAsPaid.bind(paymentController));
+paymentRouter.get("/dashboard", paymentController.getDashboardData.bind(paymentController));
+paymentRouter.get("/dashboard/tutor/:tutorId", paymentController.getTutorDashboardData.bind(paymentController));
+
 export default paymentRouter;

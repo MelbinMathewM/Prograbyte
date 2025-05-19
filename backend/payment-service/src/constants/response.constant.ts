@@ -12,4 +12,7 @@ export const HttpResponse = {
     PAYOUT_NOT_FOUND: "Payout not found",
     INSUFFICIENT_BALANCE: "Insufficient wallet",
     WALLET_PAID: "Course purchased through wallet",
+    USER_ID_NOT_FOUND: "User ID not found",
+    PREMIUM_REVOKED: "Premium membership revoked",
+    
 }

@@ -14,6 +14,7 @@ export const SOCKET_EVENTS = {
     UPDATE_VIEWER_COUNT: "update_viewer_count",
     LEAVE: "leave",
     END_STREAM: "end_stream",
+    LIVE_CLASS_STARTED: "live_class_started",
 
     LIVE_JOIN: "live_join",
     LIVE_OFFER: "live_offer",

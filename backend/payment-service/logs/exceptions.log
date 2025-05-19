@@ -4478,3 +4478,1446 @@ Stack Trace: TSError: ⨯ Unable to compile TypeScript:
     at Module.load (node:internal/modules/cjs/loader:1207:32)
     at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
     at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 06:28:20] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m261[0m:[93m31[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m261[0m             .sort((a, b) => b.totalTutorShare - a.totalTutorShare)
+[7m   [0m [91m                              ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m261[0m:[93m51[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m261[0m             .sort((a, b) => b.totalTutorShare - a.totalTutorShare)
+[7m   [0m [91m                                                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m265[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'tutor' does not exist on type 'IPayout'.
+
+[7m265[0m                 tutorName: payout.tutor.name,
+[7m   [0m [91m                                  ~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m266[0m:[93m39[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m266[0m                 totalEarnings: payout.totalTutorShare,
+[7m   [0m [91m                                      ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m272[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'totalAmount' does not exist on type 'IPayout'.
+
+[7m272[0m                 acc.totalAmount += curr.totalAmount;
+[7m   [0m [91m                                        ~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m273[0m:[93m45[0m - [91merror[0m[90m TS2551: [0mProperty 'totalAdminShare' does not exist on type 'IPayout'. Did you mean 'adminShare'?
+
+[7m273[0m                 acc.totalAdminShare += curr.totalAdminShare;
+[7m   [0m [91m                                            ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m9[0m:[93m5[0m
+    [7m9[0m     adminShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'adminShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m274[0m:[93m45[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m274[0m                 acc.totalTutorShare += curr.totalTutorShare;
+[7m   [0m [91m                                            ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m283[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'payouts' does not exist on type 'IPayout'.
+
+[7m283[0m             payout.payouts.forEach((payment) => {
+[7m   [0m [91m                   ~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m283[0m:[93m37[0m - [91merror[0m[90m TS7006: [0mParameter 'payment' implicitly has an 'any' type.
+
+[7m283[0m             payout.payouts.forEach((payment) => {
+[7m   [0m [91m                                    ~~~~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m261[0m:[93m31[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m261[0m             .sort((a, b) => b.totalTutorShare - a.totalTutorShare)
+[7m   [0m [91m                              ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m261[0m:[93m51[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m261[0m             .sort((a, b) => b.totalTutorShare - a.totalTutorShare)
+[7m   [0m [91m                                                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m265[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'tutor' does not exist on type 'IPayout'.
+
+[7m265[0m                 tutorName: payout.tutor.name,
+[7m   [0m [91m                                  ~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m266[0m:[93m39[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m266[0m                 totalEarnings: payout.totalTutorShare,
+[7m   [0m [91m                                      ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m272[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'totalAmount' does not exist on type 'IPayout'.
+
+[7m272[0m                 acc.totalAmount += curr.totalAmount;
+[7m   [0m [91m                                        ~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m273[0m:[93m45[0m - [91merror[0m[90m TS2551: [0mProperty 'totalAdminShare' does not exist on type 'IPayout'. Did you mean 'adminShare'?
+
+[7m273[0m                 acc.totalAdminShare += curr.totalAdminShare;
+[7m   [0m [91m                                            ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m9[0m:[93m5[0m
+    [7m9[0m     adminShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'adminShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m274[0m:[93m45[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m274[0m                 acc.totalTutorShare += curr.totalTutorShare;
+[7m   [0m [91m                                            ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m283[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'payouts' does not exist on type 'IPayout'.
+
+[7m283[0m             payout.payouts.forEach((payment) => {
+[7m   [0m [91m                   ~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m283[0m:[93m37[0m - [91merror[0m[90m TS7006: [0mParameter 'payment' implicitly has an 'any' type.
+
+[7m283[0m             payout.payouts.forEach((payment) => {
+[7m   [0m [91m                                    ~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m261[0m:[93m31[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m261[0m             .sort((a, b) => b.totalTutorShare - a.totalTutorShare)
+[7m   [0m [91m                              ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m261[0m:[93m51[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m261[0m             .sort((a, b) => b.totalTutorShare - a.totalTutorShare)
+[7m   [0m [91m                                                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m265[0m:[93m35[0m - [91merror[0m[90m TS2339: [0mProperty 'tutor' does not exist on type 'IPayout'.
+
+[7m265[0m                 tutorName: payout.tutor.name,
+[7m   [0m [91m                                  ~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m266[0m:[93m39[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m266[0m                 totalEarnings: payout.totalTutorShare,
+[7m   [0m [91m                                      ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m272[0m:[93m41[0m - [91merror[0m[90m TS2339: [0mProperty 'totalAmount' does not exist on type 'IPayout'.
+
+[7m272[0m                 acc.totalAmount += curr.totalAmount;
+[7m   [0m [91m                                        ~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m273[0m:[93m45[0m - [91merror[0m[90m TS2551: [0mProperty 'totalAdminShare' does not exist on type 'IPayout'. Did you mean 'adminShare'?
+
+[7m273[0m                 acc.totalAdminShare += curr.totalAdminShare;
+[7m   [0m [91m                                            ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m9[0m:[93m5[0m
+    [7m9[0m     adminShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'adminShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m274[0m:[93m45[0m - [91merror[0m[90m TS2551: [0mProperty 'totalTutorShare' does not exist on type 'IPayout'. Did you mean 'tutorShare'?
+
+[7m274[0m                 acc.totalTutorShare += curr.totalTutorShare;
+[7m   [0m [91m                                            ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/models/payout.model.ts[0m:[93m8[0m:[93m5[0m
+    [7m8[0m     tutorShare: number;
+    [7m [0m [96m    ~~~~~~~~~~[0m
+    'tutorShare' is declared here.
+[96msrc/services/implementations/payment.service.ts[0m:[93m283[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'payouts' does not exist on type 'IPayout'.
+
+[7m283[0m             payout.payouts.forEach((payment) => {
+[7m   [0m [91m                   ~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m283[0m:[93m37[0m - [91merror[0m[90m TS7006: [0mParameter 'payment' implicitly has an 'any' type.
+
+[7m283[0m             payout.payouts.forEach((payment) => {
+[7m   [0m [91m                                    ~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 06:34:52] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m117[0m:[93m99[0m - [91merror[0m[90m TS2345: [0mArgument of type 'string | ParsedQs | (string | ParsedQs)[] | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+
+[7m117[0m       const { topCourses, topTutors, totalRevenue } = await this._paymentService.getDashboardData(year, month)
+[7m   [0m [91m                                                                                                  ~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m117[0m:[93m99[0m - [91merror[0m[90m TS2345: [0mArgument of type 'string | ParsedQs | (string | ParsedQs)[] | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+
+[7m117[0m       const { topCourses, topTutors, totalRevenue } = await this._paymentService.getDashboardData(year, month)
+[7m   [0m [91m                                                                                                  ~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m117[0m:[93m99[0m - [91merror[0m[90m TS2345: [0mArgument of type 'string | ParsedQs | (string | ParsedQs)[] | undefined' is not assignable to parameter of type 'number'.
+  Type 'undefined' is not assignable to type 'number'.
+
+[7m117[0m       const { topCourses, topTutors, totalRevenue } = await this._paymentService.getDashboardData(year, month)
+[7m   [0m [91m                                                                                                  ~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 06:37:06] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m13[0m:[93m50[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m13[0m paymentRouter.get("dashboard", paymentController.)
+[7m  [0m [91m                                                 ~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m13[0m:[93m50[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m13[0m paymentRouter.get("dashboard", paymentController.)
+[7m  [0m [91m                                                 ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m13[0m:[93m50[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m13[0m paymentRouter.get("dashboard", paymentController.)
+[7m  [0m [91m                                                 ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 06:52:50] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m119[0m:[93m9[0m - [91merror[0m[90m TS2322: [0mType 'number' is not assignable to type 'string | ParsedQs | (string | ParsedQs)[] | undefined'.
+
+[7m119[0m         year = currentYear
+[7m   [0m [91m        ~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m119[0m:[93m9[0m - [91merror[0m[90m TS2322: [0mType 'number' is not assignable to type 'string | ParsedQs | (string | ParsedQs)[] | undefined'.
+
+[7m119[0m         year = currentYear
+[7m   [0m [91m        ~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m119[0m:[93m9[0m - [91merror[0m[90m TS2322: [0mType 'number' is not assignable to type 'string | ParsedQs | (string | ParsedQs)[] | undefined'.
+
+[7m119[0m         year = currentYear
+[7m   [0m [91m        ~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:09:31] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m170[0m:[93m42[0m - [91merror[0m[90m TS2304: [0mCannot find name 'courseName'.
+
+[7m170[0m         this.updateCoursePayout(courseId,courseName, tutorId, paymentAmount);
+[7m   [0m [91m                                         ~~~~~~~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m170[0m:[93m42[0m - [91merror[0m[90m TS2304: [0mCannot find name 'courseName'.
+
+[7m170[0m         this.updateCoursePayout(courseId,courseName, tutorId, paymentAmount);
+[7m   [0m [91m                                         ~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m170[0m:[93m42[0m - [91merror[0m[90m TS2304: [0mCannot find name 'courseName'.
+
+[7m170[0m         this.updateCoursePayout(courseId,courseName, tutorId, paymentAmount);
+[7m   [0m [91m                                         ~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:10:32] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m182[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'courseName' does not exist in type 'Partial<IPayout>'.
+
+[7m182[0m             courseName,
+[7m   [0m [91m            ~~~~~~~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m182[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'courseName' does not exist in type 'Partial<IPayout>'.
+
+[7m182[0m             courseName,
+[7m   [0m [91m            ~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m182[0m:[93m13[0m - [91merror[0m[90m TS2353: [0mObject literal may only specify known properties, and 'courseName' does not exist in type 'Partial<IPayout>'.
+
+[7m182[0m             courseName,
+[7m   [0m [91m            ~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:45:59] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m108[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'revokePremium' does not exist on type 'PaymentService'.
+
+[7m108[0m         await this._paymentService.revokePremium(userId);
+[7m   [0m [91m                                   ~~~~~~~~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m110[0m:[93m64[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m110[0m         res.status(HttpStatus.OK).json({ message: HttpResponse.})
+[7m   [0m [91m                                                               ~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m108[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'revokePremium' does not exist on type 'PaymentService'.
+
+[7m108[0m         await this._paymentService.revokePremium(userId);
+[7m   [0m [91m                                   ~~~~~~~~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m110[0m:[93m64[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m110[0m         res.status(HttpStatus.OK).json({ message: HttpResponse.})
+[7m   [0m [91m                                                               ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m108[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'revokePremium' does not exist on type 'PaymentService'.
+
+[7m108[0m         await this._paymentService.revokePremium(userId);
+[7m   [0m [91m                                   ~~~~~~~~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m110[0m:[93m64[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m110[0m         res.status(HttpStatus.OK).json({ message: HttpResponse.})
+[7m   [0m [91m                                                               ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:45:59] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m108[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'revokePremium' does not exist on type 'PaymentService'.
+
+[7m108[0m         await this._paymentService.revokePremium(userId);
+[7m   [0m [91m                                   ~~~~~~~~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m110[0m:[93m64[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m110[0m         res.status(HttpStatus.OK).json({ message: HttpResponse.})
+[7m   [0m [91m                                                               ~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m108[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'revokePremium' does not exist on type 'PaymentService'.
+
+[7m108[0m         await this._paymentService.revokePremium(userId);
+[7m   [0m [91m                                   ~~~~~~~~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m110[0m:[93m64[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m110[0m         res.status(HttpStatus.OK).json({ message: HttpResponse.})
+[7m   [0m [91m                                                               ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m108[0m:[93m36[0m - [91merror[0m[90m TS2339: [0mProperty 'revokePremium' does not exist on type 'PaymentService'.
+
+[7m108[0m         await this._paymentService.revokePremium(userId);
+[7m   [0m [91m                                   ~~~~~~~~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m110[0m:[93m64[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m110[0m         res.status(HttpStatus.OK).json({ message: HttpResponse.})
+[7m   [0m [91m                                                               ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:52:29] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m322[0m:[93m24[0m - [91merror[0m[90m TS2304: [0mCannot find name 'objectSourceId'.
+
+[7m322[0m             source_id: objectSourceId,
+[7m   [0m [91m                       ~~~~~~~~~~~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m322[0m:[93m24[0m - [91merror[0m[90m TS2304: [0mCannot find name 'objectSourceId'.
+
+[7m322[0m             source_id: objectSourceId,
+[7m   [0m [91m                       ~~~~~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m322[0m:[93m24[0m - [91merror[0m[90m TS2304: [0mCannot find name 'objectSourceId'.
+
+[7m322[0m             source_id: objectSourceId,
+[7m   [0m [91m                       ~~~~~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:52:29] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m322[0m:[93m24[0m - [91merror[0m[90m TS2304: [0mCannot find name 'objectSourceId'.
+
+[7m322[0m             source_id: objectSourceId,
+[7m   [0m [91m                       ~~~~~~~~~~~~~~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m322[0m:[93m24[0m - [91merror[0m[90m TS2304: [0mCannot find name 'objectSourceId'.
+
+[7m322[0m             source_id: objectSourceId,
+[7m   [0m [91m                       ~~~~~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m322[0m:[93m24[0m - [91merror[0m[90m TS2304: [0mCannot find name 'objectSourceId'.
+
+[7m322[0m             source_id: objectSourceId,
+[7m   [0m [91m                       ~~~~~~~~~~~~~~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:55:37] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m336[0m:[93m12[0m - [91merror[0m[90m TS2367: [0mThis comparison appears to be unintentional because the types 'boolean' and 'HttpStatus' have no overlap.
+
+[7m336[0m         if(!response.status === HttpStatus.OK){
+[7m   [0m [91m           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m336[0m:[93m12[0m - [91merror[0m[90m TS2367: [0mThis comparison appears to be unintentional because the types 'boolean' and 'HttpStatus' have no overlap.
+
+[7m336[0m         if(!response.status === HttpStatus.OK){
+[7m   [0m [91m           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m336[0m:[93m12[0m - [91merror[0m[90m TS2367: [0mThis comparison appears to be unintentional because the types 'boolean' and 'HttpStatus' have no overlap.
+
+[7m336[0m         if(!response.status === HttpStatus.OK){
+[7m   [0m [91m           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:55:37] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m336[0m:[93m12[0m - [91merror[0m[90m TS2367: [0mThis comparison appears to be unintentional because the types 'boolean' and 'HttpStatus' have no overlap.
+
+[7m336[0m         if(!response.status === HttpStatus.OK){
+[7m   [0m [91m           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m336[0m:[93m12[0m - [91merror[0m[90m TS2367: [0mThis comparison appears to be unintentional because the types 'boolean' and 'HttpStatus' have no overlap.
+
+[7m336[0m         if(!response.status === HttpStatus.OK){
+[7m   [0m [91m           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m336[0m:[93m12[0m - [91merror[0m[90m TS2367: [0mThis comparison appears to be unintentional because the types 'boolean' and 'HttpStatus' have no overlap.
+
+[7m336[0m         if(!response.status === HttpStatus.OK){
+[7m   [0m [91m           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:56:15] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:56:15] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m18[0m - [91merror[0m[90m TS1142: [0mLine break not permitted here.
+
+[7m337[0m             throw
+[7m   [0m [91m                 [0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:56:35] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m19[0m - [91merror[0m[90m TS2554: [0mExpected 2 arguments, but got 1.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/utils/http-error.util.ts[0m:[93m11[0m:[93m53[0m
+    [7m11[0m export const createHttpError = (statusCode: number, message: string) => {
+    [7m  [0m [96m                                                    ~~~~~~~~~~~~~~~[0m
+    An argument for 'message' was not provided.
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m46[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                                             ~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m19[0m - [91merror[0m[90m TS2554: [0mExpected 2 arguments, but got 1.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/utils/http-error.util.ts[0m:[93m11[0m:[93m53[0m
+    [7m11[0m export const createHttpError = (statusCode: number, message: string) => {
+    [7m  [0m [96m                                                    ~~~~~~~~~~~~~~~[0m
+    An argument for 'message' was not provided.
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m46[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                                             ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m19[0m - [91merror[0m[90m TS2554: [0mExpected 2 arguments, but got 1.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/utils/http-error.util.ts[0m:[93m11[0m:[93m53[0m
+    [7m11[0m export const createHttpError = (statusCode: number, message: string) => {
+    [7m  [0m [96m                                                    ~~~~~~~~~~~~~~~[0m
+    An argument for 'message' was not provided.
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m46[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                                             ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:56:35] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m19[0m - [91merror[0m[90m TS2554: [0mExpected 2 arguments, but got 1.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/utils/http-error.util.ts[0m:[93m11[0m:[93m53[0m
+    [7m11[0m export const createHttpError = (statusCode: number, message: string) => {
+    [7m  [0m [96m                                                    ~~~~~~~~~~~~~~~[0m
+    An argument for 'message' was not provided.
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m46[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                                             ~[0m
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m19[0m - [91merror[0m[90m TS2554: [0mExpected 2 arguments, but got 1.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/utils/http-error.util.ts[0m:[93m11[0m:[93m53[0m
+    [7m11[0m export const createHttpError = (statusCode: number, message: string) => {
+    [7m  [0m [96m                                                    ~~~~~~~~~~~~~~~[0m
+    An argument for 'message' was not provided.
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m46[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                                             ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m19[0m - [91merror[0m[90m TS2554: [0mExpected 2 arguments, but got 1.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                  ~~~~~~~~~~~~~~~[0m
+
+  [96msrc/utils/http-error.util.ts[0m:[93m11[0m:[93m53[0m
+    [7m11[0m export const createHttpError = (statusCode: number, message: string) => {
+    [7m  [0m [96m                                                    ~~~~~~~~~~~~~~~[0m
+    An argument for 'message' was not provided.
+[96msrc/services/implementations/payment.service.ts[0m:[93m337[0m:[93m46[0m - [91merror[0m[90m TS1003: [0mIdentifier expected.
+
+[7m337[0m             throw createHttpError(HttpStatus.)
+[7m   [0m [91m                                             ~[0m
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:58:23] error: uncaughtException: argument handler is required
+TypeError: argument handler is required
+    at Route.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\lib\route.js:221:13)
+    at Function.Router.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\index.js:448:19)
+    at Object.<anonymous> (C:\Users\User\Coding Items\Second-project\backend\payment-service\src\routes\wallet.route.ts:11:14)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1618:23)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TypeError: argument handler is required
+    at Route.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\lib\route.js:221:13)
+    at Function.Router.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\index.js:448:19)
+    at Object.<anonymous> (C:\Users\User\Coding Items\Second-project\backend\payment-service\src\routes\wallet.route.ts:11:14)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1618:23)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 07:58:23] error: uncaughtException: argument handler is required
+TypeError: argument handler is required
+    at Route.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\lib\route.js:221:13)
+    at Function.Router.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\index.js:448:19)
+    at Object.<anonymous> (C:\Users\User\Coding Items\Second-project\backend\payment-service\src\routes\wallet.route.ts:11:14)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1618:23)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TypeError: argument handler is required
+    at Route.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\lib\route.js:221:13)
+    at Function.Router.<computed> [as post] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\router\index.js:448:19)
+    at Object.<anonymous> (C:\Users\User\Coding Items\Second-project\backend\payment-service\src\routes\wallet.route.ts:11:14)
+    at Module._compile (node:internal/modules/cjs/loader:1376:14)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1618:23)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:12:50] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:12:50] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:12:50] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m160[0m:[93m11[0m - [91merror[0m[90m TS2322: [0mType 'Response<any, Record<string, any>>' is not assignable to type 'void'.
+
+[7m160[0m           return res.status(400).json({ success: false, message: "Missing parameters" });
+[7m   [0m [91m          ~~~~~~[0m
+[96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m36[0m - [91merror[0m[90m TS2552: [0mCannot find name 'DashboardService'. Did you mean 'dashboardService'?
+
+[7m163[0m       const dashboardService = new DashboardService(); // Your service class
+[7m   [0m [91m                                   ~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/implementations/payment.controller.ts[0m:[93m163[0m:[93m13[0m
+    [7m163[0m       const dashboardService = new DashboardService(); // Your service class
+    [7m   [0m [96m            ~~~~~~~~~~~~~~~~[0m
+    'dashboardService' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:21:59] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:21:59] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:21:59] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:22:21] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:22:21] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)
+[2025-04-29 08:22:21] error: uncaughtException: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19) 
+Stack Trace: TSError: ⨯ Unable to compile TypeScript:
+[96msrc/routes/payment.route.ts[0m:[93m14[0m:[93m57[0m - [91merror[0m[90m TS2551: [0mProperty 'getTutorDashboardData' does not exist on type 'IPaymentController'. Did you mean 'getDashboardData'?
+
+[7m14[0m paymentRouter.get("/dashboard/tutor", paymentController.getTutorDashboardData.bind(paymentController));
+[7m  [0m [91m                                                        ~~~~~~~~~~~~~~~~~~~~~[0m
+
+  [96msrc/controllers/interfaces/IPayment.controller.ts[0m:[93m12[0m:[93m5[0m
+    [7m12[0m     getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void>;
+    [7m  [0m [96m    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    'getDashboardData' is declared here.
+
+    at createTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:859:12)
+    at reportTSError (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:863:19)
+    at getOutput (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1077:36)
+    at Object.compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1433:41)
+    at Module.m._compile (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+    at Object.require.extensions.<computed> [as .ts] (C:\Users\User\Coding Items\Second-project\backend\payment-service\node_modules\ts-node\src\index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1207:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:1023:12)
+    at Module.require (node:internal/modules/cjs/loader:1235:19)

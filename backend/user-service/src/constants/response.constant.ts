@@ -29,4 +29,5 @@ export const HttpResponse = {
     TUTOR_NOT_FOUND: "Tutor not found",
     USER_BLOCKED: "User blocked successfully",
     USER_UNBLOCKED: "User unblocked successfully",
+    PREMIUM_REVOKED: "Premium membership revoked",
 }

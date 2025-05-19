@@ -96,6 +96,23 @@ export class PaymentController implements IPaymentController {
       }
   }
 
+  async revokePremium(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        const { userId } = req.body;
+
+        if(!userId){
+          res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.USER_ID_NOT_FOUND });
+          return;
+        }
+
+        await this._paymentService.revokePremium(userId);
+
+        res.status(HttpStatus.OK).json({ message: HttpResponse.PREMIUM_REVOKED });
+      }catch(err){
+        next(err);
+      }
+  }
+
   async getMonthlyPayout(req: Request, res: Response, next: NextFunction): Promise<void> {
       try{
 
@@ -109,6 +126,67 @@ export class PaymentController implements IPaymentController {
         next(err);
       }
   };
+
+  async getDashboardData(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      let { year, month } = req.query;
+  
+      const currentDate = new Date();
+      let newYear: number = currentDate.getFullYear();
+      let newMonth: number = currentDate.getMonth();
+  
+      if (year !== undefined) {
+        newYear = JSON.parse(year as string);
+      }
+  
+      if (month !== undefined) {
+        newMonth = JSON.parse(month as string);
+      }
+  
+      console.log("Year:", newYear, "Month:", newMonth);
+  
+      const { topCourses, topTutors, totalRevenue } = await this._paymentService.getDashboardData(newYear, newMonth);
+  
+      res.status(HttpStatus.OK).json({ topCourses, topTutors, totalRevenue });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getTutorDashboardData(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      console.log(req.query);
+      const { year, month } = req.query;
+      const { tutorId } = req.params;
+      if (!tutorId) {
+          res.status(400).json({ success: false, message: "Missing parameters" });
+          return;
+      }
+
+      const currentDate = new Date();
+      let newYear: number = currentDate.getFullYear();
+      let newMonth: number = currentDate.getMonth();
+  
+      if (year !== undefined) {
+        newYear = JSON.parse(year as string);
+      }
+  
+      if (month !== undefined) {
+        newMonth = JSON.parse(month as string);
+      }
+
+      
+      const dashboardData = await this._paymentService.getTutorDashboardData(
+          tutorId as string,
+          newYear,
+          newMonth
+      );
+
+      res.json({ success: true, data: dashboardData });
+    } catch (err) {
+      next(err);
+    }
+  }
 
   async markAsPaid(req: Request, res: Response, next: NextFunction): Promise<void> {
       try{

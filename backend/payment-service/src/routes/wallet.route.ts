@@ -8,5 +8,6 @@ const paymentController = container.get<IPaymentController>(PaymentController);
 
 walletRouter.get("/:userId", paymentController.getWallet.bind(paymentController));
 walletRouter.post("/wallet-pay", paymentController.buyCourseByWallet.bind(paymentController));
+walletRouter.post("/revoke", paymentController.revokePremium.bind(paymentController));
 
 export default walletRouter;
