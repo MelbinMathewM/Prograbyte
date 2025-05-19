@@ -23,8 +23,6 @@ export class PostService implements IPostService {
         
         const blog = await this._postRepository.create(post);
 
-        console.log(blog)
-
         return blog;
     }
 
