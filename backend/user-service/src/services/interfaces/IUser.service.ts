@@ -6,6 +6,7 @@ export interface IUserService {
     registerUserGAuth(userData: { googleId: string; email: string; name: string }): Promise<{ accessToken: string, refreshToken: string, role: string }>;
     getUserByXId(id: string): Promise<Partial<IUser>>;
     getUserById(userId: string): Promise<Partial<IUser>>;
+    revokePremium(userId: string): Promise<void>;
     getProfile(userId: string): Promise<IUser>;
     updateProfile(userId: string, updatedUser: Partial<IUser>): Promise<IUser>;
     verifyEmailLink(email: string): Promise<void>;

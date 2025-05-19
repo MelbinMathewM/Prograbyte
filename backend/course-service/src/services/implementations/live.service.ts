@@ -71,6 +71,13 @@ export class LiveService implements ILiveService {
             ...status,
         });
 
+        this._io.emit(SOCKET_EVENTS.LIVE_CLASS_STARTED, {
+            schedule_id,
+            streamUrl: res.data.streamUrl,
+            streamKey: res.data.streamKey,
+            message: `The live class has started!`
+        });
+
         return { streamUrl: res.data.hlsUrl, streamKey: res.data.streamKey };
     }
 

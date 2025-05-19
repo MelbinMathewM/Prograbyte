@@ -253,6 +253,155 @@ export class PaymentService implements IPaymentService {
         return response.data;
     };
 
+    async getDashboardData(year: number, month: number) {
+        const payouts = await this.getMonthlyPayout(year, month) as any;
+    
+        // Top Tutors
+        const topTutors = payouts
+            .sort((a: any, b: any) => b.totalTutorShare - a.totalTutorShare)
+            .slice(0, 5)
+            .map((payout: any) => ({
+                tutorId: payout._id,
+                tutorName: payout.tutor.name,
+                totalEarnings: payout.totalTutorShare,
+            }));
+    
+        // Total Revenue
+        const totalRevenue = payouts.reduce(
+            (acc: any, curr: any) => {
+                acc.totalAmount += curr.totalAmount;
+                acc.totalAdminShare += curr.totalAdminShare;
+                acc.totalTutorShare += curr.totalTutorShare;
+                return acc;
+            },
+            { totalAmount: 0, totalAdminShare: 0, totalTutorShare: 0 }
+        );
+    
+        // Top Courses (if payouts contain source_id = course id)
+        const courseMap = new Map<string, { amount: number }>();
+        payouts.forEach((payout: any) => {
+            payout.payouts.forEach((payment: any) => {
+                if (!courseMap.has(payment.source_id)) {
+                    courseMap.set(payment.source_id, { amount: 0 });
+                }
+                courseMap.get(payment.source_id)!.amount += payment.amount;
+            });
+        });
+    
+        const topCourses = Array.from(courseMap.entries())
+            .sort((a, b) => b[1].amount - a[1].amount)
+            .slice(0, 5)
+            .map(([courseId, data]) => ({
+                courseId,
+                totalRevenue: data.amount,
+            }));
+    
+        return {
+            topTutors,
+            topCourses,
+            totalRevenue,
+        };
+    };
+
+    async getTutorDashboardData(tutorId: string, year: number, month: number) {
+        console.log(tutorId,'tu')
+        const startOfMonth = new Date(Date.UTC(year, month, 1, 0, 0, 0));
+        const endOfMonth = new Date(Date.UTC(year, month + 1, 0, 23, 59, 59));
+    
+        const payouts = await this._paymentRepository.aggregate([
+            {
+                $match: {
+                    tutor_id: convertToObjectId(tutorId),
+                    // status: "pending",
+                    // createdAt: {
+                    //     $gte: startOfMonth,
+                    //     $lte: endOfMonth
+                    // }
+                },
+            },
+            {
+                $group: {
+                    _id: "$source_id",
+                    totalAmount: { $sum: "$amount" },
+                    totalTutorShare: { $sum: "$tutorShare" },
+                    totalAdminShare: { $sum: "$adminShare" },
+                    payouts: {
+                        $push: {
+                            _id: "$_id",
+                            type: "$type",
+                            amount: "$amount",
+                            createdAt: "$createdAt",
+                        },
+                    },
+                },
+            }
+        ]);
+        
+        // Calculate overall totals
+        const totalRevenue = payouts.reduce(
+            (acc: any, curr: any) => {
+                acc.totalAmount += curr.totalAmount;
+                acc.totalTutorShare += curr.totalTutorShare;
+                acc.totalAdminShare += curr.totalAdminShare;
+                return acc;
+            },
+            { totalAmount: 0, totalTutorShare: 0, totalAdminShare: 0 }
+        );
+    
+        // Top Courses (sorted by totalAmount descending)
+        const topCourses = payouts
+            .sort((a: any, b: any) => b.totalAmount - a.totalAmount)
+            .slice(0, 5)
+            .map((course: any) => ({
+                courseId: course._id,
+                totalRevenue: course.totalAmount,
+                totalTutorShare: course.totalTutorShare,
+            }));
+    
+        return {
+            totalRevenue,
+            topCourses,
+            payouts,
+        };
+    }
+    
+
+    async revokePremium(userId: string): Promise<void> {
+        
+        let wallet = await this._walletRepository.findOne({ user_id: userId });
+
+        if(!wallet){
+            const objectUserId = convertToObjectId(userId)
+            wallet = await this._walletRepository.create({ user_id: objectUserId, balance: 0, transactions: [] });
+        }
+
+        const returnAmount = Math.floor(199 * 0.5);
+        wallet.balance += returnAmount;
+
+        const transaction: ITransaction = {
+            amount: returnAmount,
+            type: "credit",
+            source: "premium",
+            description: `Refund for premium revokation`,
+            date: new Date()
+        };
+
+        wallet.transactions.push(transaction);
+
+        await this._walletRepository.save(wallet);
+
+        const response = await axios.put(`http://localhost:5002/user/${userId}/revoke-premium`,{ userId },{
+            headers: {
+                "x-api-key": env.API_GATEWAY_KEY
+            }
+        });
+
+        if(response.status !== HttpStatus.OK){
+            throw createHttpError(response.status, response.data.message);
+        }
+    }
+    
+
     async markAsPaid(payoutId: string): Promise<void> {
         
         const payout = await this._paymentRepository.findById(payoutId);

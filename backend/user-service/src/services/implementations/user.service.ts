@@ -337,4 +337,14 @@ export class UserService implements IUserService {
 
         return message;
     }
+
+    async revokePremium(userId: string): Promise<void> {
+        
+        const user = await this._userRepository.findById(userId);
+
+        if(user){
+            user.isPremium = false;
+            await this._userRepository.save(user);
+        }
+    }
 }

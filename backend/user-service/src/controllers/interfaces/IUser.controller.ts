@@ -18,4 +18,5 @@ export interface IUserController {
     editSkill(req: Request, res: Response, next: NextFunction): Promise<void>;
     deleteSkill(req: Request, res: Response, next: NextFunction): Promise<void>;
     updateToPremium(req: Request, res: Response, next: NextFunction): Promise<void>;
+    revokePremium(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

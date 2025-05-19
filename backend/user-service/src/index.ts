@@ -15,7 +15,7 @@ import { validateEnv } from "./utils/env-config.util";
 import verifyApiKey from "./configs/api-key.config";
 import { env } from "./configs/env.config";
 import { initializeRabbitMQ } from "./configs/rabbitmq.config";
-import { courseEventConsumer } from "./kafkas/course.consumer";
+
 validateEnv();
 
 const app = express();
@@ -43,7 +43,6 @@ app.use(errorHandler);
 
 (async () => {
     await initializeRabbitMQ();
-    // await courseEventConsumer();
 })();
 
 app.listen(PORT, () => {

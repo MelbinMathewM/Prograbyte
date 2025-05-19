@@ -6,6 +6,7 @@ import { env } from "../../configs/env.config";
 import { HttpStatus } from "../../constants/status.constant";
 import { HttpResponse } from "../../constants/response.constant";
 import { IUserController } from "../interfaces/IUser.controller";
+import { error } from "console";
 
 export class UserController implements IUserController {
   constructor(@inject(UserService) private _userService: UserService) { }
@@ -246,5 +247,22 @@ export class UserController implements IUserController {
     await this._userService.updateToPremium(email);
 
     res.status(HttpStatus.OK).send("User updated");
+  }
+
+  async revokePremium(req: Request, res: Response, next: NextFunction): Promise<void> {
+      try{
+        const { userId } = req.body;
+
+        if(!userId){
+          res.status(HttpStatus.BAD_REQUEST).json({ error: HttpResponse.USER_ID_NOT_FOUND });
+          return;
+        }
+
+        await this._userService.revokePremium(userId);
+
+        res.status(HttpStatus.OK).json({ message: HttpResponse.PREMIUM_REVOKED });
+      }catch(err){
+        next(err);
+      }
   }
 }
