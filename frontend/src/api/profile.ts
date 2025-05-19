@@ -8,7 +8,7 @@ export const getProfile = async (userId: string) => {
         console.error("Error fetching profile", error);
         throw error?.response?.data;
     }
-}
+};
 
 export const updateProfileInfo = async (userId: string, data: any) => {
     console.log(data,'data');
@@ -19,7 +19,7 @@ export const updateProfileInfo = async (userId: string, data: any) => {
         console.error("Error updating profile", error);
         throw error;
     }
-}
+};
 
 export const addSkill = async (userId: string, skill: string) => {
     try{
@@ -60,7 +60,7 @@ export const getEnrolledCourses = async (userId: string) => {
         console.log('Error fetching enrolled courses');
         throw error;
     }
-}
+};
 
 export const getPublicProfile = async (username: string) => {
     try{
@@ -70,7 +70,7 @@ export const getPublicProfile = async (username: string) => {
         console.error("Error fetching user profile", err);
         throw err;
     }
-}
+};
 
 export const verifyEmail = async (email: string) => {
     try{
@@ -79,7 +79,7 @@ export const verifyEmail = async (email: string) => {
     }catch(err){
         console.error("Error sending verification email",err);
     }
-}
+};
 
 export const followUser = async (userId: string, followerId: string) => {
     try{
@@ -89,7 +89,7 @@ export const followUser = async (userId: string, followerId: string) => {
         console.error("Error following user",err);
         throw err;
     }
-}
+};
 
 export const unfollowUser = async (userId: string, followerId: string) => {
     try{
@@ -99,7 +99,7 @@ export const unfollowUser = async (userId: string, followerId: string) => {
         console.error("Error unfollowing user",err);
         throw err;
     }
-}
+};
 
 export const getUserData = async (userId: string) => {
     try{
@@ -169,4 +169,4 @@ export const updateToPremium = async (email: string) => {
         console.error("error updating to premium",err);
         throw err?.response?.data;
     }
-}
+};

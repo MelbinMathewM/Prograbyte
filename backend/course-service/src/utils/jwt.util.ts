@@ -6,7 +6,7 @@ const TOKEN_EXPIRY = '15m';
 
 export function generateToken(payload: Object): string {
     return jwt.sign(payload, env.TOKEN_SECRET as string, { expiresIn: TOKEN_EXPIRY });
-}
+};
 
 export function verifyToken(token: string) {
     try {
@@ -15,4 +15,4 @@ export function verifyToken(token: string) {
         console.error(err);
         return null;
     }
-}
+};
