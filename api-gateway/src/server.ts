@@ -15,7 +15,7 @@ const app: Application = express();
 const server = http.createServer(app);
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: "https://prograbyte.vercel.app",
   credentials: true,
 };
 
