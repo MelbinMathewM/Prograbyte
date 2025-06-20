@@ -6,7 +6,8 @@ const PasswordInput: React.FC<{
   setPassword: (password: string) => void;
   confirmPassword: string;
   setConfirmPassword: (password: string) => void;
-}> = ({ password, setPassword, confirmPassword, setConfirmPassword }) => {
+  isDark: boolean;
+}> = ({ password, setPassword, confirmPassword, setConfirmPassword, isDark }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -17,7 +18,7 @@ const PasswordInput: React.FC<{
         <input
           type={showPassword ? "text" : "password"}
           placeholder="Password"
-          className="w-full p-2 border border-gray-100 hover:border-blue-400 rounded pr-10"
+          className={`w-full p-2 border ${isDark ? "border-gray-700 bg-gray-900" : "border-gray-200"} hover:border-blue-400 rounded pr-10`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -35,7 +36,7 @@ const PasswordInput: React.FC<{
         <input
           type={showConfirmPassword ? "text" : "password"}
           placeholder="Confirm Password"
-          className="w-full p-2 border border-gray-100 hover:border-blue-400 rounded pr-10"
+          className={`w-full p-2 border ${ isDark ? "border-gray-700 bg-gray-900" : "border-gray-200" } hover:border-blue-400 rounded pr-10`}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />

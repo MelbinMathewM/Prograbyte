@@ -1,6 +1,6 @@
 import axiosInstance from "@/configs/axiosConfig";
 
-export const fetchCourses = async (params: any) => {
+export const fetchCourses = async (params?: any) => {
     try{
         const response = await axiosInstance.get(`/course/courses`, { params });
         return response.data;
