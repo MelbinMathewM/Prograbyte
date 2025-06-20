@@ -1,9 +1,8 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FcGoogle } from "react-icons/fc";
-import { FaFacebook, FaGithub } from "react-icons/fa";
 import axios from "axios";
 import { AppDispatch } from "@/redux/store";
 import { setUserToken } from "@/redux/slices/authSlice";
@@ -11,6 +10,7 @@ import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { ChevronLeft } from "lucide-react";
 import PasswordInputLogin from "./password-input-login";
+import { useTheme } from "@/contexts/theme-context";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +18,9 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
+
+  const { theme } = useTheme();
+  const isDark = theme === "dark-theme";
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +31,6 @@ const Login = () => {
     if (!email || !password) return toast.error("Please enter both email and password!");
 
     setIsLoading(true);
-
     try {
       const response = await axios.post(
         `${BASE_URL}/auth/login`,
@@ -37,7 +39,7 @@ const Login = () => {
       );
 
       const { role, accessToken } = response.data;
-      
+
 
       Cookies.set("accessToken", accessToken, { expires: 7 });
       Cookies.set("role", role, { expires: 7 });
@@ -91,33 +93,58 @@ const Login = () => {
   return (
     <div className="h-screen bg-white grid grid-cols-1 md:flex">
       {/* Left Section (Logo + Social Auth) */}
-      <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-gray-200 p-6">
-        <h1 className="text-4xl font-bold italic mb-8">Prograbyte</h1>
-        <div className="flex flex-col justify-center items-center">
-          <h2 className="font-semibold mb-2">Don't have an account?</h2>
-          <Link to="/register" className="bg-white text-blue-500 px-4 py-2 rounded-md shadow-md hover:bg-gray-100">
-            Sign Up
+      <div className={`flex flex-col justify-center items-center w-full md:w-1/2 ${ isDark ? "bg-gray-800" : "bg-gray-200" } p-8 shadow-lg transition-all`}>
+        {/* Logo */}
+        <img
+          src="/prograbyte1.png"
+          alt="Prograbyte Logo"
+          className="w-40 h-auto mb-6"
+        />
+
+        {/* Register Prompt */}
+        <div className="text-center mb-6">
+          <h2 className={`text-start text-sm ${ isDark ? "text-gray-300" : "text-gray-700" } mb-1`}>
+            New here?
+          </h2>
+          <Link
+            to="/register"
+            className={`inline-flex items-center gap-2 px-5 py-2 border ${ isDark ? "border-blue-400 text-blue-400 hover:bg-blue-500 hover:text-white" : "border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white" } font-medium rounded-md transition`}
+          >
+            <span>Register</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7-7l7 7-7 7" />
+            </svg>
           </Link>
         </div>
-        <div className="my-4 w-full border-t border-gray-300"></div>
-        <p className="text-gray-500 mb-6 text-center">Login quickly using social login</p>
-        <div className="flex space-x-4">
-          <button className="bg-white p-3 rounded-full shadow-md hover:bg-gray-100" onClick={handleGoogleLogin}>
+
+        {/* Social Login */}
+        <p className={`text-sm ${ isDark ? "text-gray-400" : "text-gray-500" } mb-2`}>Or continue with</p>
+        <div className="flex items-center justify-center gap-4">
+          <button
+            className={`cursor-pointer ${ isDark ? "bg-gray-700 hover:bg-gray-600" : "bg-white hover:bg-gray-100" } p-3 rounded-full shadow transition`}
+            onClick={handleGoogleLogin}
+          >
             <FcGoogle className="text-2xl" />
-          </button>
-          <button className="bg-white p-3 rounded-full shadow-md text-blue-600 hover:bg-gray-100">
-            <FaFacebook className="text-2xl" />
-          </button>
-          <button className="bg-white p-3 rounded-full shadow-md text-gray-800 hover:bg-gray-100">
-            <FaGithub className="text-2xl" />
           </button>
         </div>
       </div>
 
       {/* Right Section (Email & Password Login or Forgot Password Form) */}
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-6 space-y-4">
-        <div className="w-96 bg-white border border-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl">
+      <div
+        className={`w-full md:w-1/2 flex flex-col justify-center items-center p-6 space-y-4 ${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+        <div
+          className={`w-96 p-6 rounded-lg shadow-md border ${isDark
+            ? "bg-gray-800 border-gray-700 text-white"
+            : "bg-white border-gray-200 text-gray-900"
+            }`}
+        >
+          <h2 className="text-xl mb-2">
             {isForgotPassword ? "Forgot Password" : "Login"}
           </h2>
 
@@ -126,19 +153,31 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-full p-2 shadow-md border border-gray-100 hover:border-blue-200 rounded mb-4"
+                className={`w-full p-2 shadow-md rounded mb-4 border ${isDark
+                  ? "bg-gray-700 text-white border-gray-600 bg-gray-900 placeholder-gray-400"
+                  : "bg-white text-gray-900 border-gray-200 placeholder-gray-500"
+                  } hover:border-blue-400`}
                 value={resetEmail}
                 onChange={(e) => setResetEmail(e.target.value)}
               />
               <button
-                className="w-full bg-blue-400 text-white p-2 rounded hover:bg-blue-600"
+                className={`w-full p-2 rounded font-medium transition ${isDark
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-blue-400 hover:bg-blue-600 text-white"
+                  }`}
                 onClick={handleForgotPassword}
                 disabled={isLoading}
               >
                 {isLoading ? "Sending..." : "Send Reset Link"}
               </button>
               <div className="w-full flex justify-end mt-4">
-                <button className="flex items-center text-blue-400 hover:text-blue-600" onClick={() => setIsForgotPassword(false)}>
+                <button
+                  className={`flex items-center font-medium transition ${isDark
+                    ? "text-blue-400 hover:text-blue-300"
+                    : "text-blue-500 hover:text-blue-700"
+                    }`}
+                  onClick={() => setIsForgotPassword(false)}
+                >
                   <ChevronLeft className="mt-0.5" size={16} /> Back to Login
                 </button>
               </div>
@@ -148,27 +187,42 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="w-80 p-2 shadow-md border border-gray-100 hover:border-blue-200 rounded mb-4"
+                className={`w-full p-2 shadow-md rounded mb-4 hover:border-blue-400 border ${isDark
+                  ? "bg-gray-700 text-white border-gray-600 bg-gray-900 placeholder-gray-400"
+                  : "bg-white text-gray-900 border-gray-200 placeholder-gray-500"
+                  }`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <PasswordInputLogin password={password} setPassword={setPassword}/>
+              <PasswordInputLogin
+                password={password}
+                setPassword={setPassword}
+              isDark={isDark}
+              />
               <button
-                className="w-80 bg-blue-400 text-white p-2 rounded hover:bg-blue-600 mb-2"
+                className={`w-full p-2 rounded font-medium transition mb-2 ${isDark
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-blue-400 hover:bg-blue-600 text-white"
+                  }`}
                 onClick={handleLogin}
                 disabled={isLoading}
               >
                 {isLoading ? "Logging in..." : "Login"}
               </button>
-              <div className="w-80 flex justify-end">
-                <p className="hover:text-blue-600 text-blue-400 cursor-pointer" onClick={() => setIsForgotPassword(true)}>
+              <div className="w-full flex justify-end">
+                <p
+                  className={`cursor-pointer font-medium ${isDark
+                    ? "text-blue-400 hover:text-blue-300"
+                    : "text-blue-500 hover:text-blue-700"
+                    }`}
+                  onClick={() => setIsForgotPassword(true)}
+                >
                   Forgot password?
                 </p>
               </div>
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

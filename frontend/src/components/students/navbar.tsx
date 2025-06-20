@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaUserCircle, FaHeart, FaBell } from "react-icons/fa";
 import { useTheme } from "@/contexts/theme-context";
 import { motion } from "framer-motion";
-import { Sun, Moon, Menu } from "lucide-react";
+import { Sun, Moon, Menu, X } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { liveSocket, SOCKET_EVENTS } from "@/configs/socketConfig";
 
@@ -42,7 +42,7 @@ const StudentNavbar = () => {
       <div className="container mx-auto flex justify-between items-center py-4 px-6">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold italic text-blue-600">
-          Prograbyte
+          <img  src="/prograbyte-blue1.png" className="w-35" alt="Logo Name"/>
         </Link>
 
         {/* Navigation Links (Desktop) */}
@@ -51,7 +51,7 @@ const StudentNavbar = () => {
             <NavLink
               to="/home"
               className={({ isActive }) =>
-                `text-lg transition-colors duration-300 ${isActive ? "text-blue-600" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
+                `text-lg transition-colors duration-300 ${isActive ? "text-blue-400" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
               }>
               Home
             </NavLink>
@@ -61,7 +61,7 @@ const StudentNavbar = () => {
               <NavLink
                 to={`/${item.toLowerCase()}`}
                 className={({ isActive }) =>
-                  `text-lg transition-colors duration-300 ${isActive ? "text-blue-600 font-medium" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
+                  `text-lg transition-colors duration-300 ${isActive ? "text-blue-400 font-medium" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
                 }>
                 {item}
               </NavLink>
@@ -106,7 +106,7 @@ const StudentNavbar = () => {
                 <NavLink
                   to="/profile"
                   className={({ isActive }) =>
-                    `text-md transition flex items-center ${isActive ? "text-blue-600" : isDark ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
+                    `text-md transition flex items-center hover:text-blue-400 ${isActive ? "text-blue-400" : isDark ? "text-gray-300 hover:text-blue-400" : "text-gray-800 hover:text-blue-400"}`
                   }>
                   <FaUserCircle size={15} />
                 </NavLink>
@@ -123,7 +123,7 @@ const StudentNavbar = () => {
                 <NavLink
                   to="/wishlist"
                   className={({ isActive }) =>
-                    `text-md transition flex items-center ${isActive ? "text-red-600" : theme.includes("dark") ? "text-gray-300 hover:text-blue-500" : "text-gray-800 hover:text-blue-500"}`
+                    `text-md transition flex items-center hover:text-blue-400 ${isActive ? "text-blue-400" : isDark ? "text-gray-300 hover:text-blue-400" : "text-gray-800 hover:text-blue-400"}`
                   }>
                   <FaHeart size={15} />
                 </NavLink>
@@ -138,7 +138,7 @@ const StudentNavbar = () => {
         {/* Mobile Menu Icon */}
         <div className="md:hidden flex items-center">
           <button onClick={toggleMobileMenu} className="focus:outline-none">
-            <Menu className="h-6 w-6" />
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
