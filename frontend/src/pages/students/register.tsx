@@ -5,7 +5,7 @@ const StudentRegister = () => {
     return (
         <>
             <ToastContainer />
-                <Register />
+            <Register />
         </>
     )
 }

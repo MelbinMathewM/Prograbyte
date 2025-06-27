@@ -1,10 +1,10 @@
 import express, { Application } from "express";
 import dotenv from "dotenv";
-import streamRouter from "@/routes/stream.route";
-import logger from "@/utils/logger.util";
-import { errorHandler } from "@/middlewares/error.middleware";
-import { startRTMPServer } from "@/services/implementations/rtmp.service";
-import verifyApiKey from "@/configs/api-key.config";
+import streamRouter from "./routes/stream.route";
+import logger from "./utils/logger.util";
+import { errorHandler } from "./middlewares/error.middleware";
+import { startRTMPServer } from "./services/implementations/rtmp.service";
+import verifyApiKey from "./configs/api-key.config";
 
 dotenv.config();
 
@@ -18,10 +18,13 @@ app.use(verifyApiKey as express.RequestHandler);
 app.use('/stream', streamRouter);
 app.use(errorHandler);
 
-startRTMPServer();
+if (process.env.NODE_ENV !== "production") {
+    startRTMPServer();
+}
 
 
-const PORT = process.env.PORT || 5005;
-app.listen(PORT, () => {
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT as number, "0.0.0.0", () => {
     logger.info(`Server started on port ${PORT}`);
 });

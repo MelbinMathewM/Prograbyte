@@ -1,6 +1,6 @@
-import container from "@/configs/inversify.config";
+import container from "../configs/inversify.config";
 import { StreamController } from "../controllers/implementations/stream.controller";
-import { IStreamController } from "@/controllers/interfaces/IStream.controller";
+import { IStreamController } from "../controllers/interfaces/IStream.controller";
 import { Router } from "express";
 
 const streamRouter = Router();

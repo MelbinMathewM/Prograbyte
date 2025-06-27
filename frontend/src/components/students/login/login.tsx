@@ -91,7 +91,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen bg-white grid grid-cols-1 md:flex">
+    <div className="min-h-screen w-full grid grid-cols-1 md:flex">
       {/* Left Section (Logo + Social Auth) */}
       <div className={`flex flex-col justify-center items-center w-full md:w-1/2 ${ isDark ? "bg-gray-800" : "bg-gray-200" } p-8 shadow-lg transition-all`}>
         {/* Logo */}
@@ -136,12 +136,11 @@ const Login = () => {
       </div>
 
       {/* Right Section (Email & Password Login or Forgot Password Form) */}
-      <div
-        className={`w-full md:w-1/2 flex flex-col justify-center items-center p-6 space-y-4 ${isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      <div className={`sm:min-h-screen flex flex-col justify-center items-center w-full md:w-1/2 ${isDark ? "bg-gray-900" : "bg-white"} p-2`}>
         <div
-          className={`w-96 p-6 rounded-lg shadow-md border ${isDark
-            ? "bg-gray-800 border-gray-700 text-white"
-            : "bg-white border-gray-200 text-gray-900"
+          className={`w-96 p-6 rounded-lg shadow-md ${isDark
+            ? "bg-gray-900 text-white"
+            : "bg-white text-gray-900"
             }`}
         >
           <h2 className="text-xl mb-2">
@@ -173,7 +172,7 @@ const Login = () => {
               <div className="w-full flex justify-end mt-4">
                 <button
                   className={`flex items-center font-medium transition ${isDark
-                    ? "text-blue-400 hover:text-blue-300"
+                    ? "text-blue-400 hover:text-blue-500"
                     : "text-blue-500 hover:text-blue-700"
                     }`}
                   onClick={() => setIsForgotPassword(false)}
@@ -212,7 +211,7 @@ const Login = () => {
               <div className="w-full flex justify-end">
                 <p
                   className={`cursor-pointer font-medium ${isDark
-                    ? "text-blue-400 hover:text-blue-300"
+                    ? "text-blue-400 hover:text-blue-500"
                     : "text-blue-500 hover:text-blue-700"
                     }`}
                   onClick={() => setIsForgotPassword(true)}

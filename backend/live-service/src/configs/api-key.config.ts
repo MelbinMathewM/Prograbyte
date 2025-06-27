@@ -1,5 +1,5 @@
-import { HttpResponse } from "@/constants/response.constant";
-import { HttpStatus } from "@/constants/status.constant";
+import { HttpResponse } from "../constants/response.constant";
+import { HttpStatus } from "../constants/status.constant";
 import { Request, Response, NextFunction } from "express";
 import { env } from "./env.config";
 

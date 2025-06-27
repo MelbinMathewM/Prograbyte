@@ -6,9 +6,10 @@ import { startAuthConsumer } from "./rabbitmqs/auth.consumer";
 
 dotenv.config();
 
-import { validateEnv } from "./utils/envConfig";
-import verifyApiKey from "./configs/apiKey";
+import { validateEnv } from "./utils/envConfig.util";
+import verifyApiKey from "./configs/apiKey.config";
 import { startUserConsumer } from "./rabbitmqs/user.consumer";
+import "./configs/redis.config";
 validateEnv();
 
 const app = express();
@@ -22,7 +23,7 @@ app.use("/", notificationRoutes);
 const PORT = process.env.PORT || 5006;
 
 app.listen(PORT, async () => {
-    console.log(`🚀 Notification Service running on port ${PORT}`);
+    console.log(`Notification Service running on port ${PORT}`);
     await initializeRabbitMQ();
     await startAuthConsumer();
     await startUserConsumer();

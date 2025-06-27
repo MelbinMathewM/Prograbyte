@@ -17,6 +17,9 @@ export const env = {
     },
     get RABBITMQ_URL() {
         return process.env.RABBITMQ_URL;
+    },
+    get REDIS_URL() {
+        return process.env.REDIS_URL;
     }
 
 }

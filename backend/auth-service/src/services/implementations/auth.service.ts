@@ -66,7 +66,7 @@ export class AuthService implements IAuthService {
 
         const otp = generateOtp();
 
-        await redisClient.set(`otp:${email}`, otp, { EX: 90 });
+        await redisClient.set(`otp:${email}`, otp, "EX", 90);
 
         publishMessage("auth.send_otp", {
             email: email,
@@ -98,7 +98,7 @@ export class AuthService implements IAuthService {
 
         const resetToken = generateResetToken({ email });
 
-        await redisClient.set(`resetToken:${user._id}`, resetToken, { EX: 900 });
+        await redisClient.set(`resetToken:${user._id}`, resetToken, "EX", 900);
 
         publishMessage("auth.forgot_password", {
             email: email,
