@@ -7,7 +7,7 @@ import { hashPassword } from '../utils/bcrypt.util';
 import { AuthService } from '../services/implementations/auth.service';
 import { AuthRepository } from '../repositories/implementations/auth.repository';
 
-const PROTO_PATH = path.join(__dirname, "../proto/auth.proto");
+const PROTO_PATH = path.join(__dirname, "../../proto/auth.proto");
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const authProto = grpc.loadPackageDefinition(packageDefinition) as any;
 const server = new grpc.Server();

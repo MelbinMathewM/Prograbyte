@@ -1,4 +1,4 @@
-import { SOCKET_EVENTS } from "@/configs/socket.config";
+import { SOCKET_EVENTS } from "../configs/socket.config";
 import { Namespace, Server } from "socket.io";
 import { io as ClientIO, Socket as ClientSocket } from "socket.io-client";
 
@@ -10,7 +10,7 @@ export class LiveGateway {
   constructor(io: Server) {
     this.io = io;
     this.nsp = io.of("/live");
-    this.courseSocket = ClientIO(process.env.COURSE_SERVICE || "http://localhost:5003", {
+    this.courseSocket = ClientIO(process.env.COURSE_SERVICE, {
       transports: ["websocket"],
       reconnection: true,
     });

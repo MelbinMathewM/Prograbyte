@@ -5,7 +5,7 @@ import authClient from '../../grpcs/auth-client.grpc';
 import { createHttpError } from '../../utils/http-error.util';
 import { HttpStatus } from '../../constants/status.constant';
 import { HttpResponse } from '../../constants/response.constant';
-import { generateAccessToken, generateRefreshToken, verifyAccessToken } from '../../utils/jwt.util';
+import { generateAccessToken, generateRefreshToken } from '../../utils/jwt.util';
 import { publishMessage } from '../../utils/rabbitmq.util';
 import { IUserService } from '../interfaces/IUser.service';
 
