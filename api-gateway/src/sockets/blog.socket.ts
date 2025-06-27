@@ -1,4 +1,4 @@
-import { SOCKET_EVENTS } from "@/configs/socket.config";
+import { SOCKET_EVENTS } from "../configs/socket.config";
 import { Namespace, Server } from "socket.io";
 import { io as ClientIO, Socket as ClientSocket } from "socket.io-client";
 
@@ -10,7 +10,7 @@ export class BlogGateway {
   constructor(io: Server) {
     this.io = io;
     this.nsp = io.of("/blog");
-    this.blogSocket = ClientIO(process.env.BLOG_SERVICE || "http://localhost:5004", {
+    this.blogSocket = ClientIO(process.env.BLOG_SERVICE, {
       transports: ["websocket"],
       reconnection: true,
     });

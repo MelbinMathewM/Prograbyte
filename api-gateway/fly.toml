@@ -1,0 +1,21 @@
+# fly.toml app configuration file generated for prograbyte-api-gateway on 2025-06-27T21:18:01+05:30
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'prograbyte-api-gateway'
+primary_region = 'bom'
+
+[build]
+  dockerfile = "Dockerfile"
+  
+[http_service]
+  internal_port = 5000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'
