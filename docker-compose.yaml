@@ -2,6 +2,7 @@ services:
   # 🚀 FRONTEND SERVICE
   frontend:
     build: ./frontend
+    image: prograbyte_frontend
     ports:
       - "5173:5173"
     depends_on:
@@ -17,6 +18,7 @@ services:
   # 🚀 API GATEWAY
   api-gateway:
     build: ./api-gateway
+    image: prograbyte_api_gateway
     ports:
       - "5000:5000"
     depends_on:
@@ -26,6 +28,7 @@ services:
       - course-service
       - live-service
       - notification-service
+      - payment-service
     environment:
       - AUTH_SERVICE_URL=http://auth-service:5001
       - USER_SERVICE_URL=http://user-service:5002
@@ -33,6 +36,7 @@ services:
       - BLOG_SERVICE_URL=http://blog-service:5004
       - LIVE_SERVICE_URL=http://live-service:5005
       - NOTIFICATION_SERVICE_URL=http://notification-service:5006
+      - PAYMENT_SERVICE_URL=http://payment-service:5007
       - API_GATEWAY_KEY=996940d97b77a0bb9f7dbfbf6e8d8af5dfa6ca47250a3b2846d0272ca6eb741f
       - JWT_SECRET=d45659e5d171e2ed2ba45ff0fd76eb68a8e627576e8529be335cbd192973b21cf1c34702b3ff9afab6bde6454bd05abec322741f95bf4242c8baffaf48ed2a18
     networks:
@@ -41,6 +45,7 @@ services:
   # 🚀 AUTH SERVICE
   auth-service:
     build: ./backend/auth-service
+    image: prograbyte_auth_service
     ports:
       - "5001:5001"
     environment:
@@ -60,6 +65,7 @@ services:
   # 🚀 USER SERVICE
   user-service:
     build: ./backend/user-service
+    image: prograbyte_user_service
     ports:
       - "5002:5002"
     environment:
@@ -82,6 +88,7 @@ services:
   # 🚀 COURSE SERVICE
   course-service:
     build: ./backend/course-service
+    image: prograbyte_course_service
     ports:
       - "5003:5003"
     environment:
@@ -103,6 +110,7 @@ services:
   # 🚀 BLOG SERVICE
   blog-service:
     build: ./backend/blog-service
+    image: prograbyte_blog_service
     ports:
       - "5004:5004"
     environment:
@@ -121,6 +129,7 @@ services:
   # 🚀 LIVE STREAMING SERVICE
   live-service:
     build: ./backend/live-service
+    image: prograbyte_live_service
     ports:
       - "5005:5005"
     environment:
@@ -159,6 +168,7 @@ services:
   # 🚀 NOTIFICATION SERVICE
   notification-service:
     build: ./backend/notification-service
+    image: prograbyte_notification_service
     ports:
       - "5006:5006"
     depends_on:
@@ -172,77 +182,20 @@ services:
     networks:
       - app-network
 
-  # 🚀 RABBITMQ (Message Broker)
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"    # RabbitMQ main port
-      - "15672:15672"  # RabbitMQ management dashboard
-    environment:
-      - RABBITMQ_DEFAULT_USER=admin
-      - RABBITMQ_DEFAULT_PASS=admin
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "rabbitmqctl", "status"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # 🚀 MONGODB (Database)
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.runCommand({ ping: 1 })"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-    # 🚀 ZOOKEEPER (Required by Kafka)
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.5.0
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - app-network
-
-  # 🚀 KAFKA
-  kafka:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka
-    ports:
-      - "9092:9092"
+  payment-service:
+    build: ./backend/payment-service
+    image: prograbyte_payment_service
+    ports: 
+      - "5007:5007"
     depends_on:
-      - zookeeper
+      - redis
+      - rabbitmq
     environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      - MONGO_URI=mongodb://mongo:27017/blog-service
+      - RABBITMQ_URL=amqp://rabbitmq
+      - FRONTEND_URL=http://frontend:5173
     networks:
       - app-network
-
-  # 🚀 REDIS (For Caching and Notifications)
-  redis:
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    networks:
-      - app-network
-
-volumes:
-  mongo-data:
 
 networks:
   app-network:

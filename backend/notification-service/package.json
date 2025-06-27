@@ -27,6 +27,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "inversify": "^6.2.2",
+    "ioredis": "^5.6.1",
     "nodemailer": "^6.10.0",
     "redis": "^4.7.0"
   }

@@ -1,7 +1,7 @@
 import { ChildProcessWithoutNullStreams, exec } from "child_process";
-import { buildFfmpegCommand, createHlsDirectory, getHlsPlaylistPath, killFfmpegProcess, spawnFfmpeg } from "@/utils/ffmpeg.util";
-import { FFmpegConfig } from "@/configs/ffmpeg.config";
-import logger from "@/utils/logger.util";
+import { buildFfmpegCommand, createHlsDirectory, getHlsPlaylistPath, killFfmpegProcess, spawnFfmpeg } from "../../utils/ffmpeg.util";
+import { FFmpegConfig } from "../../configs/ffmpeg.config";
+import logger from "../../utils/logger.util";
 import { IStreamService } from "../interfaces/IStream.service";
 import { injectable } from "inversify";
 

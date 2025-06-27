@@ -1,14 +1,12 @@
 import { IStreamController } from "../../controllers/interfaces/IStream.controller";
 import { Request, Response, NextFunction } from "express";
 import { spawn, ChildProcessWithoutNullStreams, exec } from "child_process";
-import fs from "fs";
-import path from "path";
-import logger from "@/utils/logger.util";
-import { HttpStatus } from "@/constants/status.constant";
-import { HttpResponse } from "@/constants/response.constant";
+import logger from "../../utils/logger.util";
+import { HttpStatus } from "../../constants/status.constant";
+import { HttpResponse } from "../../constants/response.constant";
 import { inject } from "inversify";
-import { StreamService } from "@/services/implementations/stream.service";
-import { IStreamService } from "@/services/interfaces/IStream.service";
+import { StreamService } from "../../services/implementations/stream.service";
+import { IStreamService } from "../../services/interfaces/IStream.service";
 
 export class StreamController implements IStreamController {
     private ffmpegProcesses: Map<string, ChildProcessWithoutNullStreams> = new Map();

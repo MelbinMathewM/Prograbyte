@@ -148,9 +148,9 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col md:flex-row">
+    <div className="min-h-screen w-full grid grid-cols-1 md:flex">
       {/* Left Section (Logo + Social Auth) */}
-            <div className={`flex flex-col justify-center items-center w-full md:w-1/2 ${ isDark ? "bg-gray-800" : "bg-gray-200" } p-8 shadow-lg transition-all`}>
+      <div className={`flex flex-col justify-center items-center w-full md:w-1/2 ${ isDark ? "bg-gray-800" : "bg-gray-200" } p-8 shadow-lg transition-all`}>
         {/* Logo */}
         <img
           src="/prograbyte1.png"
@@ -193,10 +193,10 @@ const Register = () => {
       </div>
 
       {/* Right Section (Email & OTP or Register Form) */}
-      <div className={`flex flex-col justify-center items-center w-full md:w-1/2 ${isDark ? "bg-gray-900" : "bg-white"} p-6`}>
+      <div className={`sm:min-h-screen flex flex-col justify-center items-center w-full md:w-1/2 ${isDark ? "bg-gray-900" : "bg-white"} p-6`}>
         {/* Step 1: Enter Email */}
         {step === 1 && (
-          <div className={`w-96 ${isDark ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white text-gray-900 border-gray-100"} border p-6 rounded-md shadow-md`}>
+          <div className={`w-96 ${isDark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"} p-6 rounded-md shadow-md`}>
             <h2 className="text-xl mb-4">Enter Your Email</h2>
             <input
               type="email"
@@ -217,7 +217,7 @@ const Register = () => {
 
         {/* Step 2: Verify OTP */}
         {step === 2 && (
-          <div className={`w-96 ${isDark ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white text-gray-900 border-gray-100"} border p-6 rounded-md shadow-md`}>
+          <div className={`w-96 ${isDark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"} p-6 rounded-md shadow-md`}>
             <h2 className="text-xl mb-4">Verify OTP</h2>
             <OTPInput otp={otp} setOtp={setOtp} />
             <button className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600" onClick={verifyOtp}>
@@ -254,19 +254,19 @@ const Register = () => {
 
         {/* Step 3: Enter User Details */}
         {step === 3 && otpVerified && (
-          <div className={`w-96 ${isDark ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white text-gray-900 border-gray-100"} p-6 rounded-md shadow-md`}>
+          <div className={`w-96 ${isDark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900"} p-6 rounded-md shadow-md`}>
             <h2 className="text-xl mb-4">Create Your Account</h2>
             <input
               type="text"
               placeholder="Name"
-              className={`w-full p-2 border rounded mb-4 ${isDark ? "bg-gray-900 border-gray-700 text-white placeholder-gray-400" : "border-gray-200 hover:border-blue-200"}`}
+              className={`w-full p-2 border rounded mb-4 hover:border-blue-400 ${isDark ? "bg-gray-900 border-gray-700 text-white placeholder-gray-400" : "border-gray-200 hover:border-blue-200"}`}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <input
               type="text"
               placeholder="Username"
-              className={`w-full p-2 border rounded mb-4 ${isDark ? "bg-gray-900 border-gray-700 text-white placeholder-gray-400" : "border-gray-200 hover:border-blue-200"}`}
+              className={`w-full p-2 border rounded mb-4 hover:border-blue-400 ${isDark ? "bg-gray-900 border-gray-700 text-white placeholder-gray-400" : "border-gray-200 hover:border-blue-200"}`}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />

@@ -1,0 +1,36 @@
+app = "live-service"
+primary_region = "bom"
+
+[build]
+
+# Expose HLS/HTTP traffic over HTTPS
+[http_service]
+  internal_port = 8080              # Your app (Express) must listen on this
+  force_https = true
+  auto_stop_machines = "always"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+# Explicit TCP service for HTTP (optional but good to include)
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80     # HTTP
+  [[services.ports]]
+    port = 443    # HTTPS
+
+# RTMP traffic for FFmpeg/OBS pushing
+[[services]]
+  internal_port = 1935
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 1935   # RTMP (live streaming ingestion)
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
