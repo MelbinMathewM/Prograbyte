@@ -32,7 +32,7 @@ const LandingPagePart = () => {
     const isDark = theme === "dark-theme";
     const bg = isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900";
     const cardBg = isDark ? "bg-gray-900" : "bg-white";
-    const borderColor = isDark ? "border-gray-700" : "border-gray-150";
+    const borderColor = isDark ? "border-gray-700" : "border-gray-100";
 
     return (
         <div className={`${bg} min-h-screen`}>

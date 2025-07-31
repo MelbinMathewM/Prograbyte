@@ -12,6 +12,10 @@ RUN npm run build
 
 COPY proto/ proto/
 
+COPY certs/ certs/
+
 EXPOSE 5001
+
+EXPOSE 50051
 
 CMD ["npm", "start"]

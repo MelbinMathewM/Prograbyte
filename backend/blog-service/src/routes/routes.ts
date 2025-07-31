@@ -5,6 +5,6 @@ import blogProfileRouter from "@/routes/blog-profile.route";
 const router = Router();
 
 router.use('/post',postRouter);
-router.use('/blog-profile',blogProfileRouter)
+router.use('/blog-profile',blogProfileRouter);
 
 export default router;

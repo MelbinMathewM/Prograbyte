@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createProxyMiddleware, Options } from "http-proxy-middleware";
 import { IncomingMessage, ServerResponse } from "http";
 
-const publicRoutes: string[] = ["/api/user/register"];
+const publicRoutes: string[] = ["/api/user/register","/api/payment/webhook/stripe"];
 
 interface CustomRequest extends Request {
   newAccessToken?: string;

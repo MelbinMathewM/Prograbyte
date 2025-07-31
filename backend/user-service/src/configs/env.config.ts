@@ -20,6 +20,9 @@ export const env = {
     get BACKEND_URL() {
         return process.env.BACKEND_URL;
     },
+    get AUTH_DOMAIN() {
+        return process.env.AUTH_DOMAIN;
+    },
     get FRONTEND_URL() {
         return process.env.FRONTEND_URL;
     },
