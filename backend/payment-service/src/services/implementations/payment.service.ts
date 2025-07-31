@@ -89,6 +89,8 @@ export class PaymentService implements IPaymentService {
     async handleStripeWebhook(rawBody: Buffer, signature: string | string[]): Promise<void> {
         const event = stripe.webhooks.constructEvent(rawBody, signature, env.STRIPE_WEBHOOK_SECRET!);
 
+        console.log('webhook here')
+
         if (event.type === "checkout.session.completed") {
             const session = event.data.object as Stripe.Checkout.Session;
             const email = session.customer_email;
@@ -96,7 +98,7 @@ export class PaymentService implements IPaymentService {
 
             if (metadata?.type === "premium" && email) {
 
-                await axios.post(`http://localhost:5002/upgrade`, { email }, {
+                await axios.post(`${env.AUTH_URL}/upgrade`, { email }, {
                     headers: {
                         "x-api-key": env.API_GATEWAY_KEY
                     }
@@ -105,7 +107,7 @@ export class PaymentService implements IPaymentService {
                 const paymentAmount = Number(metadata.paymentAmount);
                 const paymentId = session.payment_intent as string;
 
-                await axios.post(`http://localhost:5003/enroll`, {
+                await axios.post(`${env.COURSE_URL}/enroll`, {
                     email,
                     userId: metadata.userId,
                     courseId: metadata.courseId,

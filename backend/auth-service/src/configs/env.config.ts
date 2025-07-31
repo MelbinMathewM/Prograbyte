@@ -19,6 +19,9 @@ export const env = {
     get API_GATEWAY_KEY() {
         return process.env.API_GATEWAY_KEY;
     },
+    get AUTH_DOMAIN() {
+        return process.env.AUTH_DOMAIN;
+    },
     get RABBITMQ_URL() {
         return process.env.RABBITMQ_URL;
     }

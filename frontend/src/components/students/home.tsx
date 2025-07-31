@@ -51,7 +51,7 @@ const HomePage = () => {
     }, [user]);
 
     return (
-        <div className={`${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"} min-h-screen p-6`}>
+        <div className={`${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"} min-h-screen p-2 sm:p-6`}>
             {/* Hero Section */}
             <header className={`${isDarkMode ? "bg-blue-400" : "bg-blue-400"} text-white py-10 text-center`}>
                 <h1 className="text-2xl font-bold">Welcome to <span className="italic text-3xl">Prograbyte</span></h1>
@@ -69,7 +69,7 @@ const HomePage = () => {
                     {userCourses.map(course => (
                         <motion.div
                             key={course._id}
-                            className={`border ${isDarkMode ? "bg-gray-900 border-gray-700 text-white" : "bg-white text-gray-900"} p-2 shadow-lg rounded-md hover:shadow-xl transition cursor-pointer`}
+                            className={`border ${isDarkMode ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"} p-2 shadow-lg rounded-md hover:shadow-xl transition cursor-pointer`}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
@@ -113,7 +113,7 @@ const HomePage = () => {
                     {recommendedCourses.map(course => (
                         <motion.div
                             key={course._id}
-                            className={`border ${isDarkMode ? "bg-gray-900 border-gray-700 text-white" : "bg-white text-gray-900"} p-2 shadow-lg rounded-md hover:shadow-xl transition cursor-pointer`}
+                            className={`border ${isDarkMode ? "bg-gray-900 border-gray-700 text-white" : "bg-white border-gray-200 text-gray-900"} p-2 shadow-lg rounded-md hover:shadow-xl transition cursor-pointer`}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}

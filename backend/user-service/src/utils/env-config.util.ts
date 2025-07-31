@@ -22,6 +22,9 @@ export function validateEnv() {
     if (!env.BACKEND_URL) {
         throw new Error("BACKEND_URL is not found in env");
     }
+    if (!env.AUTH_DOMAIN) {
+        throw new Error("AUTH_DOMAIN is not found in env");
+    }
     if (!env.FRONTEND_URL) {
         throw new Error("FRONTEND_URL is not found in env");
     }

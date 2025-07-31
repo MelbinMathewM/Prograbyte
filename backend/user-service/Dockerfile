@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build
+
+COPY proto/ proto/
+
 EXPOSE 5002
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
